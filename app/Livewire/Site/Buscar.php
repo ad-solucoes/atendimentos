@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace App\Livewire\Site;
 
 use App\Models\Documento;
-use App\Models\Tipo;
 use App\Models\Organizacao;
+use App\Models\Tipo;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -68,9 +68,9 @@ class Buscar extends Component
         }
 
         return view('livewire.site.buscar', [
-            'resultados'       => $resultados,
+            'resultados'   => $resultados,
             'organizacoes' => Organizacao::orderBy('organizacao_nome')->get(),
-            'tipos'         => Tipo::orderBy('tipo_nome')->get(),
+            'tipos'        => Tipo::orderBy('tipo_nome')->get(),
         ])->layout('layouts.site', ['titulo' => 'Buscar']);
     }
 }

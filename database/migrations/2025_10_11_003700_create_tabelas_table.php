@@ -30,6 +30,7 @@ return new class () extends Migration
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->unsignedBigInteger('setor_id')->nullable();
+            $table->boolean('status')->default(1);
             $table->rememberToken();
             $table->timestamps();
 
@@ -152,7 +153,7 @@ return new class () extends Migration
                 'agendado',     // já tem data marcada
                 'marcado',      // confirmado/agendado
                 'entregue',     // entregue (ao paciente/ACS/equipe)
-                'cancelado'
+                'cancelado',
             ])->default('aguardando');
 
             $table->unsignedBigInteger('created_user_id')->nullable();

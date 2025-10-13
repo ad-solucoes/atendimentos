@@ -6,19 +6,16 @@ namespace App\Livewire\Admin\Solicitacoes;
 
 use App\Models\Solicitacao;
 use App\Models\SolicitacaoMovimentacao;
-use App\Models\Arquivo;
-use App\Models\Tipo;
-use App\Models\Organizacao;
-use App\Models\Etiqueta;
-use Illuminate\Support\Str;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class Movimentar extends Component
 {
     public $solicitacao_id;
+
     public $status;
+
     public $entregue_para;
+
     public $observacao;
 
     public function mount($solicitacao_id)
@@ -29,15 +26,15 @@ class Movimentar extends Component
     public function salvar()
     {
         $solicitacao = Solicitacao::findOrFail($this->solicitacao_id);
-        $usuario = auth()->user();
+        $usuario     = auth()->user();
 
         // registra movimentação
         SolicitacaoMovimentacao::create([
             'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-            'movimentacao_usuario_id' => $usuario->id,
-            'movimentacao_tipo' => 'entrega',
-            'movimentacao_entregue_para' => $this->entregue_para,
-            'movimentacao_observacao' => $this->observacao,
+            'movimentacao_usuario_id'     => $usuario->id,
+            'movimentacao_tipo'           => 'entrega',
+            'movimentacao_entregue_para'  => $this->entregue_para,
+            'movimentacao_observacao'     => $this->observacao,
         ]);
 
         // atualiza solicitação
@@ -46,6 +43,7 @@ class Movimentar extends Component
         ]);
 
         session()->flash('message', 'Movimentação registrada com sucesso.');
+
         return redirect()->route('admin.solicitacoes.detalhes', $solicitacao->solicitacao_id);
     }
 

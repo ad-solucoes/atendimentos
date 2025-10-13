@@ -5,24 +5,34 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Setores;
 
 use App\Models\Setor;
-use App\Models\Arquivo;
-use App\Models\Tipo;
-use App\Models\Organizacao;
-use App\Models\Etiqueta;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class Formulario extends Component
 {
-    use WithFileUploads;
-
     public $setor_id;
 
     public $setor_nome;
 
-    protected $rules = [
-        'setor_nome'            => 'required|string|max:150',
+    public $setor_status = 1;
+
+    protected function rules()
+    {
+        return [
+            'setor_nome' => [
+                'required',
+                'string',
+                'max:150',
+                Rule::unique('setores', 'setor_nome')->ignore($this->setor_id, 'setor_id'),
+            ],
+            'setor_status' => 'required',
+        ];
+    }
+
+    protected $messages = [
+        'setor_nome.required'   => 'O campo "Nome do Setor" é obrigatório.',
+        'setor_nome.unique'     => 'Este nome do setor já está em uso.',
+        'setor_status.required' => 'O campo "Status" é obrigatório.',
     ];
 
     public function mount($id = null)
@@ -31,8 +41,9 @@ class Formulario extends Component
             $doc = Setor::find($id);
 
             if ($doc) {
-                $this->setor_id      = $doc->setor_id;
-                $this->setor_nome            = $doc->setor_nome;
+                $this->setor_id     = $doc->setor_id;
+                $this->setor_nome   = $doc->setor_nome;
+                $this->setor_status = $doc->setor_status;
             }
         }
     }
@@ -44,7 +55,8 @@ class Formulario extends Component
         Setor::updateOrCreate(
             ['setor_id' => $this->setor_id],
             [
-                'setor_nome'            => $this->setor_nome,
+                'setor_nome'   => $this->setor_nome,
+                'setor_status' => $this->setor_status,
             ]
         );
 

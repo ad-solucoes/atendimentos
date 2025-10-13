@@ -5,13 +5,7 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Solicitacoes;
 
 use App\Models\Solicitacao;
-use App\Models\Arquivo;
-use App\Models\Tipo;
-use App\Models\Organizacao;
-use App\Models\Etiqueta;
-use Illuminate\Support\Str;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class Detalhes extends Component
 {
@@ -22,7 +16,7 @@ class Detalhes extends Component
     public $solicitacao_nome;
 
     protected $rules = [
-        'solicitacao_nome'            => 'required|string|max:150',
+        'solicitacao_nome' => 'required|string|max:150',
     ];
 
     public function mount($id)
@@ -37,7 +31,7 @@ class Detalhes extends Component
         Solicitacao::updateOrCreate(
             ['solicitacao_id' => $this->solicitacao_id],
             [
-                'solicitacao_nome'            => $this->solicitacao_nome,
+                'solicitacao_nome' => $this->solicitacao_nome,
             ]
         );
 

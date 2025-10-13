@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class SolicitacaoMovimentacao extends Model
 {
     protected $table = 'solicitacao_movimentacoes';
+
     protected $primaryKey = 'movimentacao_id';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -21,9 +25,9 @@ class SolicitacaoMovimentacao extends Model
     ];
 
     protected $casts = [
-        'movimentacao_data'    => 'datetime',
-        'created_at'      => 'datetime',
-        'updated_at'      => 'datetime',
+        'movimentacao_data' => 'datetime',
+        'created_at'        => 'datetime',
+        'updated_at'        => 'datetime',
     ];
 
     public function usuario()

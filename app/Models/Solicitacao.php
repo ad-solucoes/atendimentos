@@ -1,17 +1,22 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Solicitacao extends Model
 {
     use HasFactory;
 
     protected $table = 'solicitacoes';
+
     protected $primaryKey = 'solicitacao_id';
+
     public $incrementing = false;
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -26,19 +31,19 @@ class Solicitacao extends Model
     ];
 
     protected $casts = [
-        'solicitacao_data'    => 'date',
-        'created_at'      => 'datetime',
-        'updated_at'      => 'datetime',
+        'solicitacao_data' => 'date',
+        'created_at'       => 'datetime',
+        'updated_at'       => 'datetime',
     ];
 
     /**
      * Enum de status da solicitação
      */
-    const STATUS_AGUARDANDO = 'Pendente';
-    const STATUS_AGENDADO = 'Em andamento';
-    const STATUS_MARCADO = 'Concluída';
-    const STATUS_ENTREGUE = 'Entregue';
-    const STATUS_CANCELADO = 'Cancelada';
+    public const STATUS_AGUARDANDO = 'Pendente';
+    public const STATUS_AGENDADO   = 'Em andamento';
+    public const STATUS_MARCADO    = 'Concluída';
+    public const STATUS_ENTREGUE   = 'Entregue';
+    public const STATUS_CANCELADO  = 'Cancelada';
 
     /**
      * Relacionamentos
@@ -63,13 +68,13 @@ class Solicitacao extends Model
      */
     public function status_descricao()
     {
-        return match($this->solicitacao_status) {
+        return match ($this->solicitacao_status) {
             self::STATUS_AGUARDANDO => 'Aguardando',
-            self::STATUS_AGENDADO => 'Agendado',
-            self::STATUS_MARCADO => 'Marcado',
-            self::STATUS_ENTREGUE => 'Entregue',
-            self::STATUS_CANCELADO => 'Cancelado',
-            default => '',
+            self::STATUS_AGENDADO   => 'Agendado',
+            self::STATUS_MARCADO    => 'Marcado',
+            self::STATUS_ENTREGUE   => 'Entregue',
+            self::STATUS_CANCELADO  => 'Cancelado',
+            default                 => '',
         };
     }
 
@@ -78,19 +83,19 @@ class Solicitacao extends Model
      */
     public function status_cor()
     {
-        return match($this->solicitacao_status) {
+        return match ($this->solicitacao_status) {
             self::STATUS_AGUARDANDO => 'warning',
-            self::STATUS_AGENDADO => 'dark',
-            self::STATUS_MARCADO => 'success',
-            self::STATUS_ENTREGUE => 'primary',
-            self::STATUS_CANCELADO => 'danger',
-            default => 'secondary',
+            self::STATUS_AGENDADO   => 'dark',
+            self::STATUS_MARCADO    => 'success',
+            self::STATUS_ENTREGUE   => 'primary',
+            self::STATUS_CANCELADO  => 'danger',
+            default                 => 'secondary',
         };
     }
 
     public function movimentacoes()
     {
-        return $this->hasMany(\App\Models\SolicitacaoMovimentacao::class, 'movimentacao_solicitacao_id', 'solicitacao_id')
+        return $this->hasMany(SolicitacaoMovimentacao::class, 'movimentacao_solicitacao_id', 'solicitacao_id')
             ->with('usuario')
             ->latest();
     }

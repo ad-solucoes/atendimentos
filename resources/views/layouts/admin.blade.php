@@ -59,11 +59,11 @@
             x-data="{ hoverIndex: null }"
             :class="{
                 // === Desktop ===
-                'w-64 flex-shrink-0': isDesktop && !collapsed,
-                'w-20 flex-shrink-0': isDesktop && collapsed,
+                'w-60 flex-shrink-0': isDesktop && !collapsed,
+                'w-16 flex-shrink-0': isDesktop && collapsed,
 
                 // === Mobile ===
-                'fixed inset-0 z-40 w-64 transform': !isDesktop,
+                'fixed inset-0 z-40 w-60 transform': !isDesktop,
                 'translate-x-0': !isDesktop && sidebarOpen,
                 '-translate-x-full': !isDesktop && !sidebarOpen
             }"
@@ -71,11 +71,11 @@
             <!-- Header da sidebar -->
             <div class="p-4 border-b border-blue-800 flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-folder-tree text-2xl"></i>
+                    <i class="fa-solid fa-folder-tree text-1xl"></i>
                     <span
                         x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)"
                         x-transition.opacity
-                        class="font-bold text-lg truncate"
+                        class="font-bold text-md truncate"
                     >
                         Admin Acervo
                     </span>
@@ -87,48 +87,48 @@
             </div>
 
             <!-- Navegação -->
-            <nav class="flex-1 p-4 space-y-1">
+            <nav class="flex-1 p-3 space-y-1">
                 @php
                     $user = auth()->user();
                     $links = [
-                        ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'fa-solid fa-gauge'], // painel geral
-                        ['label' => 'Setores', 'route' => 'admin.setores.listagem', 'icon' => 'fa-solid fa-building'], // setor/empresa
-                        ['label' => 'Tipos de Procedimento', 'route' => 'admin.tipos_procedimento.listagem', 'icon' => 'fa-solid fa-list-check'], // lista de tipos
-                        ['label' => 'Procedimentos', 'route' => 'admin.procedimentos.listagem', 'icon' => 'fa-solid fa-stethoscope'], // procedimento médico
-                        ['label' => 'Equipes de Saúde', 'route' => 'admin.equipes_saude.listagem', 'icon' => 'fa-solid fa-house-medical'], // equipe de saúde da família
-                        ['label' => 'Agentes de Saúde', 'route' => 'admin.agentes_saude.listagem', 'icon' => 'fa-solid fa-user-nurse'], // agente comunitário de saúde
-                        ['label' => 'Pacientes', 'route' => 'admin.pacientes.listagem', 'icon' => 'fa-solid fa-user-injured'], // paciente
-                        ['label' => 'Atendimentos', 'route' => 'admin.atendimentos.listagem', 'icon' => 'fa-solid fa-calendar-check'], // atendimentos/agenda
-                        ['label' => 'Solicitações', 'route' => 'admin.solicitacoes.listagem', 'icon' => 'fa-solid fa-file-medical'], // solicitações médicas
-                        ['label' => 'Movimentações', 'route' => 'admin.movimentacoes.formulario', 'icon' => 'fa-solid fa-right-left'], // Movimentações de solicitações em massa
+                        ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => 'admin.dashboard', 'icon' => 'fa-solid fa-gauge'], // painel geral
+                        ['label' => 'Setores', 'route' => 'admin.setores.listagem', 'active' => 'admin.setores*', 'icon' => 'fa-solid fa-building'], // setor/empresa
+                        ['label' => 'Tipos de Procedimento', 'route' => 'admin.tipos_procedimento.listagem', 'active' => 'admin.tipos_procedimento*', 'icon' => 'fa-solid fa-list-check'], // lista de tipos
+                        ['label' => 'Procedimentos', 'route' => 'admin.procedimentos.listagem', 'active' => 'admin.procedimentos*', 'icon' => 'fa-solid fa-stethoscope'], // procedimento médico
+                        ['label' => 'Equipes de Saúde', 'route' => 'admin.equipes_saude.listagem', 'active' => 'admin.equipes_saude*', 'icon' => 'fa-solid fa-house-medical'], // equipe de saúde da família
+                        ['label' => 'Agentes de Saúde', 'route' => 'admin.agentes_saude.listagem', 'active' => 'admin.agentes_saude*', 'icon' => 'fa-solid fa-user-nurse'], // agente comunitário de saúde
+                        ['label' => 'Pacientes', 'route' => 'admin.pacientes.listagem', 'active' => 'admin.pacientes*', 'icon' => 'fa-solid fa-user-injured'], // paciente
+                        ['label' => 'Atendimentos', 'route' => 'admin.atendimentos.listagem', 'active' => 'admin.atendimentos*', 'icon' => 'fa-solid fa-calendar-check'], // atendimentos/agenda
+                        ['label' => 'Solicitações', 'route' => 'admin.solicitacoes.listagem', 'active' => 'admin.solicitacoes*', 'icon' => 'fa-solid fa-file-medical'], // solicitações médicas
+                        ['label' => 'Movimentações', 'route' => 'admin.movimentacoes.formulario', 'active' => 'admin.movimentacoes*', 'icon' => 'fa-solid fa-right-left'], // Movimentações de solicitações em massa
                     ];
                     if ($user && $user->isAdmin()) {
                         $links = array_merge($links, [
-                            ['label' => 'Usuários', 'route' => 'admin.usuarios.listagem', 'icon' => 'fa-solid fa-users'],
+                            ['label' => 'Usuários', 'route' => 'admin.usuarios.listagem', 'active' => 'admin.usuarios*', 'icon' => 'fa-solid fa-users'],
                         ]);
                     }
                 @endphp
 
                 @foreach ($links as $index => $link)
                     @php
-                        $active = request()->routeIs($link['route'])
+                        $active = request()->routeIs($link['active'])
                             ? 'bg-blue-700 text-white'
                             : 'text-blue-100 hover:bg-blue-800';
                     @endphp
 
                     <a href="{{ route($link['route']) }}"
-                    class="relative flex items-center py-2 px-3 rounded transition {{ $active }}"
+                    class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
                     @mouseenter="hoverIndex = {{ $index }}"
                     @mouseleave="hoverIndex = null">
 
                         <!-- Ícone: sempre visível -->
-                        <i class="{{ $link['icon'] }} text-lg min-w-[1.5rem] text-center"></i>
+                        <i class="{{ $link['icon'] }} text-md min-w-[1.5rem] text-center"></i>
 
                         <!-- Texto: aparece apenas no hover do menu colapsado -->
                         <span
                             x-show="isDesktop && collapsed && hoverIndex === {{ $index }}"
                             x-transition.opacity
-                            class="absolute left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-3 py-2 rounded shadow-lg whitespace-nowrap z-50">
+                            class="absolute left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-1 py-2 rounded shadow-lg whitespace-nowrap z-50">
                             {{ $link['label'] }}
                         </span>
 
@@ -136,10 +136,9 @@
                         <span
                             x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)"
                             x-transition.opacity
-                            class="ml-3 whitespace-nowrap">
+                            class="ml-1 whitespace-nowrap">
                             {{ $link['label'] }}
                         </span>
-
                     </a>
                 @endforeach
             </nav>
@@ -167,7 +166,7 @@
                         <form method="POST" action="{{ route('admin.logout') }}" class="relative group">
                             @csrf
                             <button type="submit"
-                                    class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full text-lg mx-auto block">
+                                    class="bg-red-600 hover:bg-red-700 text-white p-2 text-sm mx-auto block">
                                 <i class="fa-solid fa-right-from-bracket"></i>
                             </button>
 
@@ -193,7 +192,7 @@
 
         <!-- Conteúdo principal -->
         <div class="flex-1 flex flex-col">
-            <header class="bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
+            <header class="bg-white border-b px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <button
                         @click="isDesktop ? (collapsed = !collapsed) : (sidebarOpen = !sidebarOpen)"
@@ -204,8 +203,8 @@
                 </div>
             </header>
 
-            <main class="flex-1 p-6 bg-white overflow-x-auto shadow-inner">
-                <h1 class="text-2xl font-semibold mb-6 text-blue-900 border-b pb-2">
+            <main class="flex-1 p-6 bg-white overflow-x-auto">
+                <h1 class="text-lg font-semibold mb-6 text-blue-900 border-b pb-2">
                     {{ $title ?? 'Painel Administrativo' }}
                 </h1>
 

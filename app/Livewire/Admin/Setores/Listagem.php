@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Setores;
 
 use App\Models\Setor;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -29,7 +28,7 @@ class Listagem extends Component
     public function confirmDelete($id)
     {
         $this->confirmingDelete = true;
-        $this->setorToDelete = $id;
+        $this->setorToDelete    = $id;
     }
 
     public function delete()
@@ -56,6 +55,6 @@ class Listagem extends Component
 
         return view('livewire.admin.setores.listagem', [
             'setores' => $setores,
-        ])->layout('layouts.admin', ['title' => 'Gerenciar Setores']);
+        ])->layout('layouts.admin', ['title' => 'Setores']);
     }
 }

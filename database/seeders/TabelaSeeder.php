@@ -4,19 +4,19 @@ declare(strict_types = 1);
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\SolicitacaoMovimentacao;
+use App\Models\AgenteSaude;
+use App\Models\Atendimento;
+use App\Models\EquipeSaude;
 
-use App\Models\TipoProcedimento;
+use App\Models\Paciente;
 use App\Models\Procedimento;
 use App\Models\Setor;
-use App\Models\EquipeSaude;
-use App\Models\AgenteSaude;
-use App\Models\Paciente;
-use App\Models\Atendimento;
 use App\Models\Solicitacao;
+use App\Models\SolicitacaoMovimentacao;
+use App\Models\TipoProcedimento;
+use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class TabelaSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class TabelaSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = \Faker\Factory::create('pt_BR');
+        $faker = Faker::create('pt_BR');
 
         /**
          * TABELA: tipo_procedimentos
@@ -33,7 +33,7 @@ class TabelaSeeder extends Seeder
         $dataTipoProcedimento = [
             ['tipo_procedimento_nome' => 'Consulta'],
             ['tipo_procedimento_nome' => 'Exame'],
-            ['tipo_procedimento_nome' => 'Outros']
+            ['tipo_procedimento_nome' => 'Outros'],
         ];
         TipoProcedimento::insert($dataTipoProcedimento);
 
@@ -70,15 +70,15 @@ class TabelaSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name'            => 'User Recepção',
-            'email'           => 'recepcao@email.com',
-            'setor_id'           => 1,
+            'name'     => 'User Recepção',
+            'email'    => 'recepcao@email.com',
+            'setor_id' => 1,
         ]);
 
         User::factory()->create([
-            'name'            => 'User Marcação',
-            'email'           => 'marcacao@email.com',
-            'setor_id'           => 2
+            'name'     => 'User Marcação',
+            'email'    => 'marcacao@email.com',
+            'setor_id' => 2,
         ]);
 
         /**
@@ -112,17 +112,18 @@ class TabelaSeeder extends Seeder
          * TABELA: pacientes
          */
         $dataPaciente = [];
+
         for ($i = 1; $i <= 10; $i++) {
             $dataPaciente[] = [
                 'paciente_agente_saude_id' => rand(1, 6),
-                'paciente_cpf' => $faker->cpf(false),
-                'paciente_nome' => $faker->name(),
-                'paciente_sexo' => $faker->randomElement(['Masculino', 'Feminino']),
+                'paciente_cpf'             => $faker->cpf(false),
+                'paciente_nome'            => $faker->name(),
+                'paciente_sexo'            => $faker->randomElement(['Masculino', 'Feminino']),
                 'paciente_data_nascimento' => $faker->date(),
-                'paciente_nome_mae' => $faker->name('female'),
-                'paciente_endereco' => $faker->address(),
-                'paciente_contato' => '(82) ' . rand(90000, 99999) . '-' . rand(1000, 9999),
-                'paciente_cns' => $faker->numerify('###############')
+                'paciente_nome_mae'        => $faker->name('female'),
+                'paciente_endereco'        => $faker->address(),
+                'paciente_contato'         => '(82) ' . rand(90000, 99999) . '-' . rand(1000, 9999),
+                'paciente_cns'             => $faker->numerify('###############'),
             ];
         }
         Paciente::insert($dataPaciente);
@@ -132,14 +133,15 @@ class TabelaSeeder extends Seeder
          * Número gerado no formato AAAAMMDDNNN
          */
         $dataAtendimento = [];
-        $dataAtual = date('Ymd');
+        $dataAtual       = date('Ymd');
+
         for ($i = 1; $i <= 10; $i++) {
-            $sequencia = formatoId($i, 3);
+            $sequencia         = formatoId($i, 3);
             $numeroAtendimento = $dataAtual . $sequencia;
             $dataAtendimento[] = [
                 'atendimento_paciente_id' => $i,
-                'atendimento_numero' => $numeroAtendimento,
-                'atendimento_data' => now(),
+                'atendimento_numero'      => $numeroAtendimento,
+                'atendimento_data'        => now(),
             ];
         }
         Atendimento::insert($dataAtendimento);
@@ -179,36 +181,36 @@ class TabelaSeeder extends Seeder
             // Movimentação inicial: recepção -> marcação (encaminhamento)
             $movimentos[] = [
                 'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-                'movimentacao_usuario_id'      => 1, // recepcionista
-                'movimentacao_destino_id'      => null, // setor marcação pode ser preenchido
-                'movimentacao_tipo'            => 'encaminhamento',
-                'movimentacao_entregue_para'   => null,
-                'movimentacao_observacao'      => 'Encaminhada para marcação',
-                'movimentacao_data'            => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
+                'movimentacao_usuario_id'     => 1, // recepcionista
+                'movimentacao_destino_id'     => null, // setor marcação pode ser preenchido
+                'movimentacao_tipo'           => 'encaminhamento',
+                'movimentacao_entregue_para'  => null,
+                'movimentacao_observacao'     => 'Encaminhada para marcação',
+                'movimentacao_data'           => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
             ];
 
             // Se o status for 'marcada', gerar retorno para recepção
             if ($solicitacao->solicitacao_status === 'marcada') {
                 $movimentos[] = [
                     'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-                    'movimentacao_usuario_id'      => 2, // setor de marcação
-                    'movimentacao_destino_id'      => null, // retorno para recepção
-                    'movimentacao_tipo'            => 'retorno',
-                    'movimentacao_entregue_para'   => null,
-                    'movimentacao_observacao'      => 'Retorno da marcação',
-                    'movimentacao_data'            => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
+                    'movimentacao_usuario_id'     => 2, // setor de marcação
+                    'movimentacao_destino_id'     => null, // retorno para recepção
+                    'movimentacao_tipo'           => 'retorno',
+                    'movimentacao_entregue_para'  => null,
+                    'movimentacao_observacao'     => 'Retorno da marcação',
+                    'movimentacao_data'           => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
                 ];
 
                 // Movimentação de entrega ao paciente/ACS/Equipe
                 $entreguePara = $faker->randomElement(['paciente', 'agente_saude', 'equipe_saude']);
                 $movimentos[] = [
                     'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-                    'movimentacao_usuario_id'      => 1, // recepcionista
-                    'movimentacao_destino_id'      => null,
-                    'movimentacao_tipo'            => 'entrega',
-                    'movimentacao_entregue_para'   => $entreguePara,
-                    'movimentacao_observacao'      => 'Entrega realizada',
-                    'movimentacao_data'            => now(),
+                    'movimentacao_usuario_id'     => 1, // recepcionista
+                    'movimentacao_destino_id'     => null,
+                    'movimentacao_tipo'           => 'entrega',
+                    'movimentacao_entregue_para'  => $entreguePara,
+                    'movimentacao_observacao'     => 'Entrega realizada',
+                    'movimentacao_data'           => now(),
                 ];
             }
 

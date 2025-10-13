@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Pacientes;
 
 use App\Models\Paciente;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -56,6 +55,6 @@ class Listagem extends Component
 
         return view('livewire.admin.pacientes.listagem', [
             'pacientes' => $pacientes,
-        ])->layout('layouts.admin', ['title' => 'Gerenciar Pacientes']);
+        ])->layout('layouts.admin', ['title' => 'Pacientes']);
     }
 }

@@ -6,34 +6,52 @@ namespace App\Livewire\Admin\Pacientes;
 
 use App\Models\AgenteSaude;
 use App\Models\Paciente;
-use App\Models\Arquivo;
-use App\Models\Tipo;
-use App\Models\Organizacao;
-use App\Models\Etiqueta;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class Formulario extends Component
 {
-    use WithFileUploads;
-
     public $paciente_id;
 
     public $paciente_nome;
+
     public $paciente_agente_saude_id;
+
     public $paciente_sexo;
+
     public $paciente_data_nascimento;
+
     public $paciente_nome_mae;
+
     public $paciente_endereco;
+
     public $paciente_contato;
+
     public $paciente_cns;
+
     public $paciente_cpf;
+
+    public $paciente_status = 1;
 
     public $agentes_saude;
 
-    protected $rules = [
-        'paciente_nome'            => 'required|string|max:150',
+    protected function rules()
+    {
+        return [
+            'paciente_nome' => [
+                'required',
+                'string',
+                'max:150',
+                Rule::unique('pacientes', 'paciente_nome')->ignore($this->paciente_id, 'paciente_id'),
+            ],
+            'paciente_status' => 'required',
+        ];
+    }
+
+    protected $messages = [
+        'paciente_nome.required'   => 'O campo "Nome do Paciente" é obrigatório.',
+        'paciente_nome.unique'     => 'Este nome do paciente já está em uso.',
+        'paciente_status.required' => 'O campo "Status" é obrigatório.',
     ];
 
     public function mount($id = null)
@@ -44,16 +62,17 @@ class Formulario extends Component
             $doc = Paciente::find($id);
 
             if ($doc) {
-                $this->paciente_id      = $doc->paciente_id;
+                $this->paciente_id              = $doc->paciente_id;
                 $this->paciente_nome            = $doc->paciente_nome;
-                $this->paciente_agente_saude_id            = $doc->paciente_agente_saude_id;
+                $this->paciente_agente_saude_id = $doc->paciente_agente_saude_id;
                 $this->paciente_sexo            = $doc->paciente_sexo;
-                $this->paciente_data_nascimento            = $doc->paciente_data_nascimento->format('Y-m-d');
-                $this->paciente_nome_mae            = $doc->paciente_nome_mae;
-                $this->paciente_endereco            = $doc->paciente_endereco;
-                $this->paciente_contato            = $doc->paciente_contato;
-                $this->paciente_cns            = $doc->paciente_cns;
-                $this->paciente_cpf            = $doc->paciente_cpf;
+                $this->paciente_data_nascimento = $doc->paciente_data_nascimento->format('Y-m-d');
+                $this->paciente_nome_mae        = $doc->paciente_nome_mae;
+                $this->paciente_endereco        = $doc->paciente_endereco;
+                $this->paciente_contato         = $doc->paciente_contato;
+                $this->paciente_cns             = $doc->paciente_cns;
+                $this->paciente_cpf             = $doc->paciente_cpf;
+                $this->paciente_status             = $doc->paciente_status;
             }
         }
     }
@@ -66,14 +85,15 @@ class Formulario extends Component
             ['paciente_id' => $this->paciente_id],
             [
                 'paciente_nome'            => $this->paciente_nome,
-                'paciente_agente_saude_id'            => $this->paciente_agente_saude_id,
+                'paciente_agente_saude_id' => $this->paciente_agente_saude_id,
                 'paciente_sexo'            => $this->paciente_sexo,
-                'paciente_data_nascimento'            => $this->paciente_data_nascimento,
-                'paciente_nome_mae'            => $this->paciente_nome_mae,
-                'paciente_endereco'            => $this->paciente_endereco,
-                'paciente_contato'            => $this->paciente_contato,
-                'paciente_cns'            => $this->paciente_cns,
-                'paciente_cpf'            => $this->paciente_cpf,
+                'paciente_data_nascimento' => $this->paciente_data_nascimento,
+                'paciente_nome_mae'        => $this->paciente_nome_mae,
+                'paciente_endereco'        => $this->paciente_endereco,
+                'paciente_contato'         => $this->paciente_contato,
+                'paciente_cns'             => $this->paciente_cns,
+                'paciente_cpf'             => $this->paciente_cpf,
+                'paciente_status'             => $this->paciente_status,
             ]
         );
 

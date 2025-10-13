@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\EquipesSaude;
 
 use App\Models\EquipeSaude;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -28,7 +27,7 @@ class Listagem extends Component
 
     public function confirmDelete($id)
     {
-        $this->confirmingDelete = true;
+        $this->confirmingDelete    = true;
         $this->equipeSaudeToDelete = $id;
     }
 
@@ -56,6 +55,6 @@ class Listagem extends Component
 
         return view('livewire.admin.equipes_saude.listagem', [
             'equipes_saude' => $equipes_saude,
-        ])->layout('layouts.admin', ['title' => 'Gerenciar Equipes de Saúde']);
+        ])->layout('layouts.admin', ['title' => 'Equipes de Saúde']);
     }
 }

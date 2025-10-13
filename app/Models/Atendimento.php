@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Atendimento extends Model
 {
     use HasFactory;
 
     protected $table = 'atendimentos';
+
     protected $primaryKey = 'atendimento_id';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -25,9 +29,9 @@ class Atendimento extends Model
     ];
 
     protected $casts = [
-        'atendimento_data'    => 'datetime',
-        'created_at'      => 'datetime',
-        'updated_at'      => 'datetime',
+        'atendimento_data' => 'datetime',
+        'created_at'       => 'datetime',
+        'updated_at'       => 'datetime',
     ];
 
     /**
@@ -51,8 +55,9 @@ class Atendimento extends Model
      */
     public static function gerarNumeroAtendimento()
     {
-        $dataHoje = now()->format('Ymd');
+        $dataHoje  = now()->format('Ymd');
         $sequencia = self::whereDate('created_at', now()->toDateString())->count() + 1;
+
         return $dataHoje . str_pad($sequencia, 3, '0', STR_PAD_LEFT);
     }
 }

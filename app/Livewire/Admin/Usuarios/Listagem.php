@@ -28,7 +28,7 @@ class Listagem extends Component
     public function confirmDelete($id)
     {
         $this->confirmingDelete = true;
-        $this->etiquetaToDelete      = $id;
+        $this->etiquetaToDelete = $id;
     }
 
     public function delete()
@@ -49,6 +49,6 @@ class Listagem extends Component
             ->paginate(10);
 
         return view('livewire.admin.usuarios.listagem', ['usuarios' => $usuarios])
-            ->layout('layouts.admin', ['title' => 'Gerenciar Usuarios']);
+            ->layout('layouts.admin', ['title' => 'Usuários']);
     }
 }

@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Setor extends Model
 {
     use HasFactory;
 
     protected $table = 'setores';
+
     protected $primaryKey = 'setor_id';
+
     public $timestamps = true;
 
     protected $fillable = [

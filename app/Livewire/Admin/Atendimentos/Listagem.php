@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Atendimentos;
 
 use App\Models\Atendimento;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -28,7 +27,7 @@ class Listagem extends Component
 
     public function confirmDelete($id)
     {
-        $this->confirmingDelete = true;
+        $this->confirmingDelete    = true;
         $this->atendimentoToDelete = $id;
     }
 
@@ -56,6 +55,6 @@ class Listagem extends Component
 
         return view('livewire.admin.atendimentos.listagem', [
             'atendimentos' => $atendimentos,
-        ])->layout('layouts.admin', ['title' => 'Gerenciar Atendimentos']);
+        ])->layout('layouts.admin', ['title' => 'Atendimentos']);
     }
 }

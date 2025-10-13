@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class AgenteSaude extends Model
 {
     use HasFactory;
 
     protected $table = 'agentes_saude';
+
     protected $primaryKey = 'agente_saude_id';
+
     public $timestamps = true;
 
     protected $fillable = [

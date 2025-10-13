@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\TiposProcedimento;
 
 use App\Models\TipoProcedimento;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -28,7 +27,7 @@ class Listagem extends Component
 
     public function confirmDelete($id)
     {
-        $this->confirmingDelete = true;
+        $this->confirmingDelete         = true;
         $this->tipoProcedimentoToDelete = $id;
     }
 
@@ -56,6 +55,6 @@ class Listagem extends Component
 
         return view('livewire.admin.tipos_procedimento.listagem', [
             'tipos_procedimento' => $tipos_procedimento,
-        ])->layout('layouts.admin', ['title' => 'Gerenciar TipoProcedimentoes']);
+        ])->layout('layouts.admin', ['title' => 'Tipo de Procedimentos']);
     }
 }

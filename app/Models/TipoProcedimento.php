@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class TipoProcedimento extends Model
 {
     use HasFactory;
 
     protected $table = 'tipos_procedimento';
+
     protected $primaryKey = 'tipo_procedimento_id';
+
     public $timestamps = true;
 
     protected $fillable = [

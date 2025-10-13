@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Paciente extends Model
 {
     use HasFactory;
 
     protected $table = 'pacientes';
+
     protected $primaryKey = 'paciente_id';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -29,9 +33,9 @@ class Paciente extends Model
     ];
 
     protected $casts = [
-        'paciente_data_nascimento'    => 'date',
-        'created_at'      => 'datetime',
-        'updated_at'      => 'datetime',
+        'paciente_data_nascimento' => 'date',
+        'created_at'               => 'datetime',
+        'updated_at'               => 'datetime',
     ];
 
     /**

@@ -5,24 +5,34 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\EquipesSaude;
 
 use App\Models\EquipeSaude;
-use App\Models\Arquivo;
-use App\Models\Tipo;
-use App\Models\Organizacao;
-use App\Models\Etiqueta;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class Formulario extends Component
 {
-    use WithFileUploads;
-
     public $equipe_saude_id;
 
     public $equipe_saude_nome;
 
-    protected $rules = [
-        'equipe_saude_nome'            => 'required|string|max:150',
+    public $equipe_saude_status = 1;
+
+    protected function rules()
+    {
+        return [
+            'equipe_saude_nome' => [
+                'required',
+                'string',
+                'max:150',
+                Rule::unique('equipes_saude', 'equipe_saude_nome')->ignore($this->equipe_saude_id, 'equipe_saude_id'),
+            ],
+            'equipe_saude_status' => 'required',
+        ];
+    }
+
+    protected $messages = [
+        'equipe_saude_nome.required'   => 'O campo "Nome da Equipe de Saúde" é obrigatório.',
+        'equipe_saude_nome.unique'     => 'Este nome do equipe_saude já está em uso.',
+        'equipe_saude_status.required' => 'O campo "Status" é obrigatório.',
     ];
 
     public function mount($id = null)
@@ -31,8 +41,9 @@ class Formulario extends Component
             $doc = EquipeSaude::find($id);
 
             if ($doc) {
-                $this->equipe_saude_id      = $doc->equipe_saude_id;
-                $this->equipe_saude_nome            = $doc->equipe_saude_nome;
+                $this->equipe_saude_id   = $doc->equipe_saude_id;
+                $this->equipe_saude_nome = $doc->equipe_saude_nome;
+                $this->equipe_saude_status = $doc->equipe_saude_status;
             }
         }
     }
@@ -44,7 +55,8 @@ class Formulario extends Component
         EquipeSaude::updateOrCreate(
             ['equipe_saude_id' => $this->equipe_saude_id],
             [
-                'equipe_saude_nome'            => $this->equipe_saude_nome,
+                'equipe_saude_nome' => $this->equipe_saude_nome,
+                'equipe_saude_status' => $this->equipe_saude_status,
             ]
         );
 

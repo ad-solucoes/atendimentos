@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Procedimentos;
 
 use App\Models\Procedimento;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -28,7 +27,7 @@ class Listagem extends Component
 
     public function confirmDelete($id)
     {
-        $this->confirmingDelete = true;
+        $this->confirmingDelete     = true;
         $this->procedimentoToDelete = $id;
     }
 
@@ -56,6 +55,6 @@ class Listagem extends Component
 
         return view('livewire.admin.procedimentos.listagem', [
             'procedimentos' => $procedimentos,
-        ])->layout('layouts.admin', ['title' => 'Gerenciar Procedimentos']);
+        ])->layout('layouts.admin', ['title' => 'Procedimentos']);
     }
 }

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Acervo Municipal - Visualizador</title>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="max-w-6xl mx-auto p-6">
+    <a href="#" class="text-blue-600">← Voltar à busca</a>
+    <h1 class="text-2xl font-bold mt-4">Título do Documento</h1>
+    <div class="text-sm text-gray-600 mt-1">Órgão • 10/10/2025</div>
+
+    <div class="mt-6 bg-white rounded shadow p-4">
+      <!-- PDF viewer -->
+      <iframe src="/storage/documents/exemplo.pdf#toolbar=0" class="w-full h-[80vh]"></iframe>
+    </div>
+
+    <div class="mt-4 flex gap-2">
+      <a href="#" class="p-2 border rounded">Download</a>
+      <a href="#" class="p-2 border rounded">Versões</a>
+    </div>
+  </div>
+</body>
+</html>

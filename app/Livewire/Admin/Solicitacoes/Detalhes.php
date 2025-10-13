@@ -13,11 +13,11 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class Formulario extends Component
+class Detalhes extends Component
 {
-    use WithFileUploads;
+    public string $aba = 'dados';
 
-    public $solicitacao_id;
+    public $solicitacao;
 
     public $solicitacao_nome;
 
@@ -25,23 +25,16 @@ class Formulario extends Component
         'solicitacao_nome'            => 'required|string|max:150',
     ];
 
-    public function mount($id = null)
+    public function mount($id)
     {
-        if ($id) {
-            $doc = Solicitacao::find($id);
-
-            if ($doc) {
-                $this->solicitacao_id      = $doc->solicitacao_id;
-                $this->solicitacao_nome            = $doc->solicitacao_nome;
-            }
-        }
+        $this->solicitacao = Solicitacao::where('solicitacao_id', $id)->first();
     }
 
     public function save()
     {
         $this->validate();
 
-        $solicitacao = Solicitacao::updateOrCreate(
+        Solicitacao::updateOrCreate(
             ['solicitacao_id' => $this->solicitacao_id],
             [
                 'solicitacao_nome'            => $this->solicitacao_nome,
@@ -50,12 +43,12 @@ class Formulario extends Component
 
         session()->flash('message', 'Solicitacao salvo com sucesso!');
 
-        return redirect()->route('admin.solicitacoes.detalhes', $solicitacao->solicitacao_id);
+        return redirect()->route('admin.solicitacoes.listagem');
     }
 
     public function render()
     {
-        return view('livewire.admin.solicitacoes.formulario')
-            ->layout('layouts.admin', ['title' => $this->solicitacao_id == null ? 'Cadastrar Solicitação' : 'Editar Solicitação']);
+        return view('livewire.admin.solicitacoes.detalhes')
+            ->layout('layouts.admin', ['title' => 'Detalhes da Solicitação']);
     }
 }

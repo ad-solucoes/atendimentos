@@ -13,6 +13,46 @@ return new class () extends Migration
      */
     public function up(): void
     {
+        Schema::create('setores', function (Blueprint $table) {
+            $table->bigIncrements('setor_id');
+            $table->string('setor_nome');
+            $table->boolean('setor_status')->default(1);
+            $table->integer('created_user_id')->nullable();
+            $table->integer('updated_user_id')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->unsignedBigInteger('setor_id')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+
+            $table->foreign('setor_id')
+                ->references('setor_id')->on('setores')
+                ->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+
         Schema::create('tipos_procedimento', function (Blueprint $table) {
             $table->bigIncrements('tipo_procedimento_id');
             $table->string('tipo_procedimento_nome');
@@ -34,15 +74,6 @@ return new class () extends Migration
             $table->foreign('procedimento_tipo_id')
                 ->references('tipo_procedimento_id')->on('tipos_procedimento')
                 ->onDelete('cascade')->onUpdate('cascade');
-        });
-
-        Schema::create('setores', function (Blueprint $table) {
-            $table->bigIncrements('setor_id');
-            $table->string('setor_nome');
-            $table->boolean('setor_status')->default(1);
-            $table->integer('created_user_id')->nullable();
-            $table->integer('updated_user_id')->nullable();
-            $table->timestamps();
         });
 
         Schema::create('equipes_saude', function (Blueprint $table) {
@@ -111,19 +142,24 @@ return new class () extends Migration
             $table->unsignedBigInteger('solicitacao_atendimento_id');
             $table->unsignedBigInteger('solicitacao_procedimento_id');
             $table->unsignedBigInteger('solicitacao_localizacao_atual_id')->nullable();
+
             $table->string('solicitacao_numero', 20);
             $table->date('solicitacao_data');
+
+            // STATUS textual, mais semântico
             $table->enum('solicitacao_status', [
-                'aguardando',   // recebida mas ainda não encaminhada
-                'em_andamento', // em análise, ou sendo marcada
-                'marcada',      // já possui data agendada
-                'realizada',    // procedimento concluído
-                'cancelada'     // cancelada ou indeferida
+                'aguardando',   // aguardando marcação
+                'agendado',     // já tem data marcada
+                'marcado',      // confirmado/agendado
+                'entregue',     // entregue (ao paciente/ACS/equipe)
+                'cancelado'
             ])->default('aguardando');
-            $table->integer('created_user_id')->nullable();
-            $table->integer('updated_user_id')->nullable();
+
+            $table->unsignedBigInteger('created_user_id')->nullable();
+            $table->unsignedBigInteger('updated_user_id')->nullable();
             $table->timestamps();
 
+            // 🔗 Relacionamentos
             $table->foreign('solicitacao_atendimento_id')
                 ->references('atendimento_id')->on('atendimentos')
                 ->onDelete('cascade')->onUpdate('cascade');
@@ -135,6 +171,51 @@ return new class () extends Migration
             $table->foreign('solicitacao_localizacao_atual_id')
                 ->references('setor_id')->on('setores')
                 ->onDelete('set null')->onUpdate('cascade');
+
+            // 🧑‍💻 opcional: se existir tabela users
+            $table->foreign('created_user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_user_id')->references('id')->on('users')->onDelete('set null');
+        });
+
+        Schema::create('solicitacao_movimentacoes', function (Blueprint $table) {
+            $table->bigIncrements('movimentacao_id');
+            $table->unsignedBigInteger('movimentacao_solicitacao_id');
+            $table->unsignedBigInteger('movimentacao_usuario_id')->nullable();
+            $table->unsignedBigInteger('movimentacao_destino_id')->nullable(); // setor destino
+
+            // Tipo de movimentação (fluxo operacional)
+            $table->enum('movimentacao_tipo', [
+                'encaminhamento', // recepção -> marcação
+                'retorno',        // marcação -> recepção
+                'entrega',        // entrega ao paciente/ACS/equipe
+                'cancelamento',   // cancelada por algum motivo
+            ])->default('encaminhamento');
+
+            // Identifica o tipo de pessoa/unidade que recebeu (só usado se tipo == entrega)
+            $table->enum('movimentacao_entregue_para', [
+                'paciente',
+                'agente_saude',
+                'equipe_saude',
+            ])->nullable();
+
+            $table->text('movimentacao_observacao')->nullable();
+            $table->timestamp('movimentacao_data')->useCurrent();
+            $table->timestamps();
+
+            $table->foreign('movimentacao_solicitacao_id')
+                ->references('solicitacao_id')->on('solicitacoes')
+                ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('movimentacao_usuario_id')
+                ->references('id')->on('users')
+                ->onDelete('set null')->onUpdate('cascade');
+
+            $table->foreign('movimentacao_destino_id')
+                ->references('setor_id')->on('setores')
+                ->onDelete('set null')->onUpdate('cascade');
+
+            // 🔍 para relatórios rápidos
+            $table->index('movimentacao_solicitacao_id');
         });
     }
 
@@ -143,13 +224,17 @@ return new class () extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('solicitacao_movimentacoes');
         Schema::dropIfExists('solicitacoes');
         Schema::dropIfExists('atendimentos');
         Schema::dropIfExists('pacientes');
         Schema::dropIfExists('agentes_saude');
         Schema::dropIfExists('equipes_saude');
-        Schema::dropIfExists('setores');
         Schema::dropIfExists('procedimentos');
         Schema::dropIfExists('tipos_procedimento');
+        Schema::dropIfExists('setores');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Livewire\Admin\Usuarios;
 
-use App\Models\Organizacao;
+use App\Models\Setor;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -20,13 +20,13 @@ class Formulario extends Component
     
     public $is_admin = 0;
 
-    public $organizacao_id;
+    public $setor_id;
 
     protected $rules = [
         'name'     => 'required|string|max:255',
         'email'    => 'required|email',
         'is_admin' => 'boolean',
-        'organizacao_id' => 'required_if:is_admin,0',
+        'setor_id' => 'required_if:is_admin,0',
     ];
 
     public function mount($id = null)
@@ -36,7 +36,7 @@ class Formulario extends Component
             $this->user_id  = $user->id;
             $this->name     = $user->name;
             $this->email    = $user->email;
-            $this->organizacao_id    = $user->organizacao_id;
+            $this->setor_id    = $user->setor_id;
             $this->is_admin = $user->is_admin ? 1 : 0;
         }
     }
@@ -61,11 +61,11 @@ class Formulario extends Component
     public function render()
     {
         if(!$this->is_admin){
-            $organizacoes = Organizacao::all();
+            $setores = Setor::all();
         }
 
         return view('livewire.admin.usuarios.formulario', [
-            'organizacoes' => $organizacoes ?? []
+            'setores' => $setores ?? []
         ])->layout('layouts.admin', ['title' => $this->user_id == null ? 'Cadastrar Usuário' : 'Editar Usuário']);
     }
 }

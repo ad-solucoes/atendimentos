@@ -42,8 +42,15 @@
                         <td class="px-4 py-2 font-medium text-gray-800">{{ $solicitacao->procedimento->tipo_procedimento->tipo_procedimento_nome }}</td>
                         <td class="px-4 py-2 font-medium text-gray-800">{{ $solicitacao->procedimento->procedimento_nome }}</td>
                         <td class="px-4 py-2 text-right space-x-0">
+                            <!-- Movimentar -->
+                            <a href="{{ route('admin.solicitacoes.movimentar', $solicitacao->solicitacao_id) }}"
+                               class="w-9 h-9 inline-flex items-center justify-center bg-green-100 text-green-700 hover:bg-green-200 rounded-full p-2 transition"
+                               title="Editar Solicitação">
+                                <i class="fas fa-right-left text-xs"></i>
+                            </a>
+
                             <!-- Ver -->
-                            <a href="/solicitacoes/{{ $solicitacao->solicitacao_id }}"
+                            <a href="{{ route('admin.solicitacoes.detalhes', $solicitacao->solicitacao_id) }}"
                                class="w-9 h-9 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-full p-2 transition"
                                title="Ver Solicitação">
                                 <i class="fas fa-eye text-xs"></i>

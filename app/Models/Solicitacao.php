@@ -10,6 +10,7 @@ class Solicitacao extends Model
     use HasFactory;
 
     protected $table = 'solicitacoes';
+    protected $primaryKey = 'solicitacao_id';
     public $incrementing = false;
     public $timestamps = true;
 
@@ -85,5 +86,12 @@ class Solicitacao extends Model
             self::STATUS_CANCELADO => 'danger',
             default => 'secondary',
         };
+    }
+
+    public function movimentacoes()
+    {
+        return $this->hasMany(\App\Models\SolicitacaoMovimentacao::class, 'movimentacao_solicitacao_id', 'solicitacao_id')
+            ->with('usuario')
+            ->latest();
     }
 }

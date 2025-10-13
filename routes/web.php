@@ -79,6 +79,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('solicitacoes')->name('solicitacoes.')->group(function () {
             Route::get('/listagem', App\Livewire\Admin\Solicitacoes\Listagem::class)->name('listagem');
             Route::get('/formulario/{id?}', App\Livewire\Admin\Solicitacoes\Formulario::class)->name('formulario');
+            Route::get('/detalhes/{id}', App\Livewire\Admin\Solicitacoes\Detalhes::class)->name('detalhes');
+            Route::get('/movimentar/{solicitacao_id}', App\Livewire\Admin\Solicitacoes\Movimentar::class)->name('movimentar');
         });      
+
+        Route::prefix('movimentacoes')->name('movimentacoes.')->group(function () {
+            Route::get('/formulario/{id?}', App\Livewire\Admin\Movimentacoes\Formulario::class)->name('formulario');
+            Route::get('/historico/{movimentacao?}', App\Livewire\Admin\Movimentacoes\Formulario::class)->name('historico');
+        });
     });
 });

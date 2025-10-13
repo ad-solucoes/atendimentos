@@ -29,14 +29,14 @@
 
         @if(!$is_admin)
         <div>
-            <label class="block font-semibold">Organização</label>
-            <select wire:model="organizacao_id" class="border rounded px-3 py-2 w-full">
+            <label class="block font-semibold">Setor</label>
+            <select wire:model="setor_id" class="border rounded px-3 py-2 w-full">
                 <option value="">-- Selecionar --</option>
-                @foreach($organizacoes as $organizacao)
-                    <option value="{{ $organizacao->organizacao_id }}">{{ $organizacao->organizacao_nome }}</option>
+                @foreach($setores as $setor)
+                    <option value="{{ $setor->setor_id }}">{{ $setor->setor_nome }}</option>
                 @endforeach
             </select>
-            @error('organizacao_id') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+            @error('setor_id') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
         @endif
 

@@ -100,6 +100,7 @@
                         ['label' => 'Pacientes', 'route' => 'admin.pacientes.listagem', 'icon' => 'fa-solid fa-user-injured'], // paciente
                         ['label' => 'Atendimentos', 'route' => 'admin.atendimentos.listagem', 'icon' => 'fa-solid fa-calendar-check'], // atendimentos/agenda
                         ['label' => 'Solicitações', 'route' => 'admin.solicitacoes.listagem', 'icon' => 'fa-solid fa-file-medical'], // solicitações médicas
+                        ['label' => 'Movimentações', 'route' => 'admin.movimentacoes.formulario', 'icon' => 'fa-solid fa-right-left'], // Movimentações de solicitações em massa
                     ];
                     if ($user && $user->isAdmin()) {
                         $links = array_merge($links, [

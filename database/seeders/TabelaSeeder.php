@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\SolicitacaoMovimentacao;
 
 use App\Models\TipoProcedimento;
 use App\Models\Procedimento;
@@ -56,11 +58,28 @@ class TabelaSeeder extends Seeder
          */
         $dataSetor = [
             ['setor_nome' => 'Recepção'],
-            ['setor_nome' => 'Triagem'],
             ['setor_nome' => 'Marcação'],
             ['setor_nome' => 'Marcação Externa'],
         ];
         Setor::insert($dataSetor);
+
+        User::factory()->create([
+            'name'     => 'User Admin',
+            'email'    => 'admin@email.com',
+            'is_admin' => true,
+        ]);
+
+        User::factory()->create([
+            'name'            => 'User Recepção',
+            'email'           => 'recepcao@email.com',
+            'setor_id'           => 1,
+        ]);
+
+        User::factory()->create([
+            'name'            => 'User Marcação',
+            'email'           => 'marcacao@email.com',
+            'setor_id'           => 2
+        ]);
 
         /**
          * TABELA: equipes de saúde
@@ -129,23 +148,72 @@ class TabelaSeeder extends Seeder
          * TABELA: solicitações
          * Inclui enum solicitacao_status
          */
-        $statusList = ['aguardando', 'em_andamento', 'marcada', 'realizada', 'cancelada'];
+        $statusList = ['aguardando', 'agendado', 'marcado', 'entregue', 'cancelado'];
 
         $dataSolicitacao = [];
 
         for ($i = 1; $i <= 10; $i++) {
-            $procedimentoId = rand(1, 9); // ou algum critério baseado nos procedimentos existentes
+            $procedimentoId = rand(1, 9); // ajustável conforme a quantidade real de procedimentos
+
             $dataSolicitacao[] = [
-                'solicitacao_atendimento_id' => $i,
-                'solicitacao_procedimento_id' => $procedimentoId,
-                'solicitacao_localizacao_atual_id' => null, // opcional
-                'solicitacao_numero' => rand(300000, 400000),
-                'solicitacao_data' => now(),
-                'solicitacao_status' => $faker->randomElement($statusList),
-                'created_user_id' => 1,
+                'solicitacao_atendimento_id'       => $i,
+                'solicitacao_procedimento_id'      => $procedimentoId,
+                'solicitacao_localizacao_atual_id' => null, // será atualizado conforme a movimentação
+                'solicitacao_numero'               => $faker->unique()->numerify('S######'),
+                'solicitacao_data'                 => $faker->dateTimeBetween('-30 days', 'now'),
+                'solicitacao_status'               => $faker->randomElement($statusList),
+                'created_user_id'                  => 1,
+                'updated_user_id'                  => 1,
+                'created_at'                       => now(),
+                'updated_at'                       => now(),
             ];
         }
 
         Solicitacao::insert($dataSolicitacao);
+
+        $solicitacoes = Solicitacao::all();
+
+        foreach ($solicitacoes as $solicitacao) {
+            $movimentos = [];
+
+            // Movimentação inicial: recepção -> marcação (encaminhamento)
+            $movimentos[] = [
+                'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
+                'movimentacao_usuario_id'      => 1, // recepcionista
+                'movimentacao_destino_id'      => null, // setor marcação pode ser preenchido
+                'movimentacao_tipo'            => 'encaminhamento',
+                'movimentacao_entregue_para'   => null,
+                'movimentacao_observacao'      => 'Encaminhada para marcação',
+                'movimentacao_data'            => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
+            ];
+
+            // Se o status for 'marcada', gerar retorno para recepção
+            if ($solicitacao->solicitacao_status === 'marcada') {
+                $movimentos[] = [
+                    'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
+                    'movimentacao_usuario_id'      => 2, // setor de marcação
+                    'movimentacao_destino_id'      => null, // retorno para recepção
+                    'movimentacao_tipo'            => 'retorno',
+                    'movimentacao_entregue_para'   => null,
+                    'movimentacao_observacao'      => 'Retorno da marcação',
+                    'movimentacao_data'            => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
+                ];
+
+                // Movimentação de entrega ao paciente/ACS/Equipe
+                $entreguePara = $faker->randomElement(['paciente', 'agente_saude', 'equipe_saude']);
+                $movimentos[] = [
+                    'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
+                    'movimentacao_usuario_id'      => 1, // recepcionista
+                    'movimentacao_destino_id'      => null,
+                    'movimentacao_tipo'            => 'entrega',
+                    'movimentacao_entregue_para'   => $entreguePara,
+                    'movimentacao_observacao'      => 'Entrega realizada',
+                    'movimentacao_data'            => now(),
+                ];
+            }
+
+            // Inserir todas movimentações geradas
+            SolicitacaoMovimentacao::insert($movimentos);
+        }
     }
 }

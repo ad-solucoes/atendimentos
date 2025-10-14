@@ -29,6 +29,8 @@
                 <tr class="bg-gray-100 text-left text-sm text-gray-600">
                     <th class="px-2 py-2 text-center font-semibold" width="100">Status</th>
                     <th class="px-2 py-2 font-semibold">Nome do Usuário</th>
+                    <th class="px-2 py-2 font-semibold">E-mail</th>
+                    <th class="px-2 py-2 font-semibold">Admin</th>
                     <th class="px-2 py-2 text-center font-semibold" width="140">Ações</th>
                 </tr>
             </thead>
@@ -43,6 +45,8 @@
                             @endif
                         </td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $usuario->name }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $usuario->email }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $usuario->isAdmin() ? 'Sim' : 'Não' }}</td>
                         <td class="px-2 py-1 text-center space-x-0">
                             <!-- Ver -->
                             <a href="{{ route('admin.usuarios.detalhes', $usuario->id) }}"

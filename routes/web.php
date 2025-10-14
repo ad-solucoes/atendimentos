@@ -15,6 +15,10 @@ Route::name('site.')->group(function () {
 
 // Admin
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    });
+
     // Rotas públicas
     Route::get('/login', App\Livewire\Admin\Auth\Login::class)->name('login')->middleware('guest');
     Route::get('/forgot-password', App\Livewire\Admin\Auth\ForgotPassword::class)->name('password.request')->middleware('guest');
@@ -38,7 +42,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::prefix('usuarios')->name('usuarios.')->group(function () {
                 Route::get('/listagem', App\Livewire\Admin\Usuarios\Listagem::class)->name('listagem');
                 Route::get('/formulario/{id?}', App\Livewire\Admin\Usuarios\Formulario::class)->name('formulario');
-                Route::get('/detalhes/{id?}', App\Livewire\Admin\Usuarios\Formulario::class)->name('detalhes');
+                Route::get('/detalhes/{id?}', App\Livewire\Admin\Usuarios\Detalhes::class)->name('detalhes');
             });
         });
 

@@ -116,7 +116,7 @@ class TabelaSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             $dataPaciente[] = [
                 'paciente_agente_saude_id' => rand(1, 6),
-                'paciente_cpf'             => $faker->cpf(false),
+                'paciente_cpf'             => $faker->cpf(true),
                 'paciente_nome'            => $faker->name(),
                 'paciente_sexo'            => $faker->randomElement(['Masculino', 'Feminino']),
                 'paciente_data_nascimento' => $faker->date(),

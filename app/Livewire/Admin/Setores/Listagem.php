@@ -6,19 +6,34 @@ namespace App\Livewire\Admin\Setores;
 
 use App\Models\Setor;
 use Livewire\Component;
+use Illuminate\Pagination\Paginator;
 use Livewire\WithPagination;
 
 class Listagem extends Component
 {
     use WithPagination;
 
-    public $search = '';
+    public $sortBy = 'setor_nome';
+
+    public $sortDirection = 'asc';
+
+    public $perPage = '10';
+
+    public $currentPage = 1;
+
+    public $searchTerm = '';
 
     public $confirmingDelete = false;
 
     public $setorToDelete;
 
-    protected $paginationTheme = 'tailwind';
+    protected $paginationTheme = 'personalizado';
+
+    public function sortByField($field)
+    {
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
+        $this->sortBy        = $field;
+    }
 
     public function updatingSearch()
     {
@@ -48,13 +63,26 @@ class Listagem extends Component
 
     public function render()
     {
+        Paginator::currentPageResolver(function () {
+            return $this->currentPage;
+        });
+
         $setores = Setor::query()
-            ->where('setor_nome', 'like', "%{$this->search}%")
-            ->orderByDesc('created_at')
-            ->paginate(10);
+            ->where('setor_nome', 'like', "%{$this->searchTerm}%")
+            ->orderByDesc($this->sortBy, $this->sortDirection)
+            ->paginate($this->perPage);
 
         return view('livewire.admin.setores.listagem', [
             'setores' => $setores,
         ])->layout('layouts.admin', ['title' => 'Setores']);
+    }
+
+    public function setPage($url)
+    {
+        $this->currentPage = explode('page=', $url)[1];
+
+        Paginator::currentPageResolver(function () {
+            return $this->currentPage;
+        });
     }
 }

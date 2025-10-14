@@ -8,6 +8,7 @@ use App\Models\Documento;
 use App\Policies\DocumentoPolicy;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -30,7 +31,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(Documento::class, DocumentoPolicy::class);
+        Validator::extend('cpf', '\App\Utils\CpfValidation@validate');
+        Validator::extend('cns', '\App\Utils\CnsValidation@validate');
 
         $this->events();
         $this->setupLogViewer();

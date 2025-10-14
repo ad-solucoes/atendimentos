@@ -15,10 +15,6 @@ class Solicitacao extends Model
 
     protected $primaryKey = 'solicitacao_id';
 
-    public $incrementing = false;
-
-    public $timestamps = true;
-
     protected $fillable = [
         'solicitacao_atendimento_id',
         'solicitacao_procedimento_id',

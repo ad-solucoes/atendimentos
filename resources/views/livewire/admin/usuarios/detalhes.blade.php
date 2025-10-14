@@ -12,8 +12,8 @@
                 <p class="text-gray-800 font-semibold">{{ formatoId($usuario->id, 3) }}</p>
             </div>
             <div>
-                <h3 class="text-gray-400 text-sm font-medium">Nome do Setor</h3>
-                <p class="text-gray-800 font-semibold">{{ $usuario->nome }}</p>
+                <h3 class="text-gray-400 text-sm font-medium">Nome do Usuário</h3>
+                <p class="text-gray-800 font-semibold">{{ $usuario->name }}</p>
             </div>
             <div>
                 <h3 class="text-gray-400 text-sm font-medium">Status</h3>

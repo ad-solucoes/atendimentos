@@ -1,25 +1,70 @@
 <div class="space-y-6">
-    <!-- Topo: Busca + botão -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <input
-            type="text"
-            wire:model.live.debounce.500ms="search"
-            placeholder="Buscar por nome do tipo de procedimento..."
-            class="border border-gray-300 rounded-lg px-4 py-2.5 w-full sm:w-1/2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-        />
+    <!-- Filtro e Ações -->
+    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm mb-4">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            {{-- Registros por página --}}
+            <div class="flex flex-col">
+                <label for="perPage" class="text-sm font-semibold text-gray-700 mb-1">
+                    Registros por página:
+                </label>
+                <select id="perPage"
+                        wire:model.live="perPage"
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-36">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
 
-        <a href="{{ route('admin.tipos_procedimento.formulario') }}"
-           class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-lg shadow transition-all duration-200 text-sm sm:text-sm">
-           <i class="fa fa-plus"></i> Novo Tipo de Procedimento
-        </a>
-    </div>
+            {{-- Campo de busca --}}
+            <div class="flex flex-col md:flex-1">
+                <label for="searchTerm" class="text-sm font-semibold text-gray-700 mb-1">
+                    Buscar:
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <i class="fa fa-search"></i>
+                    </span>
 
-    <!-- Mensagem de sucesso -->
-    @if (session()->has('message'))
-        <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-2.5 rounded-lg text-sm shadow-sm">
-            {{ session('message') }}
+                    <input 
+                        id="searchTerm"
+                        type="text" 
+                        wire:model.live.debounce.500ms="searchTerm"
+                        placeholder="Buscar por nome do setor..."
+                        autocomplete="off"
+                        class="pl-9 pr-9 w-full border border-gray-300 rounded-lg py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                    />
+
+                    @if($searchTerm)
+                        <button type="button"
+                                wire:click="$set('searchTerm', '')"
+                                title="Limpar busca"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Total e botão de ação --}}
+            <div class="flex flex-col md:items-end">
+                <label class="text-sm font-semibold text-gray-700 mb-1">&nbsp;</label>
+                <div class="flex items-center justify-between md:justify-end gap-3">
+
+                    <small class="text-gray-600 text-sm">
+                        <i class="fa fa-info-circle text-gray-400"></i>
+                        Total: <span class="font-semibold text-gray-800">{{ $tipos_procedimento->total() }}</span> registro(s)
+                    </small>
+
+                    <a href="{{ route('admin.tipos_procedimento.formulario') }}"
+                    class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
+                        <i class="fa fa-plus"></i> Novo Tipo de Procedimento
+                    </a>
+                </div>
+            </div>
         </div>
-    @endif
+    </div>  
 
     <!-- Tabela principal -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -27,14 +72,37 @@
         <table class="hidden md:table min-w-full">
             <thead>
                 <tr class="bg-gray-100 text-left text-sm text-gray-600">
-                    <th class="px-2 py-2 text-center font-semibold" width="100">Status</th>
-                    <th class="px-2 py-2 font-semibold">Nome do Tipo de Procedimento</th>
+                    <th class="px-2 py-2 text-center font-semibold" width="100" wire:click="sortByField('tipo_procedimento_status')" style="cursor: pointer;" title="Clique para ordenar">
+                        Status
+                        @include('livewire.partials._sort-icon', ['field' => 'tipo_procedimento_status'])
+                    </th>
+                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('tipo_procedimento_nome')" style="cursor: pointer;" title="Clique para ordenar">
+                        Nome do Tipo de Procedimento
+                        @include('livewire.partials._sort-icon', ['field' => 'tipo_procedimento_nome'])
+                    </th>
                     <th class="px-2 py-2 text-center font-semibold" width="140">Ações</th>
                 </tr>
             </thead>
             <tbody>
+                <tr wire:loading.class.remove="hidden" wire:target="searchTerm" class="hidden">
+                    <td colspan="4" class="py-12 text-center">
+                        <div class="flex flex-col items-center justify-center space-y-1.5 text-gray-600">
+                            {{-- Spinner visível e animado --}}
+                            <div class="relative flex items-center justify-center">
+                                <div class="w-10 h-10 border-4 border-gray-300 rounded-full"></div>
+                                <div class="absolute w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                            {{-- Mensagem --}}
+                            <div>
+                                <p class="font-semibold text-gray-700">Carregando registros...</p>
+                                <p class="text-sm text-gray-500">Aguarde um momento</p>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
                 @forelse ($tipos_procedimento as $tipo_procedimento)
-                    <tr class="border-t hover:bg-gray-50 transition">
+                    <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="searchTerm">
                         <td class="px-2 py-1 text-sm font-medium text-center">
                             @if($tipo_procedimento->tipo_procedimento_status)
                                 <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
@@ -68,7 +136,45 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center py-4 text-gray-500">Nenhum tipo_procedimento encontrado.</td></tr>
+                    <tr wire:loading.remove wire:target="searchTerm">
+                        <td colspan="4" class="py-12 text-center">
+                            <div class="flex flex-col items-center justify-center space-y-1.5">
+
+                                <div class="text-gray-400">
+                                    <i class="fa fa-exclamation-triangle text-4xl"></i>
+                                </div>
+
+                                <div>
+                                    @if($searchTerm)
+                                        <h4 class="text-gray-700 font-semibold text-lg">
+                                            Nenhum tipo de procedimento encontrado
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Tente buscar por outros termos ou
+                                            <button wire:click="$set('searchTerm', '')"
+                                                    class="text-blue-600 hover:underline font-medium">
+                                                limpe o filtro
+                                            </button>.
+                                        </p>
+                                    @else
+                                        <h4 class="text-gray-700 font-semibold text-lg">
+                                            Nenhum tipo de procedimento cadastrado
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Comece criando um novo tipo de procedimento.
+                                        </p>
+                                    @endif
+                                </div>
+
+                                @if(!$searchTerm)
+                                    <a href="{{ route('admin.tipos_procedimento.formulario') }}" class="mt-3 inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow transition-all duration-200">
+                                        <i class="fa fa-plus"></i> Criar Primeiro Tipo de Procedimento
+                                    </a>
+                                @endif
+
+                            </div>
+                        </td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -108,7 +214,28 @@
     </div>
 
     <!-- Paginação -->
-    <div class="mt-4">{{ $tipos_procedimento->links() }}</div>
+    <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+        {{-- Informação de resultados --}}
+        @if ($tipos_procedimento->total() > 0)
+            <div class="text-sm text-gray-600">
+                Mostrando
+                <span class="font-semibold text-gray-800">{{ $tipos_procedimento->firstItem() }}</span>
+                até
+                <span class="font-semibold text-gray-800">{{ $tipos_procedimento->lastItem() }}</span>
+                de
+                <span class="font-semibold text-gray-800">{{ $tipos_procedimento->total() }}</span>
+                registro(s)
+                @if ($searchTerm)
+                    para "<span class="font-semibold text-blue-600">{{ $searchTerm }}</span>"
+                @endif
+            </div>
+        @endif
+
+         {{-- Links de paginação --}}
+        <div>
+            {{ $tipos_procedimento->links() }}
+        </div>
+    </div>
 
     <!-- Modal de confirmação -->
     @if($confirmingDelete)

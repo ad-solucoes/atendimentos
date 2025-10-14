@@ -41,8 +41,8 @@ class Formulario extends Component
             $doc = EquipeSaude::find($id);
 
             if ($doc) {
-                $this->equipe_saude_id   = $doc->equipe_saude_id;
-                $this->equipe_saude_nome = $doc->equipe_saude_nome;
+                $this->equipe_saude_id     = $doc->equipe_saude_id;
+                $this->equipe_saude_nome   = $doc->equipe_saude_nome;
                 $this->equipe_saude_status = $doc->equipe_saude_status;
             }
         }
@@ -55,7 +55,7 @@ class Formulario extends Component
         EquipeSaude::updateOrCreate(
             ['equipe_saude_id' => $this->equipe_saude_id],
             [
-                'equipe_saude_nome' => $this->equipe_saude_nome,
+                'equipe_saude_nome'   => $this->equipe_saude_nome,
                 'equipe_saude_status' => $this->equipe_saude_status,
             ]
         );

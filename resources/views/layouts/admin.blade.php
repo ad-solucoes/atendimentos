@@ -200,6 +200,60 @@
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
                     <span class="font-semibold text-blue-900 text-lg lg:hidden">Admin Acervo</span>
+
+                    <!-- Dropdown -->
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded flex items-center gap-1 text-sm">
+                            <i class="fa fa-plus"></i>
+                            <span class="hidden sm:inline">Novo</span>
+                            <i class="fa fa-caret-down ml-1"></i>
+                        </button>
+
+                        <!-- Menu dropdown -->
+                        <div x-show="open" @click.away="open = false"
+                            class="absolute left-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95">
+                            <a href="{{ route('admin.pacientes.formulario') }}"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">
+                            Novo Paciente
+                            </a>
+                            <a href="{{ route('admin.atendimentos.formulario') }}"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">
+                            Novo Atendimento
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Pesquisa no lado direito --}}
+                <div class="flex items-center space-x-2">
+                    <form action="{{ route('admin.pesquisar') }}" method="GET" class="flex items-center space-x-2">
+                        <div class="flex border border-gray-300 rounded-lg overflow-hidden">
+                            <select name="tipo" class="px-3 py-1 text-sm bg-white border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="cpf">CPF</option>
+                                <option value="cns">Cartão SUS</option>
+                                <option value="numero_atendimento">Nº Atendimento</option>
+                            </select>
+
+                            <input 
+                                type="text" 
+                                name="termo" 
+                                placeholder="Digite aqui..." 
+                                class="px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
+                                size="30"
+                                required
+                            >
+
+                            <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 flex items-center justify-center">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </header>
 

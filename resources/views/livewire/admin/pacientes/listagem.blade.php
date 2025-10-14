@@ -1,25 +1,101 @@
 <div class="space-y-6">
-    <!-- Topo: Busca + botão -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <input
-            type="text"
-            wire:model.live.debounce.500ms="search"
-            placeholder="Buscar por nome do paciente..."
-            class="border border-gray-300 rounded-lg px-4 py-2.5 w-full sm:w-1/2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-        />
+    <!-- Filtros e Ações -->
+    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {{-- Nome do Paciente --}}
+            <div class="flex flex-col">
+                <label for="filtroNome" class="text-sm font-semibold text-gray-700 mb-1">
+                    Nome do Paciente:
+                </label>
+                <input 
+                    id="filtroNome"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroNome"
+                    placeholder="Digite o nome..."
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
 
-        <a href="{{ route('admin.pacientes.formulario') }}"
-           class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-lg shadow transition-all duration-200 text-sm sm:text-sm">
-           <i class="fa fa-plus"></i> Novo Paciente
-        </a>
-    </div>
+            {{-- CPF --}}
+            <div class="flex flex-col">
+                <label for="filtroCpf" class="text-sm font-semibold text-gray-700 mb-1">
+                    CPF:
+                </label>
+                <input 
+                    id="filtroCpf"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroCpf"
+                    placeholder="999.999.999-99"
+                    maxlength="14"
+                    x-data 
+                    x-mask="999.999.999-99"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
 
-    <!-- Mensagem de sucesso -->
-    @if (session()->has('message'))
-        <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-2.5 rounded-lg text-sm shadow-sm">
-            {{ session('message') }}
+            {{-- Cartão SUS --}}
+            <div class="flex flex-col">
+                <label for="filtroSus" class="text-sm font-semibold text-gray-700 mb-1">
+                    Cartão SUS:
+                </label>
+                <input 
+                    id="filtroSus"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroSus"
+                    placeholder="999 9999 9999 9999"
+                    maxlength="18"
+                    x-data 
+                    x-mask="999 9999 9999 9999"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
+
+            {{-- Nome da Mãe --}}
+            <div class="flex flex-col">
+                <label for="filtroMae" class="text-sm font-semibold text-gray-700 mb-1">
+                    Nome da Mãe:
+                </label>
+                <input 
+                    id="filtroMae"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroMae"
+                    placeholder="Digite o nome da mãe..."
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
+
+            {{-- Ações --}}
+            <div class="flex flex-col justify-end items-end">
+                <a href="{{ route('admin.pacientes.formulario') }}"
+                class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
+                    <i class="fa fa-plus"></i> Novo Paciente
+                </a>
+            </div>
         </div>
-    @endif
+
+        {{-- Linha inferior com paginação e total --}}
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-4 gap-3">
+            <div class="flex items-center gap-2">
+                <label class="text-sm font-semibold text-gray-700">Registros por página:</label>
+                <select wire:model.live="perPage"
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-24">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+
+                <button type="button" wire:click="$set('filtroNome', ''); $set('filtroCpf', ''); $set('filtroSus', ''); $set('filtroMae', '')" class="text-blue-600 text-sm hover:underline ml-3">
+                    Limpar filtros
+                </button>
+            </div>
+
+            <small class="text-gray-600 text-sm">
+                <i class="fa fa-info-circle text-gray-400"></i>
+                Total: <span class="font-semibold text-gray-800">{{ $pacientes->total() }}</span> registro(s)
+            </small>
+        </div>        
+    </div>
 
     <!-- Tabela principal -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -27,8 +103,14 @@
         <table class="hidden md:table min-w-full">
             <thead>
                 <tr class="bg-gray-100 text-left text-sm text-gray-600">
-                    <th class="px-2 py-2 text-center font-semibold" width="100">Status</th>
-                    <th class="px-2 py-2 font-semibold">Nome do Paciente</th>
+                    <th class="px-2 py-2 text-center font-semibold" width="100" wire:click="sortByField('paciente_status')" style="cursor: pointer;" title="Clique para ordenar">
+                        Status
+                        @include('livewire.partials._sort-icon', ['field' => 'paciente_status'])
+                    </th>
+                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('paciente_nome')" style="cursor: pointer;" title="Clique para ordenar">
+                        Nome do Paciente
+                        @include('livewire.partials._sort-icon', ['field' => 'paciente_nome'])
+                    </th>
                     <th class="px-2 py-2 font-semibold">Cartão do SUS</th>
                     <th class="px-2 py-2 font-semibold">CPF nº</th>
                     <th class="px-2 py-2 font-semibold">Nome da Mãe</th>
@@ -36,8 +118,29 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $temFiltros = $filtroNome || $filtroCpf || $filtroSus || $filtroMae;
+                @endphp
+
+                <tr wire:loading.class.remove="hidden" wire:target="filtroNome, filtroCpf, filtroSus, filtroMae" class="hidden">
+                    <td colspan="4" class="py-12 text-center">
+                        <div class="flex flex-col items-center justify-center space-y-1.5 text-gray-600">
+                            {{-- Spinner visível e animado --}}
+                            <div class="relative flex items-center justify-center">
+                                <div class="w-10 h-10 border-4 border-gray-300 rounded-full"></div>
+                                <div class="absolute w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                            {{-- Mensagem --}}
+                            <div>
+                                <p class="font-semibold text-gray-700">Carregando registros...</p>
+                                <p class="text-sm text-gray-500">Aguarde um momento</p>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
                 @forelse ($pacientes as $paciente)
-                    <tr class="border-t hover:bg-gray-50 transition">
+                    <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="filtroNome, filtroCpf, filtroSus, filtroMae">
                         <td class="px-2 py-1 text-sm font-medium text-center">
                             @if($paciente->paciente_status)
                                 <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
@@ -74,7 +177,51 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center py-4 text-gray-500">Nenhum paciente encontrado.</td></tr>
+                    <tr wire:loading.remove wire:target="filtroNome, filtroCpf, filtroSus, filtroMae">
+                        <td colspan="4" class="py-12 text-center">
+                            <div class="flex flex-col items-center justify-center space-y-1.5">
+
+                                <div class="text-gray-400">
+                                    <i class="fa fa-exclamation-triangle text-4xl"></i>
+                                </div>
+
+                                <div>
+                                    @if($temFiltros)
+                                        <h4 class="text-gray-700 font-semibold text-lg">
+                                            Nenhum paciente encontrado
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Tente buscar por outros termos ou
+                                            <button 
+                                                wire:click="
+                                                        $set('filtroNome', '');
+                                                        $set('filtroCpf', '');
+                                                        $set('filtroSus', '');
+                                                        $set('filtroMae', '');
+                                                    "
+                                                    class="text-blue-600 hover:underline font-medium">
+                                                limpe o filtro
+                                            </button>.
+                                        </p>
+                                    @else
+                                        <h4 class="text-gray-700 font-semibold text-lg">
+                                            Nenhum paciente cadastrado
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Comece criando um novo paciente.
+                                        </p>
+                                    @endif
+                                </div>
+
+                                @if(!$temFiltros)
+                                    <a href="{{ route('admin.pacientes.formulario') }}" class="mt-3 inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow transition-all duration-200">
+                                        <i class="fa fa-plus"></i> Criar Primeiro Paciente
+                                    </a>
+                                @endif
+
+                            </div>
+                        </td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -114,7 +261,25 @@
     </div>
 
     <!-- Paginação -->
-    <div class="mt-4">{{ $pacientes->links() }}</div>
+    <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+        {{-- Informação de resultados --}}
+        @if ($pacientes->total() > 0)
+            <div class="text-sm text-gray-600">
+                Mostrando
+                <span class="font-semibold text-gray-800">{{ $pacientes->firstItem() }}</span>
+                até
+                <span class="font-semibold text-gray-800">{{ $pacientes->lastItem() }}</span>
+                de
+                <span class="font-semibold text-gray-800">{{ $pacientes->total() }}</span>
+                registro(s)
+            </div>
+        @endif
+
+         {{-- Links de paginação --}}
+        <div>
+            {{ $pacientes->links() }}
+        </div>
+    </div>
 
     <!-- Modal de confirmação -->
     @if($confirmingDelete)

@@ -31,15 +31,15 @@ class Formulario extends Component
                 Rule::unique('agentes_saude', 'agente_saude_nome')->ignore($this->agente_saude_id, 'agente_saude_id'),
             ],
             'agente_saude_equipe_saude_id' => 'required',
-            'agente_saude_status' => 'required',
+            'agente_saude_status'          => 'required',
         ];
     }
 
     protected $messages = [
-        'agente_saude_nome.required'   => 'O campo "Nome do Agente de Saúde" é obrigatório.',
-        'agente_saude_nome.unique'     => 'Este nome do agente de saúde já está em uso.',
+        'agente_saude_nome.required'            => 'O campo "Nome do Agente de Saúde" é obrigatório.',
+        'agente_saude_nome.unique'              => 'Este nome do agente de saúde já está em uso.',
         'agente_saude_equipe_saude_id.required' => 'O campo "Equipe de Saúde " é obrigatório.',
-        'agente_saude_status.required' => 'O campo "Status" é obrigatório.',
+        'agente_saude_status.required'          => 'O campo "Status" é obrigatório.',
     ];
 
     public function mount($id = null)
@@ -53,7 +53,7 @@ class Formulario extends Component
                 $this->agente_saude_id              = $doc->agente_saude_id;
                 $this->agente_saude_nome            = $doc->agente_saude_nome;
                 $this->agente_saude_equipe_saude_id = $doc->agente_saude_equipe_saude_id;
-                $this->agente_saude_status = $doc->agente_saude_status;
+                $this->agente_saude_status          = $doc->agente_saude_status;
             }
         }
     }
@@ -67,7 +67,7 @@ class Formulario extends Component
             [
                 'agente_saude_nome'            => $this->agente_saude_nome,
                 'agente_saude_equipe_saude_id' => $this->agente_saude_equipe_saude_id,
-                'agente_saude_status' => $this->agente_saude_status,
+                'agente_saude_status'          => $this->agente_saude_status,
             ]
         );
 

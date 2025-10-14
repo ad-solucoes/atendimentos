@@ -31,15 +31,15 @@ class Formulario extends Component
                 Rule::unique('procedimentos', 'procedimento_nome')->ignore($this->procedimento_id, 'procedimento_id'),
             ],
             'procedimento_tipo_id' => 'required',
-            'procedimento_status' => 'required',
+            'procedimento_status'  => 'required',
         ];
     }
 
     protected $messages = [
-        'procedimento_nome.required'   => 'O campo "Nome do Procedimento" é obrigatório.',
-        'procedimento_nome.unique'     => 'Este nome do procedimento já está em uso.',
+        'procedimento_nome.required'    => 'O campo "Nome do Procedimento" é obrigatório.',
+        'procedimento_nome.unique'      => 'Este nome do procedimento já está em uso.',
         'procedimento_tipo_id.required' => 'O campo "Tipo de Procedimento" é obrigatório.',
-        'procedimento_status.required' => 'O campo "Status" é obrigatório.',
+        'procedimento_status.required'  => 'O campo "Status" é obrigatório.',
     ];
 
     public function mount($id = null)

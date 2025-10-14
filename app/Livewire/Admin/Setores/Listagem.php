@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Setores;
 
 use App\Models\Setor;
-use Livewire\Component;
 use Illuminate\Pagination\Paginator;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class Listagem extends Component

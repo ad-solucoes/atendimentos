@@ -146,6 +146,7 @@ return new class () extends Migration
 
             $table->string('solicitacao_numero', 20);
             $table->date('solicitacao_data');
+            $table->string('solicitacao_observacao')->nullable();
 
             // STATUS textual, mais semântico
             $table->enum('solicitacao_status', [

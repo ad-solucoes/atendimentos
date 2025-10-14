@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Atendimentos;
 
 use App\Models\Atendimento;
-use Livewire\Component;
 use Illuminate\Pagination\Paginator;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class Listagem extends Component
@@ -21,13 +21,38 @@ class Listagem extends Component
 
     public $currentPage = 1;
 
-    public $searchTerm = '';
+    // Filtros gerais
+    public $filtroDataInicial;
+
+    public $filtroDataFinal;
+
+    public $filtroNumeroAtendimento;
+
+    public $filtroPrioridade;
+
+    // Filtros do paciente
+    public $filtroNome;
+
+    public $filtroCpf;
+
+    public $filtroSus;
+
+    public $filtroMae;
 
     public $confirmingDelete = false;
 
     public $atendimentoToDelete;
 
     protected $paginationTheme = 'personalizado';
+
+    public function updating($field)
+    {
+        if (str_starts_with($field, 'filtro') || $field === 'perPage') {
+            Paginator::currentPageResolver(function () {
+                return $this->currentPage;
+            });
+        }
+    }
 
     public function sortByField($field)
     {
@@ -67,9 +92,16 @@ class Listagem extends Component
             return $this->currentPage;
         });
 
-        $atendimentos = Atendimento::with('paciente')
-            ->where('atendimento_data', 'like', "%{$this->searchTerm}%")
-            ->orderByDesc($this->sortBy, $this->sortDirection)
+        $atendimentos = Atendimento::query()->with('paciente')
+            ->when($this->filtroDataInicial, fn ($q) => $q->whereDate('atendimento_data', '>=', $this->filtroDataInicial))
+            ->when($this->filtroDataFinal, fn ($q) => $q->whereDate('atendimento_data', '<=', $this->filtroDataFinal))
+            ->when($this->filtroNumeroAtendimento, fn ($q) => $q->where('atendimento_numero', 'like', "%{$this->filtroNumeroAtendimento}%"))
+            ->when($this->filtroPrioridade, fn ($q) => $q->where('atendimento_prioridade', $this->filtroPrioridade))
+            ->when($this->filtroNome, fn ($q) => $q->whereHas('paciente', fn ($p) => $p->where('paciente_nome', 'like', "%{$this->filtroNome}%")))
+            ->when($this->filtroCpf, fn ($q) => $q->whereHas('paciente', fn ($p) => $p->where('paciente_cpf', 'like', "%{$this->filtroCpf}%")))
+            ->when($this->filtroSus, fn ($q) => $q->whereHas('paciente', fn ($p) => $p->where('paciente_cartao_sus', 'like', "%{$this->filtroSus}%")))
+            ->when($this->filtroMae, fn ($q) => $q->whereHas('paciente', fn ($p) => $p->where('paciente_nome_mae', 'like', "%{$this->filtroMae}%")))
+            ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
 
         return view('livewire.admin.atendimentos.listagem', [

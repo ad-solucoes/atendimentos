@@ -13,7 +13,12 @@ class Detalhes extends Component
 
     public function mount($id = null)
     {
-        $this->paciente = Paciente::find($id);
+        // Carrega o paciente com atendimentos e relações necessárias
+        $this->paciente = Paciente::with('atendimentos')->find($id);
+
+        if (! $this->paciente) {
+            abort(404, 'Paciente não encontrado');
+        }
     }
 
     public function render()

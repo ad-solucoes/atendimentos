@@ -1,70 +1,172 @@
 <div class="space-y-6">
-    <!-- Filtro e Ações -->
+    <!-- Filtros e Ações -->
     <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm mb-4">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            {{-- Registros por página --}}
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            {{-- Data Inicial --}}
             <div class="flex flex-col">
-                <label for="perPage" class="text-sm font-semibold text-gray-700 mb-1">
-                    Registros por página:
+                <label for="filtroDataInicial" class="text-sm font-semibold text-gray-700 mb-1">
+                    Data Inicial:
                 </label>
-                <select id="perPage"
-                        wire:model.live="perPage"
-                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-36">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
+                <input 
+                    id="filtroDataInicial"
+                    type="date"
+                    wire:model.live.debounce.500ms="filtroDataInicial"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
+
+            {{-- Data Final --}}
+            <div class="flex flex-col">
+                <label for="filtroDataFinal" class="text-sm font-semibold text-gray-700 mb-1">
+                    Data Final:
+                </label>
+                <input 
+                    id="filtroDataFinal"
+                    type="date"
+                    wire:model.live.debounce.500ms="filtroDataFinal"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
+
+            {{-- Número do Atendimento --}}
+            <div class="flex flex-col">
+                <label for="filtroNumeroAtendimento" class="text-sm font-semibold text-gray-700 mb-1">
+                    Nº do Atendimento:
+                </label>
+                <input 
+                    id="filtroNumeroAtendimento"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroNumeroAtendimento"
+                    placeholder="Ex: A123456"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
+
+            {{-- Prioridade --}}
+            <div class="flex flex-col">
+                <label for="filtroPrioridade" class="text-sm font-semibold text-gray-700 mb-1">
+                    Prioridade:
+                </label>
+                <select 
+                    id="filtroPrioridade"
+                    wire:model.live="filtroPrioridade"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+                    <option value="">Todas</option>
+                    <option value="Baixa">Baixa</option>
+                    <option value="Média">Média</option>
+                    <option value="Alta">Alta</option>
                 </select>
             </div>
 
-            {{-- Campo de busca --}}
-            <div class="flex flex-col md:flex-1">
-                <label for="searchTerm" class="text-sm font-semibold text-gray-700 mb-1">
-                    Buscar:
+            {{-- Nome do Paciente --}}
+            <div class="flex flex-col">
+                <label for="filtroNome" class="text-sm font-semibold text-gray-700 mb-1">
+                    Nome do Paciente:
                 </label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                        <i class="fa fa-search"></i>
-                    </span>
-
-                    <input 
-                        id="searchTerm"
-                        type="text" 
-                        wire:model.live.debounce.500ms="searchTerm"
-                        placeholder="Buscar por nome do setor..."
-                        autocomplete="off"
-                        class="pl-9 pr-9 w-full border border-gray-300 rounded-lg py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                    />
-
-                    @if($searchTerm)
-                        <button type="button"
-                                wire:click="$set('searchTerm', '')"
-                                title="Limpar busca"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    @endif
-                </div>
+                <input 
+                    id="filtroNome"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroNome"
+                    placeholder="Digite o nome..."
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
             </div>
 
-            {{-- Total e botão de ação --}}
-            <div class="flex flex-col md:items-end">
-                <label class="text-sm font-semibold text-gray-700 mb-1">&nbsp;</label>
-                <div class="flex items-center justify-between md:justify-end gap-3">
+            {{-- CPF --}}
+            <div class="flex flex-col">
+                <label for="filtroCpf" class="text-sm font-semibold text-gray-700 mb-1">
+                    CPF:
+                </label>
+                <input 
+                    id="filtroCpf"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroCpf"
+                    placeholder="999.999.999-99"
+                    maxlength="14"
+                    x-data 
+                    x-mask="999.999.999-99"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
 
-                    <small class="text-gray-600 text-sm">
-                        <i class="fa fa-info-circle text-gray-400"></i>
-                        Total: <span class="font-semibold text-gray-800">{{ $atendimentos->total() }}</span> registro(s)
-                    </small>
+            {{-- Cartão SUS --}}
+            <div class="flex flex-col">
+                <label for="filtroSus" class="text-sm font-semibold text-gray-700 mb-1">
+                    Cartão SUS:
+                </label>
+                <input 
+                    id="filtroSus"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroSus"
+                    placeholder="999 9999 9999 9999"
+                    maxlength="18"
+                    x-data 
+                    x-mask="999 9999 9999 9999"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
 
+            {{-- Nome da Mãe --}}
+            <div class="flex flex-col">
+                <label for="filtroMae" class="text-sm font-semibold text-gray-700 mb-1">
+                    Nome da Mãe:
+                </label>
+                <input 
+                    id="filtroMae"
+                    type="text"
+                    wire:model.live.debounce.500ms="filtroMae"
+                    placeholder="Digite o nome da mãe..."
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+            </div>
+
+            {{-- Ações --}}
+            <div class="flex flex-col justify-end items-end md:col-span-4">
+                <div class="flex flex-wrap items-center gap-2">                   
                     <a href="{{ route('admin.atendimentos.formulario') }}"
-                    class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
+                        class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
                         <i class="fa fa-plus"></i> Novo Atendimento
                     </a>
                 </div>
             </div>
         </div>
-    </div>    
+
+        {{-- Linha inferior --}}
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-4 gap-3">
+            <div class="flex items-center gap-2">
+                <label class="text-sm font-semibold text-gray-700">Registros por página:</label>
+                <select wire:model.live="perPage"
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-24">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+
+                <button 
+                    type="button" 
+                    wire:click="
+                        $set('filtroDataInicial', '');
+                        $set('filtroDataFinal', '');
+                        $set('filtroNumeroAtendimento', '');
+                        $set('filtroPrioridade', '');
+                        $set('filtroNome', '');
+                        $set('filtroCpf', '');
+                        $set('filtroSus', '');
+                        $set('filtroMae', '');
+                    "
+                    class="text-blue-600 text-sm hover:underline ml-3">
+                    Limpar filtros
+                </button>
+            </div>
+
+            <small class="text-gray-600 text-sm">
+                <i class="fa fa-info-circle text-gray-400"></i>
+                Total: <span class="font-semibold text-gray-800">{{ $atendimentos->total() }}</span> registro(s)
+            </small>
+        </div>
+    </div>
 
     <!-- Tabela principal -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -76,18 +178,33 @@
                         Status
                         @include('livewire.partials._sort-icon', ['field' => 'atendimento_status'])
                     </th>
-                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('atendimento_data')" style="cursor: pointer;" title="Clique para ordenar">
-                        Data do Atendimento
+                    <th class="px-2 py-2 font-semibold" width="120" wire:click="sortByField('atendimento_data')" style="cursor: pointer;" title="Clique para ordenar">
+                        Data
                         @include('livewire.partials._sort-icon', ['field' => 'atendimento_data'])
                     </th>
-                    <th class="px-2 py-2 font-semibold">Número</th>
+                    <th class="px-2 py-2 font-semibold" width="120" wire:click="sortByField('atendimento_numero')" style="cursor: pointer;" title="Clique para ordenar">
+                        Número
+                        @include('livewire.partials._sort-icon', ['field' => 'atendimento_numero'])
+                    </th>
                     <th class="px-2 py-2 font-semibold">Paciente</th>
                     <th class="px-2 py-2 font-semibold">Prioridade</th>
                     <th class="px-2 py-2 text-center font-semibold" width="140">Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <tr wire:loading.class.remove="hidden" wire:target="searchTerm" class="hidden">
+                @php
+                    $temFiltros = 
+                        $filtroDataInicial || 
+                        $filtroDataFinal || 
+                        $filtroNumeroAtendimento || 
+                        $filtroPrioridade || 
+                        $filtroNome || 
+                        $filtroCpf || 
+                        $filtroSus || 
+                        $filtroMae;
+                @endphp
+
+                <tr wire:loading.class.remove="hidden" wire:target="filtroDataInicial, filtroDataFinal, filtroNumeroAtendimento, filtroPrioridade, filtroNome, filtroCpf, filtroSus, filtroMae" class="hidden">
                     <td colspan="6" class="py-12 text-center">
                         <div class="flex flex-col items-center justify-center space-y-1.5 text-gray-600">
                             {{-- Spinner visível e animado --}}
@@ -105,7 +222,7 @@
                     </td>
                 </tr>
                 @forelse ($atendimentos as $atendimento)
-                    <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="searchTerm">
+                    <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="filtroDataInicial, filtroDataFinal, filtroNumeroAtendimento, filtroPrioridade, filtroNome, filtroCpf, filtroSus, filtroMae">
                         <td class="px-2 py-1 text-sm font-medium text-center">
                             @if($atendimento->atendimento_status)
                                 <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
@@ -113,7 +230,7 @@
                                 <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
                             @endif
                         </td>
-                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->atendimento_data->format('d/m/Y H:i:s') }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->atendimento_data->format('d/m/Y') }}</td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $atendimento->atendimento_numero }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_nome }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->atendimento_prioridade }}</td>
@@ -142,39 +259,50 @@
                         </td>
                     </tr>
                 @empty
-                    <tr wire:loading.remove wire:target="searchTerm">
+                    <tr wire:loading.remove wire:target="filtroDataInicial, filtroDataFinal, filtroNumeroAtendimento, filtroPrioridade, filtroNome, filtroCpf, filtroSus, filtroMae">
                         <td colspan="6" class="py-12 text-center">
                             <div class="flex flex-col items-center justify-center space-y-1.5">
 
                                 <div class="text-gray-400">
-                                    <i class="fa fa-exclamation-triangle text-4xl"></i>
+                                    <i class="fa fa-clipboard-list text-4xl"></i>
                                 </div>
 
                                 <div>
-                                    @if($searchTerm)
+                                    @if($temFiltros)
                                         <h4 class="text-gray-700 font-semibold text-lg">
-                                            Nenhum atendimentos encontrado
+                                            Nenhum atendimento encontrado
                                         </h4>
                                         <p class="text-sm text-gray-500 mt-1">
-                                            Tente buscar por outros termos ou
-                                            <button wire:click="$set('searchTerm', '')"
-                                                    class="text-blue-600 hover:underline font-medium">
-                                                limpe o filtro
+                                            Tente ajustar os filtros ou
+                                            <button
+                                                wire:click="
+                                                    $set('filtroDataInicial', '');
+                                                    $set('filtroDataFinal', '');
+                                                    $set('filtroNumeroAtendimento', '');
+                                                    $set('filtroPrioridade', '');
+                                                    $set('filtroNome', '');
+                                                    $set('filtroCpf', '');
+                                                    $set('filtroSus', '');
+                                                    $set('filtroMae', '');
+                                                "
+                                                class="text-blue-600 hover:underline font-medium">
+                                                limpe os filtros
                                             </button>.
                                         </p>
                                     @else
                                         <h4 class="text-gray-700 font-semibold text-lg">
-                                            Nenhum atendimentos cadastrado
+                                            Nenhum atendimento cadastrado
                                         </h4>
                                         <p class="text-sm text-gray-500 mt-1">
-                                            Comece criando um novo atendimentos.
+                                            Comece criando um novo atendimento.
                                         </p>
                                     @endif
                                 </div>
 
-                                @if(!$searchTerm)
-                                    <a href="{{ route('admin.atendimentos.formulario') }}" class="mt-3 inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow transition-all duration-200">
-                                        <i class="fa fa-plus"></i> Criar Primeiro Setor
+                                @if(!$temFiltros)
+                                    <a href="{{ route('admin.atendimentos.formulario') }}"
+                                    class="mt-3 inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow transition-all duration-200">
+                                        <i class="fa fa-plus"></i> Criar Primeiro Atendimento
                                     </a>
                                 @endif
 
@@ -231,9 +359,6 @@
                 de
                 <span class="font-semibold text-gray-800">{{ $atendimentos->total() }}</span>
                 registro(s)
-                @if ($searchTerm)
-                    para "<span class="font-semibold text-blue-600">{{ $searchTerm }}</span>"
-                @endif
             </div>
         @endif
 

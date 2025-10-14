@@ -795,6 +795,7 @@ function ValidaData($data)
 function formatoId($id, $campo)
 {
     $formatoId = str_pad((string) $id, (int) $campo, '0', STR_PAD_LEFT);
+
     return $formatoId;
 }
 

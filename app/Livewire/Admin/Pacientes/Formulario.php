@@ -49,8 +49,8 @@ class Formulario extends Component
                 'max:150',
                 Rule::unique('pacientes', 'paciente_nome')->ignore($this->paciente_id, 'paciente_id'),
             ],
-            'paciente_cpf' => 'required|cpf',
-            'paciente_cns' => 'nullable|cns',
+            'paciente_cpf'    => 'required|cpf',
+            'paciente_cns'    => 'nullable|cns',
             'paciente_status' => 'required',
         ];
     }
@@ -63,7 +63,7 @@ class Formulario extends Component
 
     public function mount($id = null)
     {
-        $this->equipes_saude = EquipeSaude::orderBy('equipe_saude_nome')->get();       
+        $this->equipes_saude = EquipeSaude::orderBy('equipe_saude_nome')->get();
 
         if ($id) {
             $doc = Paciente::find($id);
@@ -71,7 +71,7 @@ class Formulario extends Component
             if ($doc) {
                 $this->paciente_id              = $doc->paciente_id;
                 $this->paciente_nome            = $doc->paciente_nome;
-                $this->equipe_saude_id = $doc->agente_saude->agente_saude_equipe_saude_id;
+                $this->equipe_saude_id          = $doc->agente_saude->agente_saude_equipe_saude_id;
                 $this->paciente_agente_saude_id = $doc->paciente_agente_saude_id;
                 $this->paciente_sexo            = $doc->paciente_sexo;
                 $this->paciente_data_nascimento = $doc->paciente_data_nascimento->format('d/m/Y');
@@ -80,17 +80,18 @@ class Formulario extends Component
                 $this->paciente_contato         = $doc->paciente_contato;
                 $this->paciente_cns             = $doc->paciente_cns;
                 $this->paciente_cpf             = $doc->paciente_cpf;
-                $this->paciente_status             = $doc->paciente_status;
+                $this->paciente_status          = $doc->paciente_status;
             }
 
-            if($this->equipe_saude_id){
+            if ($this->equipe_saude_id) {
                 $this->agentes_saude = AgenteSaude::where('agente_saude_equipe_saude_id', $this->equipe_saude_id)->orderBy('agente_saude_nome')->get();
             }
         }
     }
 
-    public function updatedEquipeSaudeId(){
-        $this->agentes_saude = AgenteSaude::where('agente_saude_equipe_saude_id', $this->equipe_saude_id)->orderBy('agente_saude_nome')->get();
+    public function updatedEquipeSaudeId()
+    {
+        $this->agentes_saude            = AgenteSaude::where('agente_saude_equipe_saude_id', $this->equipe_saude_id)->orderBy('agente_saude_nome')->get();
         $this->paciente_agente_saude_id = '';
     }
 
@@ -98,7 +99,7 @@ class Formulario extends Component
     {
         $this->validate();
 
-        Paciente::updateOrCreate(
+        $paciente = Paciente::updateOrCreate(
             ['paciente_id' => $this->paciente_id],
             [
                 'paciente_nome'            => $this->paciente_nome,
@@ -110,13 +111,13 @@ class Formulario extends Component
                 'paciente_contato'         => $this->paciente_contato,
                 'paciente_cns'             => $this->paciente_cns,
                 'paciente_cpf'             => $this->paciente_cpf,
-                'paciente_status'             => $this->paciente_status,
+                'paciente_status'          => $this->paciente_status,
             ]
         );
 
         session()->flash('message', 'Paciente salvo com sucesso!');
 
-        return redirect()->route('admin.pacientes.listagem');
+        return redirect()->route('admin.pacientes.detalhes', $paciente->paciente_id);
     }
 
     public function render()

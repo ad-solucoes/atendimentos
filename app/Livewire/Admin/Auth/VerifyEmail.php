@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Livewire\Admin\Auth;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\Log;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class VerifyEmail extends Component
@@ -16,7 +16,7 @@ class VerifyEmail extends Component
     {
         // Se o email já foi verificado, redireciona para o dashboard
         if (auth()->user() && auth()->user()->hasVerifiedEmail()) {
-            return $this->redirect('/admin/dashboard', navigate: true);
+            return redirect('/admin/dashboard');
         }
     }
 
@@ -31,7 +31,7 @@ class VerifyEmail extends Component
                 'message' => 'Seu email já foi verificado.',
             ]);
 
-            return $this->redirect('/admin/dashboard', navigate: true);
+            return redirect('/admin/dashboard');
         }
 
         Auth::user()->sendEmailVerificationNotification();
@@ -49,6 +49,6 @@ class VerifyEmail extends Component
 
     public function render()
     {
-        return view('livewire.admin.auth.verify-email')->layout('layouts.auth');
+        return view('livewire.admin.auth.verify-email')->layout('layouts.auth', ['title' => 'Verifique seu E-mail']);
     }
 }

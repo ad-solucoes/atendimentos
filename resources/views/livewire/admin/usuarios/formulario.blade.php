@@ -9,14 +9,14 @@
 
         <!-- E-mail -->
         <div>
-            <label class="block font-semibold">E-mail <span class="text-red-600 text-sm">*</span></label>
+            <label class="block text-sm font-semibold mb-1">E-mail <span class="text-red-600 text-sm">*</span></label>
             <input type="text" wire:model="email" class="border rounded px-3 py-2 w-full">
             @error('email') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
         </div>
 
         <!-- Admin -->
         <div>
-            <label class="block font-semibold">Admin <span class="text-red-600 text-sm">*</span></label>
+            <label class="block text-sm font-semibold mb-1">Admin <span class="text-red-600 text-sm">*</span></label>
             <select wire:model.live="is_admin" class="border rounded px-3 py-2 w-full">
                 <option value="1">Sim</option>
                 <option value="0">Não</option>
@@ -27,7 +27,7 @@
         @if(!$is_admin)
         <!-- Setor -->
         <div>
-            <label class="block font-semibold">Setor <span class="text-red-600 text-sm">*</span></label>
+            <label class="block text-sm font-semibold mb-1">Setor <span class="text-red-600 text-sm">*</span></label>
             <select wire:model="setor_id" class="border rounded px-3 py-2 w-full">
                 <option value="">-- Selecionar --</option>
                 @foreach($setores as $setor)

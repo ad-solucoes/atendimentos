@@ -80,13 +80,17 @@
                         Nome do Agente de Saúde
                         @include('livewire.partials._sort-icon', ['field' => 'agente_saude_nome'])
                     </th>
+                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('agente_saude_apelido')" style="cursor: pointer;" title="Clique para ordenar">
+                        Apelido
+                        @include('livewire.partials._sort-icon', ['field' => 'agente_saude_apelido'])
+                    </th>
                     <th class="px-2 py-2 font-semibold">Equipe de Saúde</th>
                     <th class="px-2 py-2 text-center font-semibold" width="140">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <tr wire:loading.class.remove="hidden" wire:target="searchTerm" class="hidden">
-                    <td colspan="4" class="py-12 text-center">
+                    <td colspan="5" class="py-12 text-center">
                         <div class="flex flex-col items-center justify-center space-y-1.5 text-gray-600">
                             {{-- Spinner visível e animado --}}
                             <div class="relative flex items-center justify-center">
@@ -112,6 +116,7 @@
                             @endif
                         </td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $agente_saude->agente_saude_nome }}</td>
+                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $agente_saude->agente_saude_apelido }}</td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $agente_saude->equipe_saude->equipe_saude_nome }}</td>
                         <td class="px-2 py-1 text-center space-x-0">
                             <!-- Ver -->
@@ -139,7 +144,7 @@
                     </tr>
                 @empty
                     <tr wire:loading.remove wire:target="searchTerm">
-                        <td colspan="4" class="py-12 text-center">
+                        <td colspan="5" class="py-12 text-center">
                             <div class="flex flex-col items-center justify-center space-y-1.5">
 
                                 <div class="text-gray-400">

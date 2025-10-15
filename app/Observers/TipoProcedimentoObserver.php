@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Observers;
 
-use App\Models\TipoProcedimento;
 use App\Models\Log;
+use App\Models\TipoProcedimento;
 
 class TipoProcedimentoObserver
 {

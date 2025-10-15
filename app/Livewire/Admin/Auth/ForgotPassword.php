@@ -21,6 +21,6 @@ class ForgotPassword extends Component
 
     public function render()
     {
-        return view('livewire.admin.auth.forgot-password')->layout('layouts.auth');
+        return view('livewire.admin.auth.forgot-password')->layout('layouts.auth', ['title' => 'Recuperar Senha']);
     }
 }

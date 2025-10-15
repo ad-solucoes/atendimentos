@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Observers;
 
-use App\Models\Setor;
 use App\Models\Log;
+use App\Models\Setor;
 
 class SetorObserver
 {

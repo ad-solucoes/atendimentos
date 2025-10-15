@@ -41,7 +41,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     })->name('logout');
 
     // Rotas Autenticadas
-    Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware(['auth', 'verified', 'password.change'])->group(function () {
         Route::get('/dashboard', App\Livewire\Admin\Dashboard::class)->name('dashboard');
         Route::get('/pesquisar', App\Livewire\Admin\Pesquisar::class)->name('pesquisar');
 

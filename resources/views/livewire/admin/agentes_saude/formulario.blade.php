@@ -7,6 +7,13 @@
             @error('agente_saude_nome') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
         </div>
 
+        <!-- Apelido -->
+        <div>
+            <label class="block text-sm font-semibold mb-1">Apelido</label>
+            <input type="text" wire:model="agente_saude_apelido" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            @error('agente_saude_apelido') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+        </div>
+
         <!-- Equipe de Saúde -->
         <div>
             <label class="block text-sm font-semibold mb-1">Equipe de Saúde <span class="text-red-600 text-sm">*</span></label>

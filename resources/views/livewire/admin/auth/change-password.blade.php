@@ -1,94 +1,81 @@
-<div>
-    <div class="signin-text">
-        @if($mustChange)
-            <span>Primeira Senha</span>
-        @else
-            <span>Alterar Senha</span>
-        @endif
-    </div> <!-- / .signin-text -->
-
-    <p style="text-align: center; color: #666; margin-bottom: 20px;">
-        @if($mustChange)
-            Por segurança, altere sua senha temporária para continuar
-        @else
-            Mantenha sua conta segura atualizando sua senha
-        @endif
-    </p>
+<div class="w-full">
+    <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-900">
+            {{ $mustChange ? 'Primeira Senha' : 'Alterar Senha' }}
+        </h2>
+        <p class="text-gray-600 text-sm mt-2">
+            {{ $mustChange
+                ? 'Por segurança, altere sua senha temporária para continuar.'
+                : 'Mantenha sua conta segura atualizando sua senha regularmente.'
+            }}
+        </p>
+    </div>
 
     @if($mustChange)
-        <!-- Warning for mandatory change - Usando classes Bootstrap -->
-        <div class="alert alert-warning" role="alert">
-            <h5 class="m-t-0 m-b-1"><i class="fa fa-exclamation-triangle"></i> Alteração Obrigatória</h5>
-            <p style="margin: 0; font-size: 12px;">
-                Por segurança, você deve alterar sua senha temporária antes de acessar o sistema.
-            </p>
+        <div class="flex items-start gap-3 bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-lg mb-6">
+            <i class="fa fa-exclamation-triangle text-yellow-600 text-xl mt-1"></i>
+            <div>
+                <h5 class="font-semibold text-sm mb-1">Alteração Obrigatória</h5>
+                <p class="text-xs">Por segurança, você deve alterar sua senha temporária antes de acessar o sistema.</p>
+            </div>
         </div>
     @endif
 
-    <form wire:submit.prevent="updatePassword" autocomplete="off">
+    <form wire:submit.prevent="updatePassword" class="space-y-5" autocomplete="off">
         @csrf
 
-        <div class="form-group">
-            <label class="control-label">Senha Atual</label>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                <input type="password" wire:model="current_password" class="form-control" placeholder="Digite sua senha atual">
-            </div>
-            <small class="help-block">Confirme sua identidade</small>
-            @error('current_password')
-                <span class="help-block text-danger">{{ $message }}</span>
-            @enderror
+        <!-- Senha atual -->
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">
+                <i class="fa fa-lock text-blue-600 mr-1"></i> Senha Atual
+            </label>
+            <input type="password" wire:model="current_password" placeholder="Digite sua senha atual"
+                class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+            <p class="text-gray-500 text-xs mt-1">Confirme sua identidade</p>
+            @error('current_password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
-        <div class="form-group">
-            <label class="control-label">Nova Senha</label>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                <input type="password" wire:model="password" class="form-control" placeholder="Digite sua nova senha">
-            </div>
-            <small class="help-block">Mínimo 8 caracteres com letras, números e símbolos</small>
-            @error('password')
-                <span class="help-block text-danger">{{ $message }}</span>
-            @enderror
+        <!-- Nova senha -->
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">
+                <i class="fa fa-key text-blue-600 mr-1"></i> Nova Senha
+            </label>
+            <input type="password" wire:model="password" placeholder="Digite sua nova senha"
+                class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+            <p class="text-gray-500 text-xs mt-1">Mínimo 8 caracteres com letras, números e símbolos</p>
+            @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
-        <div class="form-group">
-            <label class="control-label">Confirmar Nova Senha</label>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-check-circle"></i></span>
-                <input type="password" wire:model="password_confirmation" class="form-control" placeholder="Confirme sua nova senha">
-            </div>
-            <small class="help-block">Digite a mesma senha novamente</small>
-            @error('password_confirmation')
-                <span class="help-block text-danger">{{ $message }}</span>
-            @enderror
+        <!-- Confirmar nova senha -->
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">
+                <i class="fa fa-check-circle text-blue-600 mr-1"></i> Confirmar Nova Senha
+            </label>
+            <input type="password" wire:model="password_confirmation" placeholder="Confirme sua nova senha"
+                class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+            <p class="text-gray-500 text-xs mt-1">Digite a mesma senha novamente</p>
+            @error('password_confirmation') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
-        <!-- Security Tips - Usando classes Bootstrap para consistência -->
-        <div class="alert alert-success" role="alert">
-            <h5 style="margin: 0 0 10px 0;"><i class="fa fa-shield"></i> Dicas de Segurança</h5>
-            <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
-                <li>Use pelo menos 8 caracteres</li>
-                <li>Combine letras maiúsculas e minúsculas</li>
-                <li>Inclua números e símbolos</li>
-                <li>Evite informações pessoais</li>
-                <li>Use senhas diferentes para cada serviço</li>
-            </ul>
-        </div>
-
-        <div class="form-actions"> {{-- Agrupando botões e links em form-actions --}}
-            <button type="submit" class="signin-btn bg-primary"> {{-- Usando classe do botão de login --}}
+        <!-- Ações -->
+        <div class="mt-6 space-y-3">
+            <button type="submit"
+                class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 transition">
                 <i class="fa fa-check"></i>
                 {{ $mustChange ? 'Definir Nova Senha' : 'Alterar Senha' }}
             </button>
 
-            <a href="#" wire:click.prevent="logout" class="forgot-password" id="forgot-password-link"><i class="fa fa-sign-out fa-fw"></i> Sair do Sistema</a>
+            <a href="#" wire:click.prevent="logout"
+                class="block text-center text-sm text-red-600 hover:underline">
+                <i class="fa fa-sign-out-alt mr-1"></i> Sair do Sistema
+            </a>
 
-            @if(!$mustChange)
-                <a href="{{ route('dashboard') }}" class="forgot-password" style="margin-top: 10px;"> {{-- Usando classe de link existente --}}
-                    <i class="fa fa-arrow-left"></i> Voltar ao Sistema
+            @unless($mustChange)
+                <a href="{{ route('admin.dashboard') }}"
+                    class="block text-center text-sm text-blue-700 hover:underline">
+                    <i class="fa fa-arrow-left mr-1"></i> Voltar ao Sistema
                 </a>
-            @endif
+            @endunless
         </div>
     </form>
 </div>

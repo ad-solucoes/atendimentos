@@ -91,6 +91,7 @@ return new class () extends Migration
             $table->bigIncrements('agente_saude_id');
             $table->unsignedBigInteger('agente_saude_equipe_saude_id');
             $table->string('agente_saude_nome');
+            $table->string('agente_saude_apelido')->nullable();
             $table->boolean('agente_saude_status')->default(1);
             $table->integer('created_user_id')->nullable();
             $table->integer('updated_user_id')->nullable();

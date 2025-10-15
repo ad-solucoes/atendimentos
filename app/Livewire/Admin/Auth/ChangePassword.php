@@ -25,7 +25,7 @@ class ChangePassword extends Component
         $user = auth()->user();
 
         if (! $user->mustChangePassword() && $user->hasVerifiedEmail()) {
-            return $this->redirect('/admin/dashboard', navigate: true);
+            return redirect('/admin/dashboard');
         }
     }
 
@@ -93,7 +93,7 @@ class ChangePassword extends Component
         // Clear form
         $this->reset(['current_password', 'password', 'password_confirmation']);
 
-        return $this->redirect('/admin/dashboard', navigate: true);
+        return redirect('/admin/dashboard');
     }
 
     public function logout()
@@ -102,7 +102,7 @@ class ChangePassword extends Component
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return $this->redirect('/admin/login', navigate: true);
+        return redirect('/admin/login');
     }
 
     #[Title('Alterar Senha')]
@@ -113,6 +113,6 @@ class ChangePassword extends Component
 
         return view('livewire.admin.auth.change-password', [
             'mustChange' => $user->mustChangePassword(),
-        ]);
+        ])->layout('layouts.auth', ['title' => 'Alterar Senha']);
     }
 }

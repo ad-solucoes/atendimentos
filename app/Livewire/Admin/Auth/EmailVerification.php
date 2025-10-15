@@ -70,7 +70,7 @@ class EmailVerification extends Component
     #[Layout('layouts.auth')]
     public function render()
     {
-        return view('livewire.admin.auth.email-verification');
+        return view('livewire.admin.auth.email-verification')->layout('layouts.auth', ['title' => 'Verificação de E-mail']);
     }
 
     public function continueToSystem()
@@ -83,15 +83,15 @@ class EmailVerification extends Component
 
         // Check email verification
         if (! $user->hasVerifiedEmail()) {
-            return $this->redirect('/admin/auth/verify-email', navigate: true);
+            return redirect('/admin/auth/verify-email');
         }
 
         // Check if must change password
         if ($user->mustChangePassword()) {
-            return $this->redirect('/admin/auth/change-password', navigate: true);
+            return redirect('/admin/auth/change-password');
         }
 
-        return $this->redirect('/admin/dashboard', navigate: true);
+        return redirect('/admin/dashboard');
     }
 
     public function logout()

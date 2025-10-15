@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Usuarios;
 
 use App\Models\Setor;
-use App\Notifications\WelcomeUserNotification;
 use App\Models\User;
+use App\Notifications\WelcomeUserNotification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -74,31 +74,28 @@ class Formulario extends Component
 
         if ($this->user_id) {
             $usuario = User::find($this->user_id);
-        }else{
-            $usuario = new User();            
-            $usuario->password = Hash::make($senha);;
+        } else {
+            $usuario           = new User();
+            $usuario->password = Hash::make($senha);
+            ;
             $usuario->must_change_password = 1;
         }
 
-        $usuario->name = $this->name;
-        $usuario->email = $this->email;
+        $usuario->name     = $this->name;
+        $usuario->email    = $this->email;
         $usuario->is_admin = $this->is_admin;
         $usuario->setor_id = $this->setor_id;
-        $usuario->status = $this->status;
+        $usuario->status   = $this->status;
 
-        if($usuario->save()){
-            if (!$this->user_id) {
+        if ($usuario->save()) {
+            if (! $this->user_id) {
                 $usuario->notify(new WelcomeUserNotification($senha));
             }
 
             flash()->success('Usuário salvo com sucesso.', [], 'Sucesso!');
-        }else{
+        } else {
             flash()->error('Erro ao salvar usuário.', [], 'Opssss!');
         }
-
-        
-
-        
 
         return redirect()->route('admin.usuarios.listagem');
     }

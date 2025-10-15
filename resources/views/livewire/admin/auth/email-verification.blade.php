@@ -1,87 +1,76 @@
-<div>
-    <div class="signin-text">
-        @if($verified)
-            <span>✅ Email Verificado!</span>
-        @elseif($error)
-            <span>❌ Erro na Verificação</span>
-        @else
-            <span>Verificando Email</span>
-        @endif
-    </div>
+<div class="w-full text-center">
+    <h2 class="text-2xl font-bold text-blue-900 mb-4">
+        {{ $verified ? 'Email Verificado!' : ($error ? 'Erro na Verificação' : 'Verificando Email...') }}
+    </h2>
 
-    <p style="text-align: center; color: #666; margin-bottom: 20px;">
+    <p class="text-gray-600 mb-6 text-sm">
         @if($verified)
-            Seu email foi verificado com sucesso
+            Seu email foi verificado com sucesso.
         @elseif($error)
-            Não foi possível verificar seu email
+            Não foi possível verificar seu email. Tente novamente ou solicite um novo link.
         @else
-            Processando verificação...
+            Aguarde enquanto confirmamos a verificação...
         @endif
     </p>
 
+    {{-- Estado: sucesso --}}
     @if($verified)
-        <!-- Success State -->
-        <div class="alert alert-success" role="alert" style="text-align: center;">
-            <i class="fa fa-check-circle fa-3x" style="margin-bottom: 15px;"></i>
-            <h4 style="margin: 10px 0;">{{ $message }}</h4>
-            <p style="margin: 10px 0;">
-                Agora você pode acessar todas as funcionalidades do sistema com segurança.
-            </p>
+        <div class="bg-green-50 border border-green-300 text-green-800 p-5 rounded-lg mb-4">
+            <i class="fa fa-check-circle text-3xl mb-2"></i>
+            <h4 class="font-semibold mb-1">{{ $message }}</h4>
+            <p class="text-xs">Agora você pode acessar todas as funcionalidades do sistema com segurança.</p>
         </div>
 
-        <div class="form-actions">
-            <button type="button" wire:click="continueToSystem" class="signin-btn bg-primary">
-                <i class="fa fa-arrow-right"></i> Acessar Sistema
-            </button>
-        </div>
+        <button wire:click="continueToSystem"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition">
+            <i class="fa fa-arrow-right"></i> Acessar Sistema
+        </button>
 
-        <!-- Info Section -->
-        <div class="alert alert-info" role="alert" style="margin-top: 15px;">
-            <h5 style="margin: 0 0 10px 0;"><i class="fa fa-shield"></i> Conta Protegida</h5>
-            <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+        <div class="mt-6 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 text-left text-sm">
+            <h5 class="font-semibold mb-1"><i class="fa fa-shield mr-1"></i> Conta Protegida</h5>
+            <ul class="list-disc list-inside text-xs space-y-1 text-blue-700">
                 <li>Email verificado com sucesso</li>
                 <li>Conta protegida contra acesso não autorizado</li>
                 <li>Recuperação de senha habilitada</li>
             </ul>
         </div>
+    @endif
 
-    @elseif($error)
-        <!-- Error State -->
-        <div class="alert alert-danger" role="alert" style="text-align: center;">
-            <i class="fa fa-times-circle fa-3x" style="margin-bottom: 15px;"></i>
-            <h4 style="margin: 10px 0;">{{ $message }}</h4>
-            <p style="margin: 10px 0;">
-                Possíveis causas: link expirado, já utilizado ou inválido.
-            </p>
+    {{-- Estado: erro --}}
+    @if($error)
+        <div class="bg-red-50 border border-red-300 text-red-800 p-5 rounded-lg mb-4">
+            <i class="fa fa-times-circle text-3xl mb-2"></i>
+            <h4 class="font-semibold mb-1">{{ $message }}</h4>
+            <p class="text-xs">Possíveis causas: link expirado, já utilizado ou inválido.</p>
         </div>
 
-        <div class="form-actions">
-            <button type="button" wire:click="resendVerificationEmail" class="signin-btn bg-primary">
-                <i class="fa fa-envelope"></i> Solicitar Novo Email
-            </button>
+        <button wire:click="resendVerificationEmail"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition">
+            <i class="fa fa-envelope"></i> Solicitar Novo Email
+        </button>
 
-            <a href="#" wire:click.prevent="logout" class="forgot-password" id="forgot-password-link"><i class="fa fa-sign-out fa-fw"></i> Sair do Sistema</a>
-        </div>
+        <a href="#" wire:click.prevent="logout"
+            class="block text-center text-sm text-red-600 hover:underline mt-3">
+            <i class="fa fa-sign-out-alt mr-1"></i> Sair do Sistema
+        </a>
 
-        <!-- Problems Section -->
-        <div class="alert alert-warning" role="alert" style="margin-top: 15px;">
-            <h5 style="margin: 0 0 10px 0;"><i class="fa fa-exclamation-triangle"></i> Problemas Comuns</h5>
-            <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+        <div class="mt-6 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-4 text-left text-sm">
+            <h5 class="font-semibold mb-1"><i class="fa fa-exclamation-triangle mr-1"></i> Problemas Comuns</h5>
+            <ul class="list-disc list-inside text-xs space-y-1 text-yellow-700">
                 <li>Link de verificação expirado (60 minutos)</li>
                 <li>Link já utilizado anteriormente</li>
                 <li>URL modificada ou corrompida</li>
                 <li>Problema temporário no sistema</li>
             </ul>
         </div>
+    @endif
 
-    @else
-        <!-- Loading State -->
-        <div class="alert alert-info" role="alert" style="text-align: center;">
-            <i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 15px;"></i>
-            <h4 style="margin: 10px 0;">Verificando seu email...</h4>
-            <p style="margin: 10px 0;">
-                Aguarde enquanto processamos a verificação.
-            </p>
+    {{-- Estado: carregando --}}
+    @if(!$verified && !$error)
+        <div class="bg-blue-50 border border-blue-200 text-blue-800 p-5 rounded-lg">
+            <i class="fa fa-spinner fa-spin text-3xl mb-2"></i>
+            <h4 class="font-semibold mb-1">Verificando seu email...</h4>
+            <p class="text-xs">Aguarde enquanto processamos a verificação.</p>
         </div>
     @endif
 </div>

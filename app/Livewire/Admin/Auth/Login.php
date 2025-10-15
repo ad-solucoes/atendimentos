@@ -31,12 +31,12 @@ class Login extends Component
 
             // Check email verification
             if (! $user->hasVerifiedEmail()) {
-                return $this->redirect('/admin/auth/verify-email', navigate: true);
+                return redirect('/admin/auth/verify-email');
             }
 
             // Check if must change password
             if ($user->mustChangePassword()) {
-                return $this->redirect('/admin/auth/change-password', navigate: true);
+                return redirect('/admin/auth/change-password');
             }
 
             return redirect()->intended(route('admin.dashboard'));
@@ -47,6 +47,6 @@ class Login extends Component
 
     public function render()
     {
-        return view('livewire.admin.auth.login')->layout('layouts.auth');
+        return view('livewire.admin.auth.login')->layout('layouts.auth', ['title' => 'Login']);
     }
 }

@@ -15,12 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name'     => 'User Admin',
-            'email'    => 'admin@email.com',
-            'is_admin' => true,
-        ]);
-
-        // $this->call(TabelaSeeder::class);
+        $this->call(TabelaSeeder::class);
     }
 }

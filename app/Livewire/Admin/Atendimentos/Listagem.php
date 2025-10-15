@@ -76,11 +76,17 @@ class Listagem extends Component
         $atendimento = Atendimento::find($this->atendimentoToDelete);
 
         if ($atendimento) {
-            $atendimento->delete();
-
-            session()->flash('message', 'Atendimento excluído com sucesso!');
+            if ($atendimento->solicitacoes()->exists()) {
+                flash()->addWarning('Este atendimento não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($atendimento->delete()) {
+                    flash()->addSuccess('Atendimento deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar atendimento.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'Atendimento não encontrado.');
+            flash()->addWarning('Atendimento não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

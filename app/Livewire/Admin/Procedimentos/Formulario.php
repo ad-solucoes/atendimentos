@@ -69,7 +69,7 @@ class Formulario extends Component
             ]
         );
 
-        session()->flash('message', 'Procedimento salvo com sucesso!');
+        flash()->success('Procedimento salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.procedimentos.listagem');
     }

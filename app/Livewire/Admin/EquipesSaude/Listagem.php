@@ -51,11 +51,17 @@ class Listagem extends Component
         $equipe_saude = EquipeSaude::find($this->equipeSaudeToDelete);
 
         if ($equipe_saude) {
-            $equipe_saude->delete();
-
-            session()->flash('message', 'EquipeSaude excluído com sucesso!');
+            if ($equipe_saude->usuarios()->exists() or $equipe_saude->solicitacoes()->exists()) {
+                flash()->addWarning('Esta equipe de saúde não pode ser deletada.', [], 'Alerta!');
+            } else {
+                if ($equipe_saude->delete()) {
+                    flash()->addSuccess('Equipe de saúde deletada com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar equipe de saúde.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'EquipeSaude não encontrado.');
+            flash()->addWarning('Equipe de saúde não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

@@ -25,7 +25,7 @@ class Listagem extends Component
 
     public $confirmingDelete = false;
 
-    public $etiquetaToDelete;
+    public $usuarioToDelete;
 
     protected $paginationTheme = 'personalizado';
 
@@ -43,18 +43,28 @@ class Listagem extends Component
     public function confirmDelete($id)
     {
         $this->confirmingDelete = true;
-        $this->etiquetaToDelete = $id;
+        $this->usuarioToDelete  = $id;
     }
 
     public function delete()
     {
-        $etiqueta = User::find($this->etiquetaToDelete);
+        $usuario = User::find($this->usuarioToDelete);
 
-        if ($etiqueta) {
-            $etiqueta->delete();
+        if ($usuario) {
+            if ($usuario->vinculosOutrasTabelas()) {
+                flash()->addWarning('Este usuário não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($usuario->delete()) {
+                    flash()->addSuccess('Usuário deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar usuário.', [], 'Opssss!');
+                }
+            }
+        } else {
+            flash()->addWarning('Usuário não encontrado.', [], 'Alerta!');
         }
+
         $this->confirmingDelete = false;
-        session()->flash('message', 'Usuario excluída com sucesso!');
     }
 
     public function render()

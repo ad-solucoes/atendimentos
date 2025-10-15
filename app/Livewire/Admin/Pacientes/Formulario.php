@@ -115,7 +115,7 @@ class Formulario extends Component
             ]
         );
 
-        session()->flash('message', 'Paciente salvo com sucesso!');
+        flash()->success('Paciente salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.pacientes.detalhes', $paciente->paciente_id);
     }

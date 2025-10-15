@@ -51,11 +51,17 @@ class Listagem extends Component
         $agente_saude = AgenteSaude::find($this->agenteSaudeToDelete);
 
         if ($agente_saude) {
-            $agente_saude->delete();
-
-            session()->flash('message', 'AgenteSaude excluído com sucesso!');
+            if ($agente_saude->pacientes()->exists()) {
+                flash()->addWarning('Este agente de saúde não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($agente_saude->delete()) {
+                    flash()->addSuccess('Agente de saúde deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar agente de saúde.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'AgenteSaude não encontrado.');
+            flash()->addWarning('Agente de saúde não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

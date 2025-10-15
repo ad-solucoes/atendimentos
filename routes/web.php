@@ -23,7 +23,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', App\Livewire\Admin\Auth\Login::class)->name('login')->middleware('guest');
     Route::get('/forgot-password', App\Livewire\Admin\Auth\ForgotPassword::class)->name('password.request')->middleware('guest');
     Route::get('/reset-password/{token}', App\Livewire\Admin\Auth\ResetPassword::class)->name('password.reset')->middleware('guest');
-    Route::get('/email/verify', App\Livewire\Admin\Auth\VerifyEmail::class)->middleware('auth')->name('verification.notice');
+    // Route::get('/email/verify', App\Livewire\Admin\Auth\VerifyEmail::class)->middleware('auth')->name('verification.notice');
+
+    Route::get('/auth/verify-email', App\Livewire\Admin\Auth\VerifyEmail::class)->middleware('auth')->name('verification.notice');
+    Route::get('/auth/email-verification/{id}/{hash}', App\Livewire\Admin\Auth\EmailVerification::class)
+        ->middleware(['signed'])
+        ->name('verification.verify');
+    Route::get('/auth/change-password', App\Livewire\Admin\Auth\ChangePassword::class)->name('password.change');
 
     // Logout
     Route::post('/logout', function () {

@@ -1,40 +1,64 @@
-<div class="max-w-xl mx-auto bg-white rounded-xl shadow p-6 space-y-6">
-    <h2 class="text-xl font-bold text-gray-700">Movimentar Solicitação</h2>
-
-    @if (session('message'))
-        <div class="bg-green-100 border border-green-400 text-green-700 p-3 rounded">{{ session('message') }}</div>
-    @endif
-
+<div class="max-w-4xl mx-auto px-0 sm:px-6 lg:px-8 py-">
     <form wire:submit.prevent="salvar" class="space-y-4">
+        <!-- Novo Status -->
         <div>
-            <label class="block text-sm font-medium text-gray-700">Novo Status</label>
-            <select wire:model="status" class="w-full mt-1 border-gray-300 rounded-lg">
-                <option value="">Selecione...</option>
+            <label class="block text-sm font-semibold mb-1">
+                Novo Status <span class="text-red-600 text-sm">*</span>
+            </label>
+            <select wire:model="status"
+                    class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="">-- Selecionar --</option>
                 <option value="aguardando">Aguardando</option>
                 <option value="agendado">Agendado</option>
                 <option value="marcado">Marcado</option>
                 <option value="entregue">Entregue</option>
                 <option value="cancelado">Cancelado</option>
             </select>
+            @error('status') 
+                <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> 
+            @enderror
         </div>
 
+        <!-- Entregue para -->
         <div>
-            <label class="block text-sm font-medium text-gray-700">Entregue para</label>
-            <select wire:model="entregue_para" class="w-full mt-1 border-gray-300 rounded-lg">
-                <option value="">Nenhum</option>
+            <label class="block text-sm font-semibold mb-1">
+                Entregue Para <span class="text-red-600 text-sm">*</span>
+            </label>
+            <select wire:model="entregue_para"
+                    class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="">-- Selecionar --</option>
                 <option value="paciente">Paciente</option>
                 <option value="agente_saude">Agente de Saúde</option>
                 <option value="equipe_saude">Equipe de Saúde</option>
             </select>
+            @error('entregue_para') 
+                <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> 
+            @enderror
         </div>
 
+        <!-- Observação -->
         <div>
-            <label class="block text-sm font-medium text-gray-700">Observação</label>
-            <textarea wire:model="observacao" class="w-full mt-1 border-gray-300 rounded-lg" rows="3"></textarea>
+            <label class="block text-sm font-semibold mb-1">Observação</label>
+            <textarea wire:model="observacao"
+                      class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      rows="3"
+                      placeholder="Descreva observações sobre esta movimentação..."></textarea>
+            @error('observacao') 
+                <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> 
+            @enderror
         </div>
 
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">
-            Salvar Movimentação
-        </button>
+        <!-- Botões -->
+        <div class="pt-4 flex flex-col sm:flex-row justify-center sm:space-x-1 space-y-1 sm:space-y-0">
+            <a href="{{ route('admin.solicitacoes.detalhes', $solicitacao_id) }}"
+               class="px-4 py-2 border rounded w-full sm:w-auto text-center text-sm">
+                <i class="fa fa-times fa-fw"></i> Cancelar
+            </a>
+
+            <button type="submit"
+                    class="px-4 py-2 bg-blue-700 text-white rounded w-full sm:w-auto hover:bg-blue-800 text-sm">
+                <i class="fa fa-save fa-fw"></i> Salvar Movimentação
+            </button>
+        </div>
     </form>
 </div>

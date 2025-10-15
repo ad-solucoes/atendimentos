@@ -51,11 +51,17 @@ class Listagem extends Component
         $tipo_procedimento = TipoProcedimento::find($this->tipoProcedimentoToDelete);
 
         if ($tipo_procedimento) {
-            $tipo_procedimento->delete();
-
-            session()->flash('message', 'TipoProcedimento excluído com sucesso!');
+            if ($tipo_procedimento->procedimentos()->exists()) {
+                flash()->addWarning('Este tipo de procedimento não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($tipo_procedimento->delete()) {
+                    flash()->addSuccess('Tipo de procedimento deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar tipo de procedimento.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'TipoProcedimento não encontrado.');
+            flash()->addWarning('Tipo de procedimento não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

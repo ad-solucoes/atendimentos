@@ -43,7 +43,7 @@ class Formulario extends Component
             ]
         );
 
-        session()->flash('message', 'Solicitacao salvo com sucesso!');
+        flash()->success('Solicitação salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.solicitacoes.detalhes', $solicitacao->solicitacao_id);
     }

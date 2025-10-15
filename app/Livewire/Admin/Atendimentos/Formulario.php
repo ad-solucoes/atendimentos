@@ -252,7 +252,7 @@ class Formulario extends Component
             }
         }
 
-        session()->flash('message', 'Atendimento salvo com sucesso!');
+        flash()->success('Atendimento salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.atendimentos.detalhes', $atendimento->atendimento_id);
     }

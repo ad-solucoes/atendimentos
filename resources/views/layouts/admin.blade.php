@@ -8,8 +8,40 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    @livewireStyles
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+    @stack('styles')
+    <style>
+        body{
+            font-family: 'Open Sans', sans-serif;
+        }
+        a[href="#top"]{
+            position: fixed;
+            bottom: 50px;
+            right: 10px;
+            font-size: 22px;
+            width: 35px;
+            height: 35px;
+            padding: 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            outline: none!important;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 19;
+        }
+        a[href="#top"]:hover{
+            text-decoration:none;
+        }
+        a[href="#top"] img{
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 text-gray-800"
@@ -59,7 +91,7 @@
             x-data="{ hoverIndex: null }"
             :class="{
                 // === Desktop ===
-                'w-60 flex-shrink-0': isDesktop && !collapsed,
+                'fixed w-60 flex-shrink-0': isDesktop && !collapsed,
                 'w-16 flex-shrink-0': isDesktop && collapsed,
 
                 // === Mobile ===
@@ -67,6 +99,7 @@
                 'translate-x-0': !isDesktop && sidebarOpen,
                 '-translate-x-full': !isDesktop && !sidebarOpen
             }"
+            style="height: 100vh"
         >
             <!-- Header da sidebar -->
             <div class="p-4 border-b border-blue-800 flex items-center justify-between">
@@ -87,7 +120,7 @@
             </div>
 
             <!-- Navegação -->
-            <nav class="flex-1 p-3 space-y-1">
+            <nav class="flex-1 p-3 space-y-1 mt-4">
                 @php
                     $user = auth()->user();
                     $links = [
@@ -128,7 +161,7 @@
                         <span
                             x-show="isDesktop && collapsed && hoverIndex === {{ $index }}"
                             x-transition.opacity
-                            class="absolute left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-1 py-2 rounded shadow-lg whitespace-nowrap z-50">
+                            class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50">
                             {{ $link['label'] }}
                         </span>
 
@@ -191,7 +224,13 @@
         </div>
 
         <!-- Conteúdo principal -->
-        <div class="flex-1 flex flex-col">
+        <div 
+            class="flex-1 flex flex-col transition-all duration-300"
+            :class="{
+                'ml-60': isDesktop && !collapsed,  // espaço para o menu expandido
+                'ml-0': isDesktop && collapsed    // espaço para o menu colapsado
+            }"
+        >
             <header class="bg-white border-b px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <button
@@ -199,42 +238,14 @@
                         class="text-blue-900 hover:text-blue-700">
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
-                    <span class="font-semibold text-blue-900 text-lg lg:hidden">Admin Acervo</span>
-
-                    <!-- Dropdown -->
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded flex items-center gap-1 text-sm">
-                            <i class="fa fa-plus"></i>
-                            <span class="hidden sm:inline">Novo</span>
-                            <i class="fa fa-caret-down ml-1"></i>
-                        </button>
-
-                        <!-- Menu dropdown -->
-                        <div x-show="open" @click.away="open = false"
-                            class="absolute left-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50"
-                            x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="opacity-0 scale-95"
-                            x-transition:enter-end="opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
-                            x-transition:leave-start="opacity-100 scale-100"
-                            x-transition:leave-end="opacity-0 scale-95">
-                            <a href="{{ route('admin.pacientes.formulario') }}"
-                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">
-                            Novo Paciente
-                            </a>
-                            <a href="{{ route('admin.atendimentos.formulario') }}"
-                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">
-                            Novo Atendimento
-                            </a>
-                        </div>
-                    </div>
+                    <span class="font-semibold text-blue-900 text-lg lg:hidden">Admin Acervo</span>                    
                 </div>
 
                 {{-- Pesquisa no lado direito --}}
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-1">
                     <form action="{{ route('admin.pesquisar') }}" method="GET" class="flex items-center space-x-2">
                         <div class="flex border border-gray-300 rounded-lg overflow-hidden">
-                            <select name="tipo" class="px-3 py-1 text-sm bg-white border-r border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select name="tipo" class="px-3 py-1.5 text-sm bg-white border-r border-gray-300 focus:outline-none focus:ring-blue-500">
                                 <option value="cpf">CPF</option>
                                 <option value="cns">Cartão SUS</option>
                                 <option value="numero_atendimento">Nº Atendimento</option>
@@ -244,16 +255,44 @@
                                 type="text" 
                                 name="termo" 
                                 placeholder="Digite aqui..." 
-                                class="px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
+                                class="px-3 py-1.5 text-sm focus:outline-none focus:ring-blue-500 flex-1"
                                 size="30"
                                 required
                             >
 
-                            <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 flex items-center justify-center">
+                            <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 flex items-center justify-center">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
                     </form>
+
+                    <!-- Dropdown -->
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 rounded flex items-center gap-1 text-sm">
+                            <i class="fa fa-th text-xs fa-fw"></i>
+                            <span class="hidden sm:inline">Menu rápido</span>
+                            <i class="fa fa-caret-down ml-1"></i>
+                        </button>
+
+                        <!-- Menu dropdown -->
+                        <div x-show="open" @click.away="open = false"
+                            class="absolute right-0 mt-2 w-45 bg-white border border-gray-200 rounded shadow-lg z-50"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95">
+                            <a href="{{ route('admin.pacientes.formulario') }}"
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-gray-100 text-sm">
+                                <i class="fa fa-plus text-xs fa-fw"></i> Novo Paciente
+                            </a>
+                            <a href="{{ route('admin.atendimentos.formulario') }}"
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-gray-100 text-sm">
+                                <i class="fa fa-plus text-xs fa-fw"></i> Novo Atendimento
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -265,11 +304,64 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <a href="#top" title="Voltar ao Topo"><img src="{{ asset('images/up-arrow.png') }}" alt=""></a>
     </div>
 
     <script src="{{ asset('js/jquery-2.2.4.min.js') }}"></script>
     <script src="{{ asset('js/jquery.mask.min.js') }}"></script>
 
     @livewireScripts
+
+    @stack('scripts')   
+
+    <script type="text/javascript">
+        if (typeof toastr !== 'undefined') {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+        }
+
+        $(document).ready(function() {
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('a[href="#top"]').fadeIn().css('display', 'flex');
+                } else {
+                    $('a[href="#top"]').fadeOut();
+                }
+            });
+
+            $('a[href="#top"]').click(function() {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 800);
+                return false;
+            });
+        });
+
+        function maiuscula(z){
+            v = z.value.toUpperCase();
+            z.value = v;
+        }
+
+        function minuscula(z){
+            v = z.value.toLowerCase();
+            z.value = v;
+        }
+    </script>
 </body>
 </html>

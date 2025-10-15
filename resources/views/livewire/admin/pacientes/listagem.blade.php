@@ -123,7 +123,7 @@
                 @endphp
 
                 <tr wire:loading.class.remove="hidden" wire:target="filtroNome, filtroCpf, filtroSus, filtroMae" class="hidden">
-                    <td colspan="4" class="py-12 text-center">
+                    <td colspan="6" class="py-12 text-center">
                         <div class="flex flex-col items-center justify-center space-y-1.5 text-gray-600">
                             {{-- Spinner visível e animado --}}
                             <div class="relative flex items-center justify-center">
@@ -178,7 +178,7 @@
                     </tr>
                 @empty
                     <tr wire:loading.remove wire:target="filtroNome, filtroCpf, filtroSus, filtroMae">
-                        <td colspan="4" class="py-12 text-center">
+                        <td colspan=6" class="py-12 text-center">
                             <div class="flex flex-col items-center justify-center space-y-1.5">
 
                                 <div class="text-gray-400">

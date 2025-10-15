@@ -51,11 +51,17 @@ class Listagem extends Component
         $setor = Setor::find($this->setorToDelete);
 
         if ($setor) {
-            $setor->delete();
-
-            session()->flash('message', 'Setor excluído com sucesso!');
+            if ($setor->usuarios()->exists() or $setor->solicitacoes()->exists()) {
+                flash()->addWarning('Este setor não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($setor->delete()) {
+                    flash()->addSuccess('Setor deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar setor.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'Setor não encontrado.');
+            flash()->addWarning('Setor não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

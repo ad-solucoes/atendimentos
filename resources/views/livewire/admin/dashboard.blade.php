@@ -1,70 +1,148 @@
-<div class="space-y-10">
+<div class="mx-auto py-4 space-y-4">
+    {{-- Cards de métricas principais --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="bg-yellow-100 rounded-xl shadow p-4 flex flex-col items-start">
+            <h3 class="text-gray-700 text-sm font-semibold">Total de Solicitações</h3>
+            <p class="text-gray-900 text-2xl font-bold">{{ $totalSolicitacoes }}</p>
+        </div>
 
-    <!-- Cards principais -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        @php
-            $cards = [
-                ['label' => 'Pacientes', 'emoji' => '👥', 'count' => $pacientes, 'color' => 'bg-blue-600', 'route' => route('admin.pacientes.listagem'), 'quantitativos' => [
-                    'Hoje' => $this->quantitativoPacientes('hoje'),
-                    'Esta Semana' => $this->quantitativoPacientes('esta_semana'),
-                    'Este Mês' => $this->quantitativoPacientes('este_mes'),
-                    'Este Ano' => $this->quantitativoPacientes('este_ano'),
-                ]],
-                ['label' => 'Atendimentos', 'emoji' => '📅', 'count' => $atendimentos, 'color' => 'bg-green-600', 'route' => route('admin.atendimentos.listagem'), 'quantitativos' => [
-                    'Hoje' => $this->quantitativoAtendimentos('hoje'),
-                    'Esta Semana' => $this->quantitativoAtendimentos('esta_semana'),
-                    'Este Mês' => $this->quantitativoAtendimentos('este_mes'),
-                    'Este Ano' => $this->quantitativoAtendimentos('este_ano'),
-                ]],
-                ['label' => 'Solicitações', 'emoji' => '📝', 'count' => $solicitacoes, 'color' => 'bg-yellow-500', 'route' => route('admin.solicitacoes.listagem'), 'quantitativos' => [
-                    'Hoje' => $this->quantitativoSolicitacoes('hoje'),
-                    'Esta Semana' => $this->quantitativoSolicitacoes('esta_semana'),
-                    'Este Mês' => $this->quantitativoSolicitacoes('este_mes'),
-                    'Este Ano' => $this->quantitativoSolicitacoes('este_ano'),
-                ]],
-            ];
-        @endphp
+        <div class="bg-blue-100 rounded-xl shadow p-4 flex flex-col items-start">
+            <h3 class="text-gray-700 text-sm font-semibold">Total de Pacientes</h3>
+            <p class="text-gray-900 text-2xl font-bold">{{ $totalPacientes }}</p>
+        </div>
 
-        @foreach ($cards as $card)
-            <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 flex flex-col items-center justify-center text-center">
-                <div class="text-3xl sm:text-4xl mb-1 sm:mb-2">{{ $card['emoji'] }}</div>
-                <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-1">{{ $card['label'] }}</h3>
-                <p class="text-2xl sm:text-3xl font-bold text-gray-800">{{ $card['count'] }}</p>
-                <ul class="mt-2 text-left text-sm text-gray-600">
-                    @foreach ($card['quantitativos'] as $periodo => $valor)
-                        <li><small>{{ $periodo }}:</small> <b>{{ $valor }}</b></li>
-                    @endforeach
-                </ul>
-                <div class="mt-2 h-1.5 w-10 sm:w-12 rounded-full {{ $card['color'] }}"></div>
-                <a href="{{ $card['route'] }}" class="mt-2 text-blue-700 hover:text-blue-900 text-sm sm:text-base transition">Mais informações →</a>
+        <div class="bg-indigo-100 rounded-xl shadow p-4 flex flex-col items-start">
+            <h3 class="text-gray-700 text-sm font-semibold">Total de Atendimentos</h3>
+            <p class="text-gray-900 text-2xl font-bold">{{ $totalAtendimentos }}</p>
+        </div>    
+
+        <div class="bg-green-100 rounded-xl shadow p-4 flex flex-col items-start">
+            <h3 class="text-gray-700 text-sm font-semibold">Total de Procedimentos</h3>
+            <p class="text-gray-900 text-2xl font-bold">{{ $totalProcedimentos ?? 0 }}</p>
+        </div>    
+    </div>
+
+    {{-- Cards de métricas secundárias (por status) --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        @foreach(['aguardando','agendado','marcado','entregue','cancelado'] as $status)
+            @php
+                $bg = match($status){
+                    'aguardando'=>'bg-yellow-200',
+                    'agendado'=>'bg-blue-200',
+                    'marcado'=>'bg-indigo-200',
+                    'entregue'=>'bg-green-200',
+                    'cancelado'=>'bg-red-200',
+                    default=>'bg-gray-200'
+                };
+            @endphp
+            <div class="{{ $bg }} rounded-xl shadow p-3 flex flex-col items-start">
+                <h4 class="text-gray-700 text-sm font-semibold">{{ ucfirst($status) }}</h4>
+                <p class="text-gray-900 text-xl font-bold">{{ $statusCounts[$status] ?? 0 }}</p>
             </div>
         @endforeach
     </div>
 
-    <!-- Cards de solicitações por status -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-6">
-        @php
-            $statusCards = [
-                ['label' => 'Aguardadas', 'count' => $solicitacoes_aguardadas, 'color' => 'bg-gray-800', 'status' => 'aguardando'],
-                ['label' => 'Agendadas', 'count' => $solicitacoes_agendadas, 'color' => 'bg-gray-800', 'status' => 'em_andamento'],
-                ['label' => 'Marcadas', 'count' => $solicitacoes_marcadas, 'color' => 'bg-gray-800', 'status' => 'marcada'],
-            ];
-        @endphp
+    {{-- Gráficos --}}
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {{-- Gráfico de Atendimentos --}}
+        <div class="bg-white rounded-xl shadow p-6 col-span-8">
+            <h3 class="text-gray-700 text-lg font-semibold mb-4">Fluxo de Atendimentos por Mês</h3>
+            <canvas id="chartAtendimentos" class="h-64 w-full"></canvas>
+        </div>
 
-        @foreach ($statusCards as $sCard)
-            <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 flex flex-col items-center justify-center text-center">
-                <h3 class="text-2xl font-bold text-white mb-1 {{ $sCard['color'] }}">{{ $sCard['count'] }}</h3>
-                <p class="text-base sm:text-lg text-gray-700 mb-2">Solicitações {{ strtoupper($sCard['label']) }}</p>
-                <form action="#" method="post" target="_blank">
-                {{-- <form action="{{ route('admin.consultas.impressao', ['consulta' => 'solicitacoes', 'tipo' => 'listagem_solicitacoes']) }}" method="post" target="_blank"> --}}
-                    @csrf
-                    <input type="hidden" name="status" value="{{ $sCard['status'] }}">
-                    <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm sm:text-base transition-all duration-300">
-                        <i class="fas fa-print fa-fw"></i> Imprimir relação
-                    </button>
-                </form>
-            </div>
-        @endforeach
+        {{-- Gráfico de Solicitações por Status --}}
+        <div class="bg-white rounded-xl shadow p-6 col-span-4">
+            <h3 class="text-gray-700 text-lg font-semibold mb-4">Solicitações por Status</h3>
+            <canvas id="chartStatus" class="h-64 w-full"></canvas>
+        </div>
+    </div>
+
+    {{-- Últimas Solicitações --}}
+    <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-gray-700 text-lg font-semibold mb-4">Últimas Solicitações (20 últimos)</h3>
+        <table class="min-w-full text-sm">
+            <thead>
+                <tr class="bg-gray-50 border-b">
+                    <th class="p-2 text-left">Número</th>
+                    <th class="p-2 text-left">Paciente</th>
+                    <th class="p-2 text-left">Procedimento</th>
+                    <th class="p-2 text-left">Status</th>
+                    <th class="p-2 text-left">Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($ultimasSolicitacoes as $s)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-2">{{ $s->solicitacao_numero }}</td>
+                        <td class="p-2">{{ $s->atendimento->paciente->paciente_nome ?? '—' }}</td>
+                        <td class="p-2">{{ $s->procedimento->procedimento_nome ?? '—' }}</td>
+                        <td class="p-2">
+                            <span class="px-2 py-1 rounded-full text-white text-xs font-semibold
+                                {{ match($s->solicitacao_status){
+                                    'aguardando' => 'bg-yellow-400',
+                                    'agendado' => 'bg-blue-500',
+                                    'marcado' => 'bg-indigo-500',
+                                    'entregue' => 'bg-green-500',
+                                    'cancelado' => 'bg-red-500',
+                                    default => 'bg-gray-400',
+                                } }}">
+                                {{ ucfirst($s->solicitacao_status) }}
+                            </span>
+                        </td>
+                        <td class="p-2">{{ $s->solicitacao_data->format('d/m/Y') }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-gray-500">Nenhuma solicitação encontrada.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 
 </div>
+
+{{-- Chart.js --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Gráfico de Solicitações por Status
+    const ctxStatus = document.getElementById('chartStatus').getContext('2d');
+    new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            labels: ['Aguardando','Agendado','Marcado','Entregue','Cancelado'],
+            datasets: [{
+                label: 'Solicitações',
+                data: [
+                    {{ $statusCounts['aguardando'] ?? 0 }},
+                    {{ $statusCounts['agendado'] ?? 0 }},
+                    {{ $statusCounts['marcado'] ?? 0 }},
+                    {{ $statusCounts['entregue'] ?? 0 }},
+                    {{ $statusCounts['cancelado'] ?? 0 }}
+                ],
+                backgroundColor: ['#facc15','#3b82f6','#6366f1','#22c55e','#ef4444'],
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Gráfico de Atendimentos (exemplo de dados)
+    const ctxAtend = document.getElementById('chartAtendimentos').getContext('2d');
+    new Chart(ctxAtend, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($meses ?? ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']) !!},
+            datasets: [{
+                label: 'Atendimentos',
+                data: {!! json_encode($atendimentosPorMes ?? array_fill(0,12,0)) !!},
+                backgroundColor: '#3b82f6'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>

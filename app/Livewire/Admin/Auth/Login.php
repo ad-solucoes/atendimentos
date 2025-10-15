@@ -23,10 +23,26 @@ class Login extends Component
         ]);
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            $user = Auth::user();
+
+            request()->session()->regenerate();
+
+            toastr()->success("Bem-vindo(a) ao sistema, {$user->name}!");
+
+            // Check email verification
+            if (! $user->hasVerifiedEmail()) {
+                return $this->redirect('/admin/auth/verify-email', navigate: true);
+            }
+
+            // Check if must change password
+            if ($user->mustChangePassword()) {
+                return $this->redirect('/admin/auth/change-password', navigate: true);
+            }
+
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        $this->addError('email', 'Credenciais inválidas.');
+        $this->addError('email', 'As credenciais fornecidas não correspondem aos nossos registros.');
     }
 
     public function render()

@@ -6,84 +6,51 @@ namespace App\Livewire\Admin;
 
 use App\Models\Atendimento;
 use App\Models\Paciente;
+use App\Models\Procedimento;
 use App\Models\Solicitacao;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class Dashboard extends Component
 {
-    public $pacientes;
-
-    public $atendimentos;
-
-    public $solicitacoes;
-
-    public $protocolos;
-
-    public $solicitacoes_aguardadas;
-
-    public $solicitacoes_agendadas;
-
-    public $solicitacoes_marcadas;
-
-    public function mount()
-    {
-        $this->pacientes    = Paciente::count();
-        $this->atendimentos = Atendimento::count();
-        $this->solicitacoes = Solicitacao::count();
-
-        $this->solicitacoes_aguardadas = Solicitacao::where('solicitacao_status', 'aguardando')->count();
-        $this->solicitacoes_agendadas  = Solicitacao::where('solicitacao_status', 'em_andamento')->count();
-        $this->solicitacoes_marcadas   = Solicitacao::where('solicitacao_status', 'marcada')->count();
-    }
-
     public function render()
     {
-        return view('livewire.admin.dashboard')
-            ->layout('layouts.admin', ['title' => 'Dashboard']);
-    }
+        // Define locale para português
+        Carbon::setLocale('pt_BR');
 
-    // Funções auxiliares para contagem por período
-    public function quantitativoPacientes($periodo)
-    {
-        $query = Paciente::query();
+        // Métricas principais
+        $totalSolicitacoes  = Solicitacao::count();
+        $totalPacientes     = Paciente::count();
+        $totalAtendimentos  = Atendimento::count();
+        $totalProcedimentos = Procedimento::count();
 
-        return $this->quantitativoPeriodo($query, $periodo);
-    }
+        // Contagem por status
+        $statusCounts = Solicitacao::selectRaw('solicitacao_status, COUNT(*) as total')
+            ->groupBy('solicitacao_status')
+            ->pluck('total', 'solicitacao_status')
+            ->toArray();
 
-    public function quantitativoAtendimentos($periodo)
-    {
-        $query = Atendimento::query();
+        // Últimas solicitações
+        $ultimasSolicitacoes = Solicitacao::with(['atendimento.paciente', 'procedimento'])
+            ->latest('solicitacao_data')
+            ->limit(20)
+            ->get();
 
-        return $this->quantitativoPeriodo($query, $periodo);
-    }
+        // Fluxo de atendimentos por mês (para o gráfico)
+        $meses              = collect(range(1, 12))->map(fn ($m) => Carbon::create()->month($m)->translatedFormat('M'));
+        $atendimentosPorMes = collect(range(1, 12))->map(function ($m) {
+            return Atendimento::whereMonth('created_at', $m)->count();
+        });
 
-    public function quantitativoSolicitacoes($periodo)
-    {
-        $query = Solicitacao::query();
-
-        return $this->quantitativoPeriodo($query, $periodo);
-    }
-
-    public function quantitativoProtocolos($periodo)
-    {
-        $query = Protocolo::query();
-
-        return $this->quantitativoPeriodo($query, $periodo);
-    }
-
-    private function quantitativoPeriodo($query, $periodo)
-    {
-        switch ($periodo) {
-            case 'hoje':
-                return $query->whereDate('created_at', now())->count();
-            case 'esta_semana':
-                return $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
-            case 'este_mes':
-                return $query->whereMonth('created_at', now()->month)->count();
-            case 'este_ano':
-                return $query->whereYear('created_at', now()->year)->count();
-            default:
-                return $query->count();
-        }
+        return view('livewire.admin.dashboard', compact(
+            'totalSolicitacoes',
+            'totalPacientes',
+            'totalAtendimentos',
+            'totalProcedimentos',
+            'statusCounts',
+            'ultimasSolicitacoes',
+            'meses',
+            'atendimentosPorMes'
+        ))->layout('layouts.admin', ['title' => 'Dashboard']);
     }
 }

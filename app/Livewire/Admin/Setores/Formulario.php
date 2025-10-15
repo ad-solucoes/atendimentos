@@ -60,7 +60,6 @@ class Formulario extends Component
             ]
         );
 
-        // toastr()->closeButton()->success('Setor salvo com sucesso!');
         flash()->success('Setor salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.setores.listagem');

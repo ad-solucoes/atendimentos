@@ -60,7 +60,7 @@ class Formulario extends Component
             ]
         );
 
-        session()->flash('message', 'EquipeSaude salvo com sucesso!');
+        flash()->success('Equipe de saúde salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.equipes_saude.listagem');
     }

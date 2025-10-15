@@ -51,11 +51,17 @@ class Listagem extends Component
         $procedimento = Procedimento::find($this->procedimentoToDelete);
 
         if ($procedimento) {
-            $procedimento->delete();
-
-            session()->flash('message', 'Procedimento excluído com sucesso!');
+            if ($procedimento->solicitacoes()->exists()) {
+                flash()->addWarning('Este procedimento não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($procedimento->delete()) {
+                    flash()->addSuccess('Procedimento deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar procedimento.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'Procedimento não encontrado.');
+            flash()->addWarning('Procedimento não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

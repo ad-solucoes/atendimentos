@@ -71,7 +71,7 @@ class Formulario extends Component
             ]
         );
 
-        session()->flash('message', 'AgenteSaude salvo com sucesso!');
+        flash()->success('Agente de saúde salvo com sucesso.', [], 'Sucesso!');
 
         return redirect()->route('admin.agentes_saude.listagem');
     }

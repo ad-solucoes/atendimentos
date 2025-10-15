@@ -4,9 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
+use App\Observers\SetorObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([SetorObserver::class])]
 class Setor extends Model
 {
     use HasFactory;
@@ -24,11 +27,13 @@ class Setor extends Model
         'updated_user_id',
     ];
 
-    /**
-     * Um setor pode ter várias solicitações
-     */
+    public function usuarios()
+    {
+        return $this->hasMany(User::class, 'setor_id', 'setor_id');
+    }
+
     public function solicitacoes()
     {
-        return $this->hasMany(Solicitacao::class, 'solicitacao_setor_id', 'setor_id');
+        return $this->hasMany(Solicitacao::class, 'solicitacao_localizacao_atual_id', 'setor_id');
     }
 }

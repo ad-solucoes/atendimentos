@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Livewire\Admin\Usuarios;
 
 use App\Models\Setor;
+use App\Notifications\WelcomeUserNotification;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -67,17 +68,37 @@ class Formulario extends Component
 
     public function save()
     {
-        $data = $this->validate();
+        $this->validate();
 
-        if (! $this->user_id) {
-            // $senha = Str::random(10);
-            // $data['password'] = $senha;
-            $data['password'] = Hash::make('password');
+        $senha = Str::random(8);
+
+        if ($this->user_id) {
+            $usuario = User::find($this->user_id);
+        }else{
+            $usuario = new User();            
+            $usuario->password = Hash::make($senha);;
+            $usuario->must_change_password = 1;
         }
 
-        User::updateOrCreate(['id' => $this->user_id], $data);
+        $usuario->name = $this->name;
+        $usuario->email = $this->email;
+        $usuario->is_admin = $this->is_admin;
+        $usuario->setor_id = $this->setor_id;
+        $usuario->status = $this->status;
 
-        session()->flash('message', 'Usuário salvo com sucesso!');
+        if($usuario->save()){
+            if (!$this->user_id) {
+                $usuario->notify(new WelcomeUserNotification($senha));
+            }
+
+            flash()->success('Usuário salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar usuário.', [], 'Opssss!');
+        }
+
+        
+
+        
 
         return redirect()->route('admin.usuarios.listagem');
     }

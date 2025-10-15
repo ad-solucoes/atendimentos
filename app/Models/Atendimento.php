@@ -4,9 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
+use App\Observers\AtendimentoObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([AtendimentoObserver::class])]
 class Atendimento extends Model
 {
     use HasFactory;

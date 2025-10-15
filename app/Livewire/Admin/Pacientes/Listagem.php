@@ -70,11 +70,17 @@ class Listagem extends Component
         $paciente = Paciente::find($this->pacienteToDelete);
 
         if ($paciente) {
-            $paciente->delete();
-
-            session()->flash('message', 'Paciente excluído com sucesso!');
+            if ($paciente->atendimentos()->exists()) {
+                flash()->addWarning('Este paciente não pode ser deletado.', [], 'Alerta!');
+            } else {
+                if ($paciente->delete()) {
+                    flash()->addSuccess('Paciente deletado com sucesso.', [], 'Sucesso!');
+                } else {
+                    flash()->addError('Erro ao deletar paciente.', [], 'Opssss!');
+                }
+            }
         } else {
-            session()->flash('message', 'Paciente não encontrado.');
+            flash()->addWarning('Paciente não encontrado.', [], 'Alerta!');
         }
 
         $this->confirmingDelete = false;

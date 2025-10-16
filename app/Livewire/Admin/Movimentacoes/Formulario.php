@@ -29,7 +29,7 @@ class Formulario extends Component
     public $setor_destino_id = null;
 
     // Filtros
-    public $filtro_status = '';
+    public $filtro_status;
     public $filtro_data_inicial;
     public $filtro_data_final;
     public $filtro_periodo = '';
@@ -52,6 +52,17 @@ class Formulario extends Component
     ];
 
     protected $listeners = ['refreshMovimentacoes' => '$refresh'];
+
+    public function mount()
+    {
+        if(auth()->user()->setor_id == '1'){
+            $this->filtro_status = 'pendente';
+        }
+
+        if(auth()->user()->setor_id == '2'){
+            $this->filtro_status = 'aguardando';
+        }
+    }
 
     /** ✅ Marcar todas as solicitações da página */
     public function updatedSelecionadasAll($value)
@@ -93,7 +104,6 @@ class Formulario extends Component
     {
         $this->validate([
             'selecionadas' => 'required|array|min:1',
-            'status'       => 'required|string',
         ], [
             'selecionadas.required' => 'Selecione ao menos uma solicitação.',
             'status.required'       => 'Escolha o novo status.',
@@ -223,11 +233,29 @@ class Formulario extends Component
     {
         $solicitacoes = $this->solicitacoesQuery()->orderByDesc('solicitacao_data')->paginate(25);
 
+        if(auth()->user()->setor_id == '1'){
+            if($this->filtro_status == 'pendente'){
+                $destinos = Setor::whereIn('setor_id', [2])->orderBy('setor_nome')->get();
+            }
+            if(in_array($this->filtro_status, ['marcado', 'cancelado', 'rejeitado'])){
+                $destinos = Setor::whereIn('setor_id', [4])->orderBy('setor_nome')->get();
+            }            
+        }
+
+        if(auth()->user()->setor_id == '2'){
+            if($this->filtro_status == 'aguardando'){
+                $destinos = Setor::whereIn('setor_id', [2, 3])->orderBy('setor_nome')->get();
+            }
+            if(in_array($this->filtro_status, ['pendente', 'cancelado', 'rejeitado'])){
+                $destinos = Setor::whereIn('setor_id', [4])->orderBy('setor_nome')->get();
+            }            
+        }
+
         return view('livewire.admin.movimentacoes.formulario', [
             'solicitacoes'  => $solicitacoes,
             'tipos'         => TipoProcedimento::orderBy('tipo_procedimento_nome')->get(),
             'procedimentos' => Procedimento::orderBy('procedimento_nome')->get(),
-            'setores'       => Setor::orderBy('setor_nome')->get(),
+            'destinos'       => $destinos ?? [],
         ])->layout('layouts.admin', [
             'title' => 'Movimentações de Solicitações',
         ]);

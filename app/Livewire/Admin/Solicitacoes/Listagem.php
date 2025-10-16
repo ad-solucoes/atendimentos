@@ -41,6 +41,8 @@ class Listagem extends Component
 
     public $filtroMae;
 
+    public $filtroStatus;
+
     public $confirmingDelete = false;
 
     public $solicitacaoToDelete;
@@ -140,6 +142,7 @@ class Listagem extends Component
                     $q->where('paciente_mae', 'like', "%{$this->filtroMae}%");
                 });
             })
+            ->when($this->filtroStatus, fn($query) => $query->where('solicitacao_status', $this->filtroStatus))
             ->orderByDesc($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
 

@@ -152,6 +152,22 @@
                     class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
             </div>
+
+            {{-- Status --}}
+            <div class="flex flex-col">
+                <label class="text-sm font-semibold text-gray-700 mb-1">Status</label>
+                <select wire:model.live="filtroStatus"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+                    <option value="">Todos</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="aguardando">Aguardando</option>
+                    <option value="agendado">Agendado</option>
+                    <option value="marcado">Marcado</option>
+                    <option value="entregue">Entregue</option>
+                    <option value="cancelado">Cancelado</option>
+                    <option value="devolvido">Devolvido</option>
+                </select>
+            </div>
         </div>
 
         {{-- Linha inferior --}}
@@ -246,10 +262,20 @@
                 @forelse ($solicitacoes as $solicitacao)
                     <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="filtroDataInicial, filtroDataFinal, filtroNumeroSolicitacao, filtroTipoProcedimento, filtroProcedimento, filtroNome, filtroCpf, filtroSus, filtroMae">
                         <td class="px-2 py-1 text-sm font-medium text-center">
-                            @if($solicitacao->solicitacao_status)
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
-                            @else
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
+                            @if($solicitacao->solicitacao_status == 'pendente')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">Pendente</span>
+                            @elseif($solicitacao->solicitacao_status == 'aguardando')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Aguardando</span>
+                            @elseif($solicitacao->solicitacao_status == 'agendado')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Agendado</span>
+                            @elseif($solicitacao->solicitacao_status == 'marcado')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">Marcado</span>
+                            @elseif($solicitacao->solicitacao_status == 'entregue')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Entregue</span>
+                            @elseif($solicitacao->solicitacao_status == 'cancelado')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Cancelado</span>
+                            @elseif($solicitacao->solicitacao_status == 'devolvido')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Devolvido</span>
                             @endif
                         </td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->solicitacao_data->format('d/m/Y') }}</td>

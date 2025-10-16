@@ -48,14 +48,15 @@
             <div class="border-t border-blue-700 w-20 my-4"></div>
 
             <p class="text-center text-blue-100 text-sm leading-relaxed max-w-sm">
-                Sistema de gestão e organização de documentos públicos municipais.  
-                Acesse, gerencie e mantenha o acervo digital de forma simples e segura.
+                Este sistema foi desenvolvido para modernizar o atendimento, 
+                agilizar os fluxos entre setores e garantir mais eficiência e transparência nos serviços da SMS.
             </p>
 
             <ul class="text-sm text-blue-100 space-y-2 mt-4">
-                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Acesso seguro e autenticado</li>
-                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Gerenciamento centralizado</li>
-                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Backup e histórico automático</li>
+                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Centralização dos dados dos pacientes</li>
+                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Acompanhamento de solicitações e atendimentos</li>
+                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Comunicação integrada entre setores da saúde</li>
+                <li><i class="fa-solid fa-check mr-2 text-green-300"></i> Relatórios e indicadores em tempo real</li>
             </ul>
         </div>
 

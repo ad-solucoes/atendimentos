@@ -108,7 +108,6 @@
                 <label class="text-sm font-semibold text-gray-700 mb-1">Status</label>
                 <select wire:model.live="filtro_status"
                     class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
-                    <option value="">Todos</option>
                     <option value="pendente">Pendente</option>
                     <option value="aguardando">Aguardando</option>
                     <option value="agendado">Agendado</option>
@@ -166,28 +165,12 @@
         <h3 class="text-base font-semibold text-gray-700">Movimentar Selecionadas</h3>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-
-            {{-- Status --}}
-            <div class="flex flex-col">
-                <label class="text-sm font-semibold text-gray-700 mb-1">Novo Status</label>
-                <select wire:model="status"
-                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
-                    <option value="">Selecione...</option>
-                    <option value="aguardando">Aguardando</option>
-                    <option value="agendado">Agendado</option>
-                    <option value="marcado">Marcado</option>
-                    <option value="entregue">Entregue</option>
-                    <option value="cancelado">Cancelado</option>
-                    <option value="devolvido">Devolvido</option>
-                </select>
-            </div>
-
             {{-- Destino --}}
             <div class="flex flex-col">
                 <label class="text-sm font-semibold text-gray-700 mb-1">Destino</label>
                 <select wire:model="setor_destino_id"
                     class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
-                    @foreach($setores as $s)
+                    @foreach($destinos as $s)
                         <option value="{{ $s->setor_id }}">{{ $s->setor_nome }}</option>
                     @endforeach
                 </select>
@@ -195,24 +178,26 @@
             </div>
 
             {{-- Entregue para --}}
-            <div class="flex flex-col">
-                <label class="text-sm font-semibold text-gray-700 mb-1">Entregue para</label>
-                <select wire:model="entregue_para"
-                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
-                    <option value="">Nenhum</option>
-                    <option value="paciente">Paciente</option>
-                    <option value="agente_saude">Agente de Saúde</option>
-                    <option value="equipe_saude">Equipe de Saúde</option>
-                </select>
-            </div>
+            @if(auth()->user()->setor_id == 1 and $filtro_status == 'marcado')
+                <div class="flex flex-col">
+                    <label class="text-sm font-semibold text-gray-700 mb-1">Entregue para</label>
+                    <select wire:model="entregue_para"
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+                        <option value="">Nenhum</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="agente_saude">Agente de Saúde</option>
+                        <option value="equipe_saude">Equipe de Saúde</option>
+                    </select>
+                </div>            
 
-            {{-- Observação --}}
-            <div class="flex flex-col">
-                <label class="text-sm font-semibold text-gray-700 mb-1">Observação</label>
-                <input type="text" wire:model="observacao"
-                    placeholder="Ex: entregue ao ACS João"
-                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
-            </div>
+                {{-- Observação --}}
+                <div class="flex flex-col">
+                    <label class="text-sm font-semibold text-gray-700 mb-1">Observação</label>
+                    <input type="text" wire:model="observacao"
+                        placeholder="Ex: entregue ao ACS João"
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+                </div>
+            @endif
         </div>
 
         <div class="flex justify-end">

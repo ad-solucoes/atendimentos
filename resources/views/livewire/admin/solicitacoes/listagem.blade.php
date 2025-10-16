@@ -202,14 +202,14 @@
                         Status
                         @include('livewire.partials._sort-icon', ['field' => 'solicitacao_status'])
                     </th>
-                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('solicitacao_data')" style="cursor: pointer;" title="Clique para ordenar">
-                        Data da Solicitação
+                    <th class="px-2 py-2 font-semibold" width="120" wire:click="sortByField('solicitacao_data')" style="cursor: pointer;" title="Clique para ordenar">
+                        Data
                         @include('livewire.partials._sort-icon', ['field' => 'solicitacao_data'])
                     </th>
                     <th class="px-2 py-2 font-semibold">Atendimento</th>
                     <th class="px-2 py-2 font-semibold">Tipo</th>
                     <th class="px-2 py-2 font-semibold">Procedimento</th>
-                    <th class="px-2 py-2 text-center font-semibold" width="180">Ações</th>
+                    <th class="px-2 py-2 text-center font-semibold" width="100">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -252,17 +252,26 @@
                                 <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
                             @endif
                         </td>
-                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->solicitacao_data->format('d/m/Y H:i:s') }}</td>
-                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->atendimento->atendimento_numero }} | {{ $solicitacao->atendimento->paciente->paciente_nome }}</td>
+                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->solicitacao_data->format('d/m/Y') }}</td>
+                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->atendimento->atendimento_numero }} | {{ $solicitacao->atendimento->paciente->paciente_nome }} [CPF nº {{ $solicitacao->atendimento->paciente->paciente_cpf }}]</td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->procedimento->tipo_procedimento->tipo_procedimento_nome }}</td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $solicitacao->procedimento->procedimento_nome }}</td>
                         <td class="px-2 py-1 text-center space-x-0">
                             <!-- Movimentar -->
+                            @if(!auth()->user()->isAdmin() and $solicitacao->solicitacao_localizacao_atual_id == auth()->user()->setor_id)
                             <a href="{{ route('admin.solicitacoes.movimentar', $solicitacao->solicitacao_id) }}"
                                class="w-7 h-6 inline-flex items-center justify-center bg-green-100 text-green-700 hover:bg-green-200 p-2 transition"
                                title="Editar Solicitação">
                                 <i class="fas fa-right-left text-xs"></i>
                             </a>
+                            @else
+                            <a href="#"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-green-100 text-green-700 hover:bg-green-200 p-2 transition
+                                        opacity-50 cursor-not-allowed pointer-events-none"
+                                title="Editar Solicitação">
+                                    <i class="fas fa-right-left text-xs"></i>
+                            </a>
+                            @endif
 
                             <!-- Ver -->
                             <a href="{{ route('admin.solicitacoes.detalhes', $solicitacao->solicitacao_id) }}"
@@ -270,21 +279,6 @@
                                title="Ver Solicitação">
                                 <i class="fas fa-eye text-xs"></i>
                             </a>
-
-                            <!-- Editar -->
-                            <a href="{{ route('admin.solicitacoes.formulario', $solicitacao->solicitacao_id) }}"
-                               class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 p-2 transition"
-                               title="Editar Solicitação">
-                                <i class="fas fa-pen text-xs"></i>
-                            </a>
-
-                            <!-- Excluir -->
-                            <button type="button"
-                                    wire:click="confirmDelete('{{ $solicitacao->solicitacao_id }}')"
-                                    class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 p-2 transition"
-                                    title="Excluir Solicitação">
-                                <i class="fas fa-trash-alt text-xs"></i>
-                            </button>
                         </td>
                     </tr>
                 @empty

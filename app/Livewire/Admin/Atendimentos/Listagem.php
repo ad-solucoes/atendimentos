@@ -73,10 +73,10 @@ class Listagem extends Component
 
     public function delete()
     {
-        $atendimento = Atendimento::find($this->atendimentoToDelete);
+        $atendimento = Atendimento::with('solicitacoes.movimentacoes')->find($this->atendimentoToDelete);
 
         if ($atendimento) {
-            if ($atendimento->solicitacoes()->exists()) {
+            if ($atendimento->solicitacoes()->whereHas('movimentacoes')->exists()) {
                 flash()->addWarning('Este atendimento não pode ser deletado.', [], 'Alerta!');
             } else {
                 if ($atendimento->delete()) {
@@ -98,7 +98,7 @@ class Listagem extends Component
             return $this->currentPage;
         });
 
-        $atendimentos = Atendimento::query()->with('paciente')
+        $atendimentos = Atendimento::query()->with('paciente', 'solicitacoes')
             ->when($this->filtroDataInicial, fn ($q) => $q->whereDate('atendimento_data', '>=', $this->filtroDataInicial))
             ->when($this->filtroDataFinal, fn ($q) => $q->whereDate('atendimento_data', '<=', $this->filtroDataFinal))
             ->when($this->filtroNumeroAtendimento, fn ($q) => $q->where('atendimento_numero', 'like', "%{$this->filtroNumeroAtendimento}%"))

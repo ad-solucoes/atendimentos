@@ -39,4 +39,9 @@ class SolicitacaoMovimentacao extends Model
     {
         return $this->belongsTo(Solicitacao::class, 'movimentacao_solicitacao_id');
     }
+
+    public function destino()
+    {
+        return $this->belongsTo(Setor::class, 'movimentacao_destino_id');
+    }
 }

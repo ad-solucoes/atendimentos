@@ -130,7 +130,6 @@ return new class () extends Migration
             $table->string('atendimento_numero', 15)->unique(); // ex: 20251012001
             $table->dateTime('atendimento_data');
             $table->string('atendimento_observacao', 500)->nullable();
-            $table->boolean('atendimento_status')->default(1);
             $table->integer('created_user_id')->nullable();
             $table->integer('updated_user_id')->nullable();
             $table->timestamps();
@@ -148,16 +147,17 @@ return new class () extends Migration
 
             $table->string('solicitacao_numero', 20);
             $table->date('solicitacao_data');
-            $table->string('solicitacao_observacao')->nullable();
 
             // STATUS textual, mais semântico
             $table->enum('solicitacao_status', [
+                'pendente',   // quando inicia a solicitação
                 'aguardando',   // aguardando marcação
                 'agendado',     // já tem data marcada
                 'marcado',      // confirmado/agendado
                 'entregue',     // entregue (ao paciente/ACS/equipe)
-                'cancelado',
-            ])->default('aguardando');
+                'cancelado', // quando não é possível marcar
+                'devolvido', // quando o paciente pedi de volta a solicitação
+            ])->default('pendente');
 
             $table->unsignedBigInteger('created_user_id')->nullable();
             $table->unsignedBigInteger('updated_user_id')->nullable();
@@ -189,11 +189,11 @@ return new class () extends Migration
 
             // Tipo de movimentação (fluxo operacional)
             $table->enum('movimentacao_tipo', [
+                '',
                 'encaminhamento', // recepção -> marcação
                 'retorno',        // marcação -> recepção
                 'entrega',        // entrega ao paciente/ACS/equipe
-                'cancelamento',   // cancelada por algum motivo
-            ])->default('encaminhamento');
+            ])->default('');
 
             // Identifica o tipo de pessoa/unidade que recebeu (só usado se tipo == entrega)
             $table->enum('movimentacao_entregue_para', [

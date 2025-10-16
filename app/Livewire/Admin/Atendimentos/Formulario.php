@@ -82,7 +82,6 @@ class Formulario extends Component
                 $this->atendimento_numero      = $doc->atendimento_numero;
                 $this->atendimento_data        = $doc->atendimento_data->format('Y-m-d\TH:i');
                 $this->atendimento_observacao  = $doc->atendimento_observacao;
-                $this->atendimento_status      = $doc->atendimento_status;
 
                 $this->solicitacoes = $doc->solicitacoes->map(fn ($s) => [
                     'id'              => $s->solicitacao_id,
@@ -220,36 +219,27 @@ class Formulario extends Component
                 'atendimento_numero'      => $this->atendimento_numero ?? $this->gerarNumeroAtendimento(),
                 'atendimento_data'        => $this->atendimento_data,
                 'atendimento_observacao'  => $this->atendimento_observacao,
-                'atendimento_status'      => $this->atendimento_status,
                 'created_user_id'         => auth()->id(),
                 'updated_user_id'         => auth()->id(),
             ]
         );
 
         foreach ($this->solicitacoes as $sol) {
-            $novaSolicitacao = Solicitacao::updateOrCreate(
+            Solicitacao::updateOrCreate(
                 ['solicitacao_id' => $sol['id'] ?? null],
                 [
                     'solicitacao_atendimento_id'  => $atendimento->atendimento_id,
                     'solicitacao_procedimento_id' => $sol['procedimento_id'],
+                    'solicitacao_localizacao_atual_id' => auth()->user()->setor_id ?? null,
                     'solicitacao_numero'          => isset($sol['id']) && $sol['id']
                         ? ($sol['solicitacao_numero'] ?? 'S' . rand(100000, 999999))
                         : 'S' . rand(100000, 999999),
                     'solicitacao_data'   => now(),
-                    'solicitacao_status' => 'aguardando',
+                    'solicitacao_status' => 'pendente',
                     'created_user_id'    => auth()->id(),
                     'updated_user_id'    => auth()->id(),
                 ]
             );
-
-            if (empty($sol['id'])) {
-                SolicitacaoMovimentacao::create([
-                    'movimentacao_solicitacao_id' => $novaSolicitacao->solicitacao_id,
-                    'movimentacao_usuario_id'     => auth()->id(),
-                    'movimentacao_tipo'           => 'encaminhamento',
-                    'movimentacao_observacao'     => 'Solicitação criada no atendimento.',
-                ]);
-            }
         }
 
         flash()->success('Atendimento salvo com sucesso.', [], 'Sucesso!');

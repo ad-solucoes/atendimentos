@@ -166,6 +166,7 @@ class TabelaSeeder extends Seeder
             ['setor_nome' => 'Recepção'],
             ['setor_nome' => 'Marcação'],
             ['setor_nome' => 'Marcação Externa'],
+            ['setor_nome' => 'Paciente'],
         ];
         Setor::insert($dataSetor);
 
@@ -279,90 +280,90 @@ class TabelaSeeder extends Seeder
          * TABELA: atendimentos
          * Número gerado no formato AAAAMMDDNNN
          */
-        $dataAtendimento = [];
-        $dataAtual       = date('Ymd');
+        // $dataAtendimento = [];
+        // $dataAtual       = date('Ymd');
 
-        for ($i = 1; $i <= 10; $i++) {
-            $sequencia         = formatoId($i, 3);
-            $numeroAtendimento = $dataAtual . $sequencia;
-            $dataAtendimento[] = [
-                'atendimento_paciente_id' => $i,
-                'atendimento_numero'      => $numeroAtendimento,
-                'atendimento_data'        => now(),
-            ];
-        }
-        Atendimento::insert($dataAtendimento);
+        // for ($i = 1; $i <= 10; $i++) {
+        //     $sequencia         = formatoId($i, 3);
+        //     $numeroAtendimento = $dataAtual . $sequencia;
+        //     $dataAtendimento[] = [
+        //         'atendimento_paciente_id' => $i,
+        //         'atendimento_numero'      => $numeroAtendimento,
+        //         'atendimento_data'        => now(),
+        //     ];
+        // }
+        // Atendimento::insert($dataAtendimento);
 
         /**
          * TABELA: solicitações
          * Inclui enum solicitacao_status
          */
-        $statusList = ['aguardando', 'agendado', 'marcado', 'entregue', 'cancelado'];
+        // $statusList = ['aguardando', 'agendado', 'marcado', 'entregue', 'cancelado'];
 
-        $dataSolicitacao = [];
+        // $dataSolicitacao = [];
 
-        for ($i = 1; $i <= 10; $i++) {
-            $procedimentoId = rand(1, 9); // ajustável conforme a quantidade real de procedimentos
+        // for ($i = 1; $i <= 10; $i++) {
+        //     $procedimentoId = rand(1, 9); // ajustável conforme a quantidade real de procedimentos
 
-            $dataSolicitacao[] = [
-                'solicitacao_atendimento_id'       => $i,
-                'solicitacao_procedimento_id'      => $procedimentoId,
-                'solicitacao_localizacao_atual_id' => null, // será atualizado conforme a movimentação
-                'solicitacao_numero'               => $faker->unique()->numerify('S######'),
-                'solicitacao_data'                 => $faker->dateTimeBetween('-30 days', 'now'),
-                'solicitacao_status'               => $faker->randomElement($statusList),
-                'created_user_id'                  => 1,
-                'updated_user_id'                  => 1,
-                'created_at'                       => now(),
-                'updated_at'                       => now(),
-            ];
-        }
+        //     $dataSolicitacao[] = [
+        //         'solicitacao_atendimento_id'       => $i,
+        //         'solicitacao_procedimento_id'      => $procedimentoId,
+        //         'solicitacao_localizacao_atual_id' => null, // será atualizado conforme a movimentação
+        //         'solicitacao_numero'               => $faker->unique()->numerify('S######'),
+        //         'solicitacao_data'                 => $faker->dateTimeBetween('-30 days', 'now'),
+        //         'solicitacao_status'               => $faker->randomElement($statusList),
+        //         'created_user_id'                  => 1,
+        //         'updated_user_id'                  => 1,
+        //         'created_at'                       => now(),
+        //         'updated_at'                       => now(),
+        //     ];
+        // }
 
-        Solicitacao::insert($dataSolicitacao);
+        // Solicitacao::insert($dataSolicitacao);
 
-        $solicitacoes = Solicitacao::all();
+        // $solicitacoes = Solicitacao::all();
 
-        foreach ($solicitacoes as $solicitacao) {
-            $movimentos = [];
+        // foreach ($solicitacoes as $solicitacao) {
+        //     $movimentos = [];
 
-            // Movimentação inicial: recepção -> marcação (encaminhamento)
-            $movimentos[] = [
-                'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-                'movimentacao_usuario_id'     => 1, // recepcionista
-                'movimentacao_destino_id'     => null, // setor marcação pode ser preenchido
-                'movimentacao_tipo'           => 'encaminhamento',
-                'movimentacao_entregue_para'  => null,
-                'movimentacao_observacao'     => 'Encaminhada para marcação',
-                'movimentacao_data'           => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
-            ];
+        //     // Movimentação inicial: recepção -> marcação (encaminhamento)
+        //     $movimentos[] = [
+        //         'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
+        //         'movimentacao_usuario_id'     => 1, // recepcionista
+        //         'movimentacao_destino_id'     => null, // setor marcação pode ser preenchido
+        //         'movimentacao_tipo'           => 'encaminhamento',
+        //         'movimentacao_entregue_para'  => null,
+        //         'movimentacao_observacao'     => 'Encaminhada para marcação',
+        //         'movimentacao_data'           => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
+        //     ];
 
-            // Se o status for 'marcada', gerar retorno para recepção
-            if ($solicitacao->solicitacao_status === 'marcada') {
-                $movimentos[] = [
-                    'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-                    'movimentacao_usuario_id'     => 2, // setor de marcação
-                    'movimentacao_destino_id'     => null, // retorno para recepção
-                    'movimentacao_tipo'           => 'retorno',
-                    'movimentacao_entregue_para'  => null,
-                    'movimentacao_observacao'     => 'Retorno da marcação',
-                    'movimentacao_data'           => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
-                ];
+        //     // Se o status for 'marcada', gerar retorno para recepção
+        //     if ($solicitacao->solicitacao_status === 'marcada') {
+        //         $movimentos[] = [
+        //             'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
+        //             'movimentacao_usuario_id'     => 2, // setor de marcação
+        //             'movimentacao_destino_id'     => null, // retorno para recepção
+        //             'movimentacao_tipo'           => 'retorno',
+        //             'movimentacao_entregue_para'  => null,
+        //             'movimentacao_observacao'     => 'Retorno da marcação',
+        //             'movimentacao_data'           => $faker->dateTimeBetween($solicitacao->solicitacao_data, 'now'),
+        //         ];
 
-                // Movimentação de entrega ao paciente/ACS/Equipe
-                $entreguePara = $faker->randomElement(['paciente', 'agente_saude', 'equipe_saude']);
-                $movimentos[] = [
-                    'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
-                    'movimentacao_usuario_id'     => 1, // recepcionista
-                    'movimentacao_destino_id'     => null,
-                    'movimentacao_tipo'           => 'entrega',
-                    'movimentacao_entregue_para'  => $entreguePara,
-                    'movimentacao_observacao'     => 'Entrega realizada',
-                    'movimentacao_data'           => now(),
-                ];
-            }
+        //         // Movimentação de entrega ao paciente/ACS/Equipe
+        //         $entreguePara = $faker->randomElement(['paciente', 'agente_saude', 'equipe_saude']);
+        //         $movimentos[] = [
+        //             'movimentacao_solicitacao_id' => $solicitacao->solicitacao_id,
+        //             'movimentacao_usuario_id'     => 1, // recepcionista
+        //             'movimentacao_destino_id'     => null,
+        //             'movimentacao_tipo'           => 'entrega',
+        //             'movimentacao_entregue_para'  => $entreguePara,
+        //             'movimentacao_observacao'     => 'Entrega realizada',
+        //             'movimentacao_data'           => now(),
+        //         ];
+        //     }
 
-            // Inserir todas movimentações geradas
-            SolicitacaoMovimentacao::insert($movimentos);
-        }
+        //     // Inserir todas movimentações geradas
+        //     SolicitacaoMovimentacao::insert($movimentos);
+        // }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Livewire\Admin\Solicitacoes;
 
@@ -13,22 +13,32 @@ use Livewire\Component;
 class Movimentar extends Component
 {
     public $solicitacao_id;
-
     public $status = '';
-
     public $entregue_para = '';
-
     public $observacao = '';
-
     public $setor_destino_id = null;
 
     public $solicitacao;
+    public $movimentacoes = [];
 
     public function mount($solicitacao_id)
     {
         $this->solicitacao_id = $solicitacao_id;
-        $this->solicitacao    = Solicitacao::with('localizacao_atual')->findOrFail($solicitacao_id);
-        $this->status         = $this->solicitacao->solicitacao_status ?? 'aguardando';
+        $this->solicitacao = Solicitacao::with(['localizacao_atual', 'movimentacoes.usuario', 'movimentacoes.destino'])
+            ->findOrFail($solicitacao_id);
+
+        $this->status = $this->solicitacao->solicitacao_status ?? 'aguardando';
+        $this->carregarMovimentacoes();
+    }
+
+    /** 🧾 Carrega todas as movimentações (mais recentes primeiro) */
+    private function carregarMovimentacoes(): void
+    {
+        $this->movimentacoes = $this->solicitacao
+            ->movimentacoes()
+            ->with(['usuario', 'destino'])
+            ->orderByDesc('movimentacao_data')
+            ->get();
     }
 
     public function salvar()
@@ -44,7 +54,7 @@ class Movimentar extends Component
         DB::transaction(function () use ($usuario) {
             $solicitacao = $this->solicitacao;
 
-            // Determinar tipo de movimentação conforme o status
+            // Determina o tipo de movimentação conforme status
             $movTipo = $this->determineMovimentacaoTipo($this->status);
 
             // Define destino (mantém o atual se não informado)
@@ -69,13 +79,13 @@ class Movimentar extends Component
             ]);
         });
 
-        session()->flash('message', 'Movimentação registrada com sucesso.');
-        flash()->success('Setor salvo com sucesso.', [], 'Sucesso!');
+        $this->carregarMovimentacoes();
 
+        flash()->success('Movimentação registrada com sucesso.', [], 'Sucesso!');
         return redirect()->route('admin.solicitacoes.detalhes', $this->solicitacao_id);
     }
 
-    /** Define tipo de movimentação conforme status */
+    /** Determina o tipo da movimentação */
     private function determineMovimentacaoTipo(string $status): string
     {
         return match ($status) {
@@ -83,6 +93,7 @@ class Movimentar extends Component
             'agendado', 'marcado' => 'encaminhamento',
             'entregue'  => 'entrega',
             'cancelado' => 'cancelamento',
+            'devolvido' => 'retorno',
             default     => 'encaminhamento',
         };
     }
@@ -90,8 +101,9 @@ class Movimentar extends Component
     public function render()
     {
         return view('livewire.admin.solicitacoes.movimentar', [
-            'setores'     => Setor::orderBy('setor_nome')->get(),
-            'solicitacao' => $this->solicitacao,
+            'setores'       => Setor::orderBy('setor_nome')->get(),
+            'solicitacao'   => $this->solicitacao,
+            'movimentacoes' => $this->movimentacoes,
         ])->layout('layouts.admin', [
             'title' => 'Movimentar Solicitação',
         ]);

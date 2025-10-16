@@ -114,7 +114,7 @@
                     <th class="px-2 py-2 font-semibold">Cartão do SUS</th>
                     <th class="px-2 py-2 font-semibold">CPF nº</th>
                     <th class="px-2 py-2 font-semibold">Nome da Mãe</th>
-                    <th class="px-2 py-2 text-center font-semibold" width="140">Ações</th>
+                    <th class="px-2 py-2 text-center font-semibold" width="180">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,6 +153,13 @@
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $paciente->paciente_cpf }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $paciente->paciente_nome_mae }}</td>
                         <td class="px-2 py-1 text-center space-x-0">
+                            <!-- Movimentar -->
+                            <a href="{{ route('admin.atendimentos.formulario', ['paciente_id' => $paciente->paciente_id]) }}"
+                               class="w-7 h-6 inline-flex items-center justify-center bg-green-100 text-green-700 hover:bg-green-200 p-2 transition"
+                               title="Editar Solicitação">
+                                <i class="fas fa-plus text-xs"></i>
+                            </a>
+
                             <!-- Ver -->
                             <a href="{{ route('admin.pacientes.detalhes', $paciente->paciente_id) }}"
                                class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 p-2 transition"

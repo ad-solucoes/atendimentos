@@ -1,4 +1,4 @@
-<div class="max-w-5xl mx-auto p-4">
+<div class="max-w-6xl mx-auto p-4">
     <form wire:submit.prevent="save" class="space-y-6">
         @if ($errors->any())
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
@@ -14,7 +14,7 @@
         {{-- DADOS DO ATENDIMENTO --}}
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
             {{-- Paciente --}}
-            <div class="relative col-span-7">
+            <div class="relative col-span-8">
                 <label class="font-semibold text-sm mb-1 block">Paciente <span class="text-red-600">*</span></label>
                 <input 
                     type="text"
@@ -57,7 +57,7 @@
             </div>
 
             {{-- Prioridade --}}
-            <div class="col-span-5">
+            <div class="col-span-4">
                 <label class="font-semibold text-sm mb-2 block text-gray-700">Prioridade</label>
 
                 <div class="flex flex-wrap gap-3">
@@ -135,15 +135,6 @@
                         disabled:opacity-100 disabled:text-gray-800 disabled:border-gray-300"
                 >
             </div>
-
-            {{-- Status --}}
-            <div>
-                <label class="font-semibold text-sm mb-1 block">Status</label>
-                <select wire:model="atendimento_status" class="w-full border rounded px-3 py-2">
-                    <option value="1">Ativo</option>
-                    <option value="0">Inativo</option>
-                </select>
-            </div>
         </div>
 
         {{-- Observação --}}
@@ -163,14 +154,14 @@
 
             @foreach($solicitacoes as $index => $sol)
                 <div class="border rounded-lg p-3 mb-3 bg-gray-50">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                         {{-- Tipo de procedimento --}}
-                        <div>
+                        <div class="col-span-3">
                             <label class="text-sm font-semibold">Tipo de Procedimento</label>
                             <select 
                                 wire:model="solicitacoes.{{ $index }}.tipo_id" 
                                 wire:change="atualizarProcedimentos({{ $index }})"
-                                class="w-full border rounded px-2 py-1"
+                                class="w-full border rounded px-2 py-1 bg-white"
                             >
                                 <option value="">Selecione</option>
                                 @foreach($tiposProcedimento as $tipo)
@@ -180,20 +171,14 @@
                         </div>
 
                         {{-- Procedimento --}}
-                        <div>
+                        <div class="col-span-9">
                             <label class="text-sm font-semibold">Procedimento</label>
-                            <select wire:model="solicitacoes.{{ $index }}.procedimento_id" class="w-full border rounded px-2 py-1">
+                            <select wire:model="solicitacoes.{{ $index }}.procedimento_id" class="w-full border rounded px-2 py-1 bg-white">
                                 <option value="">Selecione</option>
                                 @foreach($sol['procedimentos_disponiveis'] ?? [] as $proc)
                                     <option value="{{ $proc->procedimento_id }}">{{ $proc->procedimento_nome }}</option>
                                 @endforeach
                             </select>
-                        </div>
-
-                        {{-- Observação --}}
-                        <div class="md:col-span-2">
-                            {{-- <label class="text-sm font-semibold">Observação</label> --}}
-                            <input type="text" wire:model="solicitacoes.{{ $index }}.observacao" class="w-full border rounded px-2 py-1" placeholder="Observação">
                         </div>
                     </div>
 

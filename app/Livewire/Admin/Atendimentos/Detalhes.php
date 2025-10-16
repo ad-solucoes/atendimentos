@@ -13,7 +13,7 @@ class Detalhes extends Component
 
     public function mount($id = null)
     {
-        $this->atendimento = Atendimento::find($id);
+        $this->atendimento = Atendimento::with('solicitacoes.procedimento.tipo_procedimento')->find($id);
     }
 
     public function render()

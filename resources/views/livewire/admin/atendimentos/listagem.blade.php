@@ -174,7 +174,7 @@
         <table class="hidden md:table min-w-full">
             <thead>
                 <tr class="bg-gray-100 text-left text-sm text-gray-600">
-                    <th class="px-2 py-2 text-center font-semibold" width="100" wire:click="sortByField('atendimento_status')" style="cursor: pointer;" title="Clique para ordenar">
+                    <th class="px-2 py-2 text-center font-semibold" width="120" wire:click="sortByField('atendimento_status')" style="cursor: pointer;" title="Clique para ordenar">
                         Status
                         @include('livewire.partials._sort-icon', ['field' => 'atendimento_status'])
                     </th>
@@ -187,6 +187,8 @@
                         @include('livewire.partials._sort-icon', ['field' => 'atendimento_numero'])
                     </th>
                     <th class="px-2 py-2 font-semibold">Paciente</th>
+                    <th class="px-2 py-2 font-semibold">CPF nº</th>
+                    <th class="px-2 py-2 font-semibold">Cartão do SUS</th>
                     <th class="px-2 py-2 font-semibold">Prioridade</th>
                     <th class="px-2 py-2 text-center font-semibold" width="140">Ações</th>
                 </tr>
@@ -224,16 +226,26 @@
                 @forelse ($atendimentos as $atendimento)
                     <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="filtroDataInicial, filtroDataFinal, filtroNumeroAtendimento, filtroPrioridade, filtroNome, filtroCpf, filtroSus, filtroMae">
                         <td class="px-2 py-1 text-sm font-medium text-center">
-                            @if($atendimento->atendimento_status)
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
+                            @if($atendimento->solicitacoes)
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Concluído</span>
                             @else
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Aberto</span>
                             @endif
                         </td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->atendimento_data->format('d/m/Y') }}</td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $atendimento->atendimento_numero }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_nome }}</td>
-                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->atendimento_prioridade }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_cpf }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_cns }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">
+                            @if ($atendimento->atendimento_prioridade == 'Baixa')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Baixa</span>
+                            @elseif ($atendimento->atendimento_prioridade == 'Média')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Média</span>
+                            @elseif ($atendimento->atendimento_prioridade == 'Alta')
+                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Alta</span>
+                            @endif
+                        </td>
                         <td class="px-2 py-1 text-center space-x-0">
                             <!-- Ver -->
                             <a href="{{ route('admin.atendimentos.detalhes', $atendimento->atendimento_id) }}"

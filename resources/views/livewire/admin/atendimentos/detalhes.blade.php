@@ -1,4 +1,4 @@
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     {{-- Informações do Atendimento --}}
     <div class="space-y-4 bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
@@ -15,19 +15,23 @@
             </div>
             <div>
                 <h3 class="text-gray-400 text-sm font-medium">Prioridade</h3>
-                <p class="text-gray-800 font-semibold">{{ $atendimento->atendimento_prioridade }}</p>
+                <p class="text-gray-800 font-semibold">
+                    @if ($atendimento->atendimento_prioridade == 'Baixa')
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Baixa</span>
+                    @elseif ($atendimento->atendimento_prioridade == 'Média')
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Média</span>
+                    @elseif ($atendimento->atendimento_prioridade == 'Alta')
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Alta</span>
+                    @endif
+                </p>
             </div>
             <div>
                 <h3 class="text-gray-400 text-sm font-medium">Status</h3>
-                @if($atendimento->atendimento_status)
+                @if($atendimento->solicitacoes)
                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Concluído</span>
                 @else
                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pendente</span>
                 @endif
-            </div>
-            <div>
-                <h3 class="text-gray-400 text-sm font-medium">Profissional</h3>
-                <p class="text-gray-800 font-semibold">{{ $atendimento->profissional->profissional_nome ?? '-' }}</p>
             </div>
         </div>
 

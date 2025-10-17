@@ -37,6 +37,36 @@ class Atendimento extends Model
         'updated_at'       => 'datetime',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($atendimento) {
+            $atendimento->atendimento_numero = self::gerarNumeroAtendimento();
+        });
+    }
+
+    // Função para gerar o número
+    public static function gerarNumeroAtendimento()
+    {
+        $hoje = date('Y-m-d');
+
+        // Busca último atendimento do dia
+        $ultimo = self::whereDate('atendimento_data', $hoje)
+            ->orderBy('atendimento_data', 'desc')
+            ->first();
+
+        if ($ultimo) {
+            // Pega os últimos 3 dígitos e incrementa
+            $numero = intval(substr($ultimo->atendimento_numero, -3)) + 1;
+        } else {
+            $numero = 1;
+        }
+
+        // Monta o número final no formato AAAAMMDDXXX
+        return date('Ymd') . formatoId($numero, 3);
+    }
+
     /**
      * Um atendimento pertence a um paciente
      */
@@ -51,16 +81,5 @@ class Atendimento extends Model
     public function solicitacoes()
     {
         return $this->hasMany(Solicitacao::class, 'solicitacao_atendimento_id', 'atendimento_id');
-    }
-
-    /**
-     * Gera automaticamente o número do atendimento no formato AAAAMMDD### (ex: 20251012001)
-     */
-    public static function gerarNumeroAtendimento()
-    {
-        $dataHoje  = now()->format('Ymd');
-        $sequencia = self::whereDate('created_at', now()->toDateString())->count() + 1;
-
-        return $dataHoje . str_pad($sequencia, 3, '0', STR_PAD_LEFT);
     }
 }

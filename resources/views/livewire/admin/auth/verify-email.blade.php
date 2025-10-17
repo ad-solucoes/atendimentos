@@ -1,20 +1,20 @@
 <div class="w-full text-center">
-    <h2 class="text-2xl font-bold text-blue-900 mb-2">Verifique seu Email</h2>
+    <h2 class="text-2xl font-bold text-blue-900 mb-2">Exibirifique seu Email</h2>
     <p class="text-gray-600 mb-6 text-sm">
         Confirme seu endereço de email para garantir a segurança da sua conta.
     </p>
 
-    @if(session('message'))
+    @if (session('message'))
         <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
             <i class="fa fa-check-circle mr-2"></i> {{ session('message') }}
         </div>
     @endif
 
-    @if($emailSent)
+    @if ($emailSent)
         <div class="bg-green-50 border border-green-200 text-green-800 p-5 rounded-lg mb-4">
             <i class="fa fa-envelope text-3xl mb-2"></i>
             <h4 class="font-semibold mb-1">Email reenviado com sucesso!</h4>
-            <p class="text-xs">Verifique sua caixa de entrada ou pasta de spam.</p>
+            <p class="text-xs">Exibirifique sua caixa de entrada ou pasta de spam.</p>
         </div>
 
         <a href="#" wire:click.prevent="logout"
@@ -42,7 +42,7 @@
 
         <button wire:click="resend"
             class="w-full flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded-lg transition">
-            <i class="fa fa-paper-plane"></i> Reenviar Email de Verificação
+            <i class="fa fa-paper-plane"></i> Reenviar Email de Exibirificação
         </button>
 
         <a href="#" wire:click.prevent="logout"

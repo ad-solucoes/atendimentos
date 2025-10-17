@@ -7,9 +7,8 @@
                 <label for="perPage" class="text-sm font-semibold text-gray-700 mb-1">
                     Registros por página:
                 </label>
-                <select id="perPage"
-                        wire:model.live="perPage"
-                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-36">
+                <select id="perPage" wire:model.live="perPage"
+                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-36">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -27,20 +26,13 @@
                         <i class="fa fa-search"></i>
                     </span>
 
-                    <input 
-                        id="searchTerm"
-                        type="text" 
-                        wire:model.live.debounce.500ms="searchTerm"
-                        placeholder="Buscar por nome do setor..."
-                        autocomplete="off"
-                        class="pl-9 pr-9 w-full border border-gray-300 rounded-lg py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                    />
+                    <input id="searchTerm" type="text" wire:model.live.debounce.500ms="searchTerm"
+                        placeholder="Buscar por nome do setor..." autocomplete="off"
+                        class="pl-9 pr-9 w-full border border-gray-300 rounded-lg py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
 
-                    @if($searchTerm)
-                        <button type="button"
-                                wire:click="$set('searchTerm', '')"
-                                title="Limpar busca"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                    @if ($searchTerm)
+                        <button type="button" wire:click="$set('searchTerm', '')" title="Limpar busca"
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
                             <i class="fa fa-times"></i>
                         </button>
                     @endif
@@ -54,17 +46,25 @@
 
                     <small class="text-gray-600 text-sm">
                         <i class="fa fa-info-circle text-gray-400"></i>
-                        Total: <span class="font-semibold text-gray-800">{{ $procedimentos->total() }}</span> registro(s)
+                        Total: <span class="font-semibold text-gray-800">{{ $procedimentos->total() }}</span>
+                        registro(s)
                     </small>
 
-                    <a href="{{ route('admin.procedimentos.formulario') }}"
-                    class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
-                        <i class="fa fa-plus"></i> Novo Procedimento
-                    </a>
+                    @can('Adicionar Procedimento')
+                        <a href="{{ route('admin.procedimentos.formulario') }}"
+                            class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
+                            <i class="fa fa-plus"></i> Novo Procedimento
+                        </a>
+                    @else
+                        <button type="button"
+                        class="inline-flex items-center justify-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm opacity-50 cursor-not-allowed">
+                            <i class="fa fa-plus"></i> Novo Procedimento
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <!-- Tabela principal -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -72,11 +72,14 @@
         <table class="hidden md:table min-w-full">
             <thead>
                 <tr class="bg-gray-100 text-left text-sm text-gray-600">
-                    <th class="px-2 py-2 text-center font-semibold" width="100" wire:click="sortByField('procedimento_status')" style="cursor: pointer;" title="Clique para ordenar">
+                    <th class="px-2 py-2 text-center font-semibold" width="100"
+                        wire:click="sortByField('procedimento_status')" style="cursor: pointer;"
+                        title="Clique para ordenar">
                         Status
                         @include('livewire.partials._sort-icon', ['field' => 'procedimento_status'])
                     </th>
-                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('procedimento_nome')" style="cursor: pointer;" title="Clique para ordenar">
+                    <th class="px-2 py-2 font-semibold" wire:click="sortByField('procedimento_nome')"
+                        style="cursor: pointer;" title="Clique para ordenar">
                         Nome do Procedimento
                         @include('livewire.partials._sort-icon', ['field' => 'procedimento_nome'])
                     </th>
@@ -91,7 +94,9 @@
                             {{-- Spinner visível e animado --}}
                             <div class="relative flex items-center justify-center">
                                 <div class="w-10 h-10 border-4 border-gray-300 rounded-full"></div>
-                                <div class="absolute w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                <div
+                                    class="absolute w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin">
+                                </div>
                             </div>
                             {{-- Mensagem --}}
                             <div>
@@ -105,36 +110,63 @@
                 @forelse ($procedimentos as $procedimento)
                     <tr class="border-t hover:bg-gray-50 transition" wire:loading.remove wire:target="searchTerm">
                         <td class="px-2 py-1 text-sm font-medium text-center">
-                            @if($procedimento->procedimento_status)
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
+                            @if ($procedimento->procedimento_status)
+                                <span
+                                    class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
                             @else
-                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
+                                <span
+                                    class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
                             @endif
                         </td>
-                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $procedimento->procedimento_nome }}</td>
-                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $procedimento->tipo_procedimento->tipo_procedimento_nome }}</td>
+                        <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $procedimento->procedimento_nome }}
+                        </td>
+                        <td class="px-2 py-1 text-sm font-medium text-gray-800">
+                            {{ $procedimento->tipo_procedimento->tipo_procedimento_nome }}</td>
                         <td class="px-2 py-1 text-center space-x-0">
-                            <!-- Ver -->
+                            <!-- Exibir -->
+                            @can('Exibir Procedimento')
                             <a href="{{ route('admin.procedimentos.detalhes', $procedimento->procedimento_id) }}"
-                               class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 p-2 transition"
-                               title="Ver Procedimento">
+                                class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 p-2 transition"
+                                title="Exibir Procedimento">
                                 <i class="fas fa-eye text-xs"></i>
                             </a>
+                            @else
+                                <button type="button"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 p-2 transition opacity-60 cursor-not-allowed"
+                                title="Exibir Procedimento">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </button>
+                            @endif
 
                             <!-- Editar -->
+                            @can('Editar Procedimento')
                             <a href="{{ route('admin.procedimentos.formulario', $procedimento->procedimento_id) }}"
-                               class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 p-2 transition"
-                               title="Editar Procedimento">
+                                class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 p-2 transition"
+                                title="Editar Procedimento">
                                 <i class="fas fa-pen text-xs"></i>
                             </a>
+                            @else
+                                <button type="button"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 p-2 transition opacity-60 cursor-not-allowed"
+                                title="Editar Procedimento">
+                                    <i class="fas fa-pen text-xs"></i>
+                                </button>
+                            @endif
 
-                            <!-- Excluir -->
-                            <button type="button"
-                                    wire:click="confirmDelete('{{ $procedimento->procedimento_id }}')"
-                                    class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 p-2 transition"
-                                    title="Excluir Procedimento">
+                            <!-- Deletar -->
+                            @can('Deletar Procedimento')
+                            <button type="button" wire:click="confirmDelete('{{ $procedimento->procedimento_id }}')"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 p-2 transition"
+                                title="Deletar Procedimento">
                                 <i class="fas fa-trash-alt text-xs"></i>
                             </button>
+                            @else
+                                <button type="button"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 p-2 transition opacity-60 cursor-not-allowed"
+                                title="Deletar Procedimento">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -147,14 +179,14 @@
                                 </div>
 
                                 <div>
-                                    @if($searchTerm)
+                                    @if ($searchTerm)
                                         <h4 class="text-gray-700 font-semibold text-lg">
                                             Nenhum procedimento encontrado
                                         </h4>
                                         <p class="text-sm text-gray-500 mt-1">
                                             Tente buscar por outros termos ou
                                             <button wire:click="$set('searchTerm', '')"
-                                                    class="text-blue-600 hover:underline font-medium">
+                                                class="text-blue-600 hover:underline font-medium">
                                                 limpe o filtro
                                             </button>.
                                         </p>
@@ -168,8 +200,9 @@
                                     @endif
                                 </div>
 
-                                @if(!$searchTerm)
-                                    <a href="{{ route('admin.procedimentos.formulario') }}" class="mt-3 inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow transition-all duration-200">
+                                @if (!$searchTerm)
+                                    <a href="{{ route('admin.procedimentos.formulario') }}"
+                                        class="mt-3 inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow transition-all duration-200">
                                         <i class="fa fa-plus"></i> Criar Primeiro Procedimento
                                     </a>
                                 @endif
@@ -181,7 +214,7 @@
             </tbody>
         </table>
 
-        <!-- Versão MOBILE -->
+        <!-- Exibirsão MOBILE -->
         <div class="block md:hidden divide-y divide-gray-100">
             @forelse ($procedimentos as $procedimento)
                 <div class="p-4 hover:bg-gray-50 transition">
@@ -192,19 +225,18 @@
 
                     <!-- Botões -->
                     <div class="flex justify-end mt-2 gap-1">
-                        <a href="/procedimentos/{{ $procedimento->procedimento_id }}" 
-                           class="w-8 h-8 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-full p-2 transition">
+                        <a href="/procedimentos/{{ $procedimento->procedimento_id }}"
+                            class="w-8 h-8 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-full p-2 transition">
                             <i class="fas fa-eye text-xs"></i>
                         </a>
 
                         <a href="{{ route('admin.procedimentos.formulario', $procedimento->procedimento_id) }}"
-                           class="w-8 h-8 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-full p-2 transition">
+                            class="w-8 h-8 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-full p-2 transition">
                             <i class="fas fa-pen text-xs"></i>
                         </a>
 
-                        <button type="button" 
-                                wire:click="confirmDelete('{{ $procedimento->procedimento_id }}')" 
-                                class="w-8 h-8 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 rounded-full p-2 transition">
+                        <button type="button" wire:click="confirmDelete('{{ $procedimento->procedimento_id }}')"
+                            class="w-8 h-8 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 rounded-full p-2 transition">
                             <i class="fas fa-trash-alt text-xs"></i>
                         </button>
                     </div>
@@ -233,21 +265,26 @@
             </div>
         @endif
 
-         {{-- Links de paginação --}}
+        {{-- Links de paginação --}}
         <div>
             {{ $procedimentos->links() }}
         </div>
     </div>
 
     <!-- Modal de confirmação -->
-    @if($confirmingDelete)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4" style="margin-top: 0!important">
+    @if ($confirmingDelete)
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
+            style="margin-top: 0!important">
             <div class="bg-white rounded-lg p-4 w-full max-w-md shadow-lg">
                 <h2 class="text-lg font-semibold mb-3">Confirmar exclusão</h2>
                 <p class="mb-4 text-gray-700">Tem certeza de que deseja excluir este procedimento?</p>
                 <div class="flex justify-end space-x-2 mt-5">
-                    <button wire:click="$set('confirmingDelete', false)" class="px-4 py-2 border rounded hover:bg-gray-100 transition text-sm"><i class="fa fa-times fa-fw"></i> Cancelar</button>
-                    <button wire:click="delete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition  text-sm"><i class="fa fa-trash fa-fw"></i> Excluir</button>
+                    <button wire:click="$set('confirmingDelete', false)"
+                        class="px-4 py-2 border rounded hover:bg-gray-100 transition text-sm"><i
+                            class="fa fa-times fa-fw"></i> Cancelar</button>
+                    <button wire:click="delete"
+                        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition  text-sm"><i
+                            class="fa fa-trash fa-fw"></i> Deletar</button>
                 </div>
             </div>
         </div>

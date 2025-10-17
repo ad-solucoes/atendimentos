@@ -14,6 +14,7 @@ class Formulario extends Component
     public $agente_saude_id;
 
     public $agente_saude_nome;
+
     public $agente_saude_apelido;
 
     public $agente_saude_equipe_saude_id;
@@ -53,7 +54,7 @@ class Formulario extends Component
             if ($doc) {
                 $this->agente_saude_id              = $doc->agente_saude_id;
                 $this->agente_saude_nome            = $doc->agente_saude_nome;
-                $this->agente_saude_apelido            = $doc->agente_saude_apelido;
+                $this->agente_saude_apelido         = $doc->agente_saude_apelido;
                 $this->agente_saude_equipe_saude_id = $doc->agente_saude_equipe_saude_id;
                 $this->agente_saude_status          = $doc->agente_saude_status;
             }
@@ -68,7 +69,7 @@ class Formulario extends Component
             ['agente_saude_id' => $this->agente_saude_id],
             [
                 'agente_saude_nome'            => $this->agente_saude_nome,
-                'agente_saude_apelido'            => $this->agente_saude_apelido,
+                'agente_saude_apelido'         => $this->agente_saude_apelido,
                 'agente_saude_equipe_saude_id' => $this->agente_saude_equipe_saude_id,
                 'agente_saude_status'          => $this->agente_saude_status,
             ]

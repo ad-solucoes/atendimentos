@@ -187,28 +187,6 @@ function emitente()
     ]);
 }
 
-function numeroAtendimento()
-{
-    if (Atendimento::whereYear('atendimento_data', date('Y'))->whereMonth('atendimento_data', date('m'))->whereDay('atendimento_data', date('d'))->orderBy('atendimento_data', 'desc')->exists()) {
-        $atendimento = Atendimento::whereYear('atendimento_data', date('Y'))->whereMonth('atendimento_data', date('m'))->whereDay('atendimento_data', date('d'))->orderBy('atendimento_data', 'desc')->limit(1)->first();
-
-        return date('Y') . '' . date('m') . '' . date('d') . '' . formatoId(substr($atendimento->atendimento_numero, 8, 3) + 1, 3);
-    } else {
-        return date('Y') . '' . date('m') . '' . date('d') . '' . formatoId(1, 3);
-    }
-}
-
-function numeroSolicitacao()
-{
-    if (Solicitacao::whereYear('solicitacao_data', date('Y'))->orderBy('solicitacao_numero', 'desc')->exists()) {
-        $solicitacao = Solicitacao::orderBy('solicitacao_numero', 'desc')->limit(1)->first();
-
-        return date('Y') . '' . formatoId(substr($solicitacao->solicitacao_numero, 8, 6) + 1, 6);
-    } else {
-        return date('Y') . '' . formatoId(1, 6);
-    }
-}
-
 function numeroProtocolo()
 {
     if (Protocolo::whereYear('protocolo_data', date('Y'))->orderBy('protocolo_data', 'desc')->exists()) {

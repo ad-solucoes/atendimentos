@@ -2,22 +2,21 @@
     {{-- Header com ações --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
         <h2 class="text-lg font-semibold text-gray-700">Detalhes do Paciente</h2>
-        
+
         <div class="flex items-center space-x-2">
             <span class="text-gray-600 text-sm">
-                Total de Atendimentos: 
+                Total de Atendimentos:
                 <strong>{{ $paciente->atendimentos->count() }}</strong>
             </span>
 
-            <a href="{{ route('admin.atendimentos.formulario', ['paciente_id' => $paciente->paciente_id]) }}" 
-               class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded shadow text-sm flex items-center justify-center gap-2 transition">
+            <a href="{{ route('admin.atendimentos.formulario', ['paciente_id' => $paciente->paciente_id]) }}"
+                class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded shadow text-sm flex items-center justify-center gap-2 transition">
                 <i class="fa fa-plus"></i> Novo Atendimento
             </a>
 
-            <a href="{{ route('admin.pacientes.impressao', ['id' => $paciente->paciente_id]) }}" 
-               target="_blank"
-               class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded shadow text-sm flex items-center justify-center gap-2 transition">
-               <i class="fa fa-file-pdf"></i> Gerar PDF
+            <a href="{{ route('admin.pacientes.impressao', ['id' => $paciente->paciente_id]) }}" target="_blank"
+                class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded shadow text-sm flex items-center justify-center gap-2 transition">
+                <i class="fa fa-file-pdf"></i> Gerar PDF
             </a>
         </div>
     </div>
@@ -47,10 +46,12 @@
             </div>
             <div>
                 <h3 class="text-gray-400 text-sm font-medium">Status</h3>
-                @if($paciente->paciente_status)
-                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
+                @if ($paciente->paciente_status)
+                    <span
+                        class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Ativo</span>
                 @else
-                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
+                    <span
+                        class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inativo</span>
                 @endif
             </div>
             <div>
@@ -78,7 +79,7 @@
         {{-- Histórico de atendimentos --}}
         <div class="mt-6 border-t border-gray-200 pt-4">
             <h3 class="text-gray-600 font-semibold mb-2 flex justify-between items-center">
-                Histórico de Atendimentos 
+                Histórico de Atendimentos
                 <span class="text-sm text-gray-500">{{ $paciente->atendimentos->count() }} registro(s)</span>
             </h3>
             <div class="overflow-x-auto">
@@ -101,14 +102,17 @@
                                 <td class="px-3 py-2">{{ $atendimento->atendimento_prioridade }}</td>
                                 <td class="px-3 py-2">{{ $atendimento->profissional->profissional_nome ?? '-' }}</td>
                                 <td class="px-3 py-2">
-                                    @if($atendimento->atendimento_status)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Concluído</span>
+                                    @if ($atendimento->solicitacoes)
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Concluído</span>
                                     @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pendente</span>
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pendente</span>
                                     @endif
                                 </td>
                                 <td class="px-3 py-2">
-                                    <a href="{{ route('admin.atendimentos.detalhes', $atendimento->atendimento_id) }}" class="text-blue-600 hover:underline text-sm">Ver</a>
+                                    <a href="{{ route('admin.atendimentos.detalhes', $atendimento->atendimento_id) }}"
+                                        class="text-blue-600 hover:underline text-sm">Exibir</a>
                                 </td>
                             </tr>
                         @empty

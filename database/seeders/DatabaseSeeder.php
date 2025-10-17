@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,5 +15,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(TabelaSeeder::class);
+        $this->call(PermissionsTableSeeder::class);
     }
 }

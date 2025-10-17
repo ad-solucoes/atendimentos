@@ -134,107 +134,207 @@
             <nav class="flex-1 p-3 space-y-1 mt-4">
                 @php
                     $user = auth()->user();
-                    $links = [
-                        [
-                            'label' => 'Dashboard',
-                            'route' => 'admin.dashboard',
-                            'active' => 'admin.dashboard',
-                            'icon' => 'fa-solid fa-gauge',
-                        ], // painel geral
-                        [
-                            'label' => 'Setores',
-                            'route' => 'admin.setores.listagem',
-                            'active' => 'admin.setores*',
-                            'icon' => 'fa-solid fa-building',
-                        ], // setor/empresa
-                        [
-                            'label' => 'Tipos de Procedimento',
-                            'route' => 'admin.tipos_procedimento.listagem',
-                            'active' => 'admin.tipos_procedimento*',
-                            'icon' => 'fa-solid fa-list-check',
-                        ], // lista de tipos
-                        [
-                            'label' => 'Procedimentos',
-                            'route' => 'admin.procedimentos.listagem',
-                            'active' => 'admin.procedimentos*',
-                            'icon' => 'fa-solid fa-stethoscope',
-                        ], // procedimento médico
-                        [
-                            'label' => 'Equipes de Saúde',
-                            'route' => 'admin.equipes_saude.listagem',
-                            'active' => 'admin.equipes_saude*',
-                            'icon' => 'fa-solid fa-house-medical',
-                        ], // equipe de saúde da família
-                        [
-                            'label' => 'Agentes de Saúde',
-                            'route' => 'admin.agentes_saude.listagem',
-                            'active' => 'admin.agentes_saude*',
-                            'icon' => 'fa-solid fa-user-nurse',
-                        ], // agente comunitário de saúde
-                        [
-                            'label' => 'Pacientes',
-                            'route' => 'admin.pacientes.listagem',
-                            'active' => 'admin.pacientes*',
-                            'icon' => 'fa-solid fa-user-injured',
-                        ], // paciente
-                        [
-                            'label' => 'Atendimentos',
-                            'route' => 'admin.atendimentos.listagem',
-                            'active' => 'admin.atendimentos*',
-                            'icon' => 'fa-solid fa-calendar-check',
-                        ], // atendimentos/agenda
-                        [
-                            'label' => 'Solicitações',
-                            'route' => 'admin.solicitacoes.listagem',
-                            'active' => 'admin.solicitacoes*',
-                            'icon' => 'fa-solid fa-file-medical',
-                        ], // solicitações médicas
-                        [
-                            'label' => 'Movimentações',
-                            'route' => 'admin.movimentacoes.formulario',
-                            'active' => 'admin.movimentacoes*',
-                            'icon' => 'fa-solid fa-right-left',
-                        ], // Movimentações de solicitações em massa
-                    ];
-                    if ($user && $user->isAdmin()) {
-                        $links = array_merge($links, [
-                            [
-                                'label' => 'Usuários',
-                                'route' => 'admin.usuarios.listagem',
-                                'active' => 'admin.usuarios*',
-                                'icon' => 'fa-solid fa-users',
-                            ],
-                        ]);
-                    }
+                    $isDesktop = true; // exemplo, se você controla com Alpine
                 @endphp
 
-                @foreach ($links as $index => $link)
+                <!-- Dashboard -->
+                @php
+                    $active = request()->routeIs('admin.dashboard') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                @endphp
+                <a href="{{ route('admin.dashboard') }}"
+                    class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                    @mouseenter="hoverIndex = 'dashboard'" @mouseleave="hoverIndex = null">
+                    <i class="fa-solid fa-gauge text-md min-w-[1.5rem] text-center"></i>
+
+                    <span x-show="isDesktop && collapsed && hoverIndex === 'dashboard'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Dashboard</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Dashboard </span>
+                </a>
+
+                @if(auth()->user()->hasRole(['Recepcao', 'Marcacao', 'Gestor']))
+                    <!-- Setores -->
+                    @can('Listar Setor')
                     @php
-                        $active = request()->routeIs($link['active'])
-                            ? 'bg-blue-700 text-white'
-                            : 'text-blue-100 hover:bg-blue-800';
+                        $active = request()->routeIs('admin.setores*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
                     @endphp
 
-                    <a href="{{ route($link['route']) }}"
+                    <a href="{{ route('admin.setores.listagem') }}"
                         class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
-                        @mouseenter="hoverIndex = {{ $index }}" @mouseleave="hoverIndex = null">
-
-                        <!-- Ícone: sempre visível -->
-                        <i class="{{ $link['icon'] }} text-md min-w-[1.5rem] text-center"></i>
-
-                        <!-- Texto: aparece apenas no hover do menu colapsado -->
-                        <span x-show="isDesktop && collapsed && hoverIndex === {{ $index }}" x-transition.opacity
-                            class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50">
-                            {{ $link['label'] }}
-                        </span>
-
-                        <!-- Texto normal (menu expandido ou mobile) -->
-                        <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity
-                            class="ml-1 whitespace-nowrap">
-                            {{ $link['label'] }}
-                        </span>
+                        @mouseenter="hoverIndex = 'setores'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-building text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'setores'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Setores</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Setores </span>
                     </a>
-                @endforeach
+                    @endif
+
+                    <!-- Tipos de Procedimento -->
+                    @can('Listar Tipo de Procedimento')
+                    @php
+                        $active = request()->routeIs('admin.tipos_procedimento*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.tipos_procedimento.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'tipos_procedimento'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-list-check text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'tipos_procedimento'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Tipos de Procedimento</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Tipos de Procedimento </span>
+                    </a>
+                    @endif
+
+                    <!-- Procedimentos -->
+                    @can('Listar Procedimento')
+                    @php
+                        $active = request()->routeIs('admin.procedimentos*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.procedimentos.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'procedimentos'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-stethoscope text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'procedimentos'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Procedimentos</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Procedimentos </span>
+                    </a>
+                    @endif
+
+                    <!-- Equipes de Saúde -->
+                    @can('Listar Equipe de Saude')
+                    @php
+                        $active = request()->routeIs('admin.equipes_saude*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.equipes_saude.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'equipes_saude'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-house-medical text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'equipes_saude'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Equipes de Saúde</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Equipes de Saúde </span>
+                    </a>
+                    @endif
+
+                    <!-- Agentes de Saúde -->
+                    @can('Listar Agente de Saude')
+                    @php
+                        $active = request()->routeIs('admin.agentes_saude*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.agentes_saude.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'agentes_saude'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-user-nurse text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'agentes_saude'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Agentes de Saúde</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Agentes de Saúde </span>
+                    </a>
+                    @endif
+
+                    <!-- Pacientes -->
+                    @can('Listar Paciente')
+                    @php
+                        $active = request()->routeIs('admin.pacientes*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.pacientes.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'pacientes'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-user-injured text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'pacientes'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Pacientes</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Pacientes </span>
+                    </a>
+                    @endif
+
+                    <!-- Atendimentos -->
+                    @can('Listar Atendimento')
+                    @php
+                        $active = request()->routeIs('admin.atendimentos*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.atendimentos.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'atendimentos'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-calendar-check text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'atendimentos'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Atendimentos</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Atendimentos </span>
+                    </a>
+                    @endif
+
+                    <!-- Solicitações -->
+                    @can('Listar Solicitacao')
+                    @php
+                        $active = request()->routeIs('admin.solicitacoes*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.solicitacoes.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'solicitacoes'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-file-medical text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'solicitacoes'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Solicitações</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Solicitações </span>
+                    </a>
+                    @endif
+
+                    <!-- Movimentações -->
+                    @can('Realizar Movimentacao')
+                    @php
+                        $active = request()->routeIs('admin.movimentacoes*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.movimentacoes.formulario') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'movimentacoes'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-right-left text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'movimentacoes'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Movimentações</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Movimentações </span>
+                    </a>
+                    @endif
+
+                    <!-- Relatórios -->
+                    @can('Gerenciar Relatorios')
+                    @php
+                        $active = request()->routeIs('admin.relatorios*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.relatorios') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'relatorios'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-pie-chart text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'relatorios'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Relatórios</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Relatórios </span>
+                    </a>
+                    @endif
+                @endif
+
+                @if(auth()->user()->hasRole('Administrador'))
+                    <!-- Permissões -->
+                    @can('Listar Permissao')
+                    @php
+                        $active = request()->routeIs('admin.permissoes*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.permissoes.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'permissoes'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-key text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'permissoes'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Permissões</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Permissões </span>
+                    </a>
+                    @endif
+
+                    <!-- Perfis -->
+                    @can('Listar Perfil')
+                    @php
+                        $active = request()->routeIs('admin.perfis*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.perfis.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'perfis'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-user-shield text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'perfis'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Perfis</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Perfis </span>
+                    </a>
+                    @endif
+
+                    <!-- Usuários -->
+                    @can('Listar Usuario')
+                    @php
+                        $active = request()->routeIs('admin.usuarios*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.usuarios.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'usuarios'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-users text-md min-w-[1.5rem] text-center"></i>
+
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'usuarios'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Usuários</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Usuários </span>
+                    </a>
+                    @endif
+                @endif
             </nav>
 
             <!-- Footer -->

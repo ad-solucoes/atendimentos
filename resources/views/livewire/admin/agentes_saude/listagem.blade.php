@@ -57,10 +57,17 @@
                         Total: <span class="font-semibold text-gray-800">{{ $agentes_saude->total() }}</span> registro(s)
                     </small>
 
-                    <a href="{{ route('admin.agentes_saude.formulario') }}"
-                    class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
-                        <i class="fa fa-plus"></i> Novo Agente de Saúde
-                    </a>
+                    @can('Adicionar Agente de Saude')
+                        <a href="{{ route('admin.agentes_saude.formulario') }}"
+                        class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm">
+                            <i class="fa fa-plus"></i> Novo Agente de Saúde
+                        </a>
+                    @else
+                        <button type="button"
+                        class="inline-flex items-center justify-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-all duration-200 text-sm opacity-50 cursor-not-allowed">
+                            <i class="fa fa-plus"></i> Novo Agente de Saúde
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -119,27 +126,51 @@
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $agente_saude->agente_saude_apelido }}</td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $agente_saude->equipe_saude->equipe_saude_nome }}</td>
                         <td class="px-2 py-1 text-center space-x-0">
-                            <!-- Ver -->
-                            <a href="{{ route('admin.agentes_saude.detalhes', $agente_saude->agente_saude_id) }}"
-                               class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 p-2 transition"
-                               title="Ver Agente de Saúde">
-                                <i class="fas fa-eye text-xs"></i>
-                            </a>
+                            <!-- Exibir -->
+                            @can('Exibir Agente de Saude')
+                                <a href="{{ route('admin.agentes_saude.detalhes', $agente_saude->agente_saude_id) }}"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 p-2 transition"
+                                title="Exibir Agente de Saúde">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </a>
+                            @else
+                                <button type="button"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-blue-100 text-blue-700 p-2 transition opacity-60 cursor-not-allowed"
+                                title="Exibir Agente de Saúde">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </button>
+                            @endif
 
                             <!-- Editar -->
-                            <a href="{{ route('admin.agentes_saude.formulario', $agente_saude->agente_saude_id) }}"
-                               class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 p-2 transition"
-                               title="Editar Agente de Saúde">
-                                <i class="fas fa-pen text-xs"></i>
-                            </a>
+                            @can('Editar Agente de Saude')
+                                <a href="{{ route('admin.agentes_saude.formulario', $agente_saude->agente_saude_id) }}"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 hover:bg-yellow-200 p-2 transition"
+                                title="Editar Agente de Saúde">
+                                    <i class="fas fa-pen text-xs"></i>
+                                </a>
+                            @else
+                                <button type="button"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-yellow-100 text-yellow-700 p-2 transition opacity-60 cursor-not-allowed"
+                                title="Editar Agente de Saúde">
+                                    <i class="fas fa-pen text-xs"></i>
+                                </button>
+                            @endif
 
-                            <!-- Excluir -->
-                            <button type="button"
-                                    wire:click="confirmDelete('{{ $agente_saude->agente_saude_id }}')"
-                                    class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 p-2 transition"
-                                    title="Excluir Agente de Saúde">
-                                <i class="fas fa-trash-alt text-xs"></i>
-                            </button>
+                            <!-- Deletar -->
+                            @can('Deletar Agente de Saude')
+                                <button type="button"
+                                        wire:click="confirmDelete('{{ $agente_saude->agente_saude_id }}')"
+                                        class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 p-2 transition"
+                                        title="Deletar Agente de Saúde">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            @else
+                                <button type="button"
+                                class="w-7 h-6 inline-flex items-center justify-center bg-red-100 text-red-700 p-2 transition opacity-60 cursor-not-allowed"
+                                title="Deletar Agente de Saúde">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -186,7 +217,7 @@
             </tbody>
         </table>
 
-        <!-- Versão MOBILE -->
+        <!-- Exibirsão MOBILE -->
         <div class="block md:hidden divide-y divide-gray-100">
             @forelse ($agentes_saude as $agente_saude)
                 <div class="p-4 hover:bg-gray-50 transition">
@@ -252,7 +283,7 @@
                 <p class="mb-4 text-gray-700">Tem certeza de que deseja excluir este agente_saude?</p>
                 <div class="flex justify-end space-x-2 mt-5">
                     <button wire:click="$set('confirmingDelete', false)" class="px-4 py-2 border rounded hover:bg-gray-100 transition text-sm"><i class="fa fa-times fa-fw"></i> Cancelar</button>
-                    <button wire:click="delete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition  text-sm"><i class="fa fa-trash fa-fw"></i> Excluir</button>
+                    <button wire:click="delete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition  text-sm"><i class="fa fa-trash fa-fw"></i> Deletar</button>
                 </div>
             </div>
         </div>

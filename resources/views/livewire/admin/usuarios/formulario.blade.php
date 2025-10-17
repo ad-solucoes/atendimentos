@@ -14,30 +14,6 @@
             @error('email') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
         </div>
 
-        <!-- Admin -->
-        <div>
-            <label class="block text-sm font-semibold mb-1">Admin <span class="text-red-600 text-sm">*</span></label>
-            <select wire:model.live="is_admin" class="border rounded px-3 py-2 w-full">
-                <option value="1">Sim</option>
-                <option value="0">Não</option>
-            </select>
-            @error('is_admin') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
-        </div>
-
-        @if(!$is_admin)
-        <!-- Setor -->
-        <div>
-            <label class="block text-sm font-semibold mb-1">Setor <span class="text-red-600 text-sm">*</span></label>
-            <select wire:model="setor_id" class="border rounded px-3 py-2 w-full">
-                <option value="">-- Selecionar --</option>
-                @foreach($setores as $setor)
-                    <option value="{{ $setor->setor_id }}">{{ $setor->setor_nome }}</option>
-                @endforeach
-            </select>
-            @error('setor_id') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
-        </div>
-        @endif
-
         <!-- Status -->
         <div>
             <label class="block text-sm font-semibold mb-1">Status <span class="text-red-600 text-sm">*</span></label>

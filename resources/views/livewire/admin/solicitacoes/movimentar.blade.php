@@ -99,7 +99,7 @@
                             <td class="px-3 py-2">{{ \Carbon\Carbon::parse($mov->movimentacao_data)->format('d/m/Y H:i') }}</td>
                             <td class="px-3 py-2">{{ $mov->usuario->name ?? '-' }}</td>
                             <td class="px-3 py-2 capitalize">{{ $mov->movimentacao_tipo }}</td>
-                            <td class="px-3 py-2">{{ $mov->destino->setor_nome ?? '-' }}</td>
+                            <td class="px-3 py-2">{{ $mov->setor->setor_nome ?? '-' }}</td>
                             <td class="px-3 py-2 capitalize">{{ $mov->movimentacao_entregue_para ?? '-' }}</td>
                         </tr>
                     @endforeach

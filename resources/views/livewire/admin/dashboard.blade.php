@@ -1,22 +1,22 @@
 <div class="mx-auto py-4 space-y-4">
     {{-- Cards de métricas principais --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="bg-yellow-100 rounded-xl shadow p-4 flex flex-col items-start">
+        <div class="bg-yellow-200 rounded-xl shadow p-4 flex flex-col items-start">
             <h3 class="text-gray-700 text-sm font-semibold">Total de Solicitações</h3>
             <p class="text-gray-900 text-2xl font-bold">{{ $totalSolicitacoes }}</p>
         </div>
 
-        <div class="bg-blue-100 rounded-xl shadow p-4 flex flex-col items-start">
+        <div class="bg-blue-300 rounded-xl shadow p-4 flex flex-col items-start">
             <h3 class="text-gray-700 text-sm font-semibold">Total de Pacientes</h3>
             <p class="text-gray-900 text-2xl font-bold">{{ $totalPacientes }}</p>
         </div>
 
-        <div class="bg-indigo-100 rounded-xl shadow p-4 flex flex-col items-start">
+        <div class="bg-indigo-300 rounded-xl shadow p-4 flex flex-col items-start">
             <h3 class="text-gray-700 text-sm font-semibold">Total de Atendimentos</h3>
             <p class="text-gray-900 text-2xl font-bold">{{ $totalAtendimentos }}</p>
         </div>    
 
-        <div class="bg-green-100 rounded-xl shadow p-4 flex flex-col items-start">
+        <div class="bg-green-300 rounded-xl shadow p-4 flex flex-col items-start">
             <h3 class="text-gray-700 text-sm font-semibold">Total de Procedimentos</h3>
             <p class="text-gray-900 text-2xl font-bold">{{ $totalProcedimentos ?? 0 }}</p>
         </div>    
@@ -24,15 +24,14 @@
 
     {{-- Cards de métricas secundárias (por status) --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-        @foreach(['aguardando','agendado','marcado','entregue','cancelado'] as $status)
+        @foreach(['pendente', 'aguardando','agendado','marcado','entregue'] as $status)
             @php
                 $bg = match($status){
+                    'pendente'=>'bg-gray-200',
                     'aguardando'=>'bg-yellow-200',
-                    'agendado'=>'bg-blue-200',
-                    'marcado'=>'bg-indigo-200',
-                    'entregue'=>'bg-green-200',
-                    'cancelado'=>'bg-red-200',
-                    default=>'bg-gray-200'
+                    'agendado'=>'bg-blue-300',
+                    'marcado'=>'bg-indigo-300',
+                    'entregue'=>'bg-green-300',
                 };
             @endphp
             <div class="{{ $bg }} rounded-xl shadow p-3 flex flex-col items-start">

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Livewire\Admin\Solicitacoes;
 
@@ -13,18 +13,23 @@ use Livewire\Component;
 class Movimentar extends Component
 {
     public $solicitacao_id;
+
     public $status = '';
+
     public $entregue_para = '';
+
     public $observacao = '';
+
     public $setor_destino_id = null;
 
     public $solicitacao;
+
     public $movimentacoes = [];
 
     public function mount($solicitacao_id)
     {
         $this->solicitacao_id = $solicitacao_id;
-        $this->solicitacao = Solicitacao::with(['localizacao_atual', 'movimentacoes.usuario', 'movimentacoes.destino'])
+        $this->solicitacao    = Solicitacao::with(['localizacao_atual', 'movimentacoes.usuario', 'movimentacoes.destino'])
             ->findOrFail($solicitacao_id);
 
         $this->status = $this->solicitacao->solicitacao_status ?? 'aguardando';
@@ -82,6 +87,7 @@ class Movimentar extends Component
         $this->carregarMovimentacoes();
 
         flash()->success('Movimentação registrada com sucesso.', [], 'Sucesso!');
+
         return redirect()->route('admin.solicitacoes.detalhes', $this->solicitacao_id);
     }
 

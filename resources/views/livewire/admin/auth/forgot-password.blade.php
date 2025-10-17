@@ -5,14 +5,16 @@
     </p>
 
     @if (session('message'))
-        <div class="flex items-center justify-center bg-green-50 text-green-800 px-4 py-3 rounded-lg mb-4 border border-green-200">
+        <div
+            class="flex items-center justify-center bg-green-50 text-green-800 px-4 py-3 rounded-lg mb-4 border border-green-200">
             <i class="fa fa-check-circle mr-2"></i>
             <span>{{ session('message') }}</span>
         </div>
     @endif
 
     @if (session('error'))
-        <div class="flex items-center justify-center bg-red-50 text-red-800 px-4 py-3 rounded-lg mb-4 border border-red-200">
+        <div
+            class="flex items-center justify-center bg-red-50 text-red-800 px-4 py-3 rounded-lg mb-4 border border-red-200">
             <i class="fa fa-times-circle mr-2"></i>
             <span>{{ session('error') }}</span>
         </div>
@@ -53,7 +55,7 @@
         </div>
         <ul class="list-disc list-inside text-xs text-blue-700 space-y-1">
             <li>O link expira em até 60 minutos</li>
-            <li>Verifique também sua caixa de spam</li>
+            <li>Exibirifique também sua caixa de spam</li>
             <li>Se não receber, solicite novamente após alguns minutos</li>
         </ul>
     </div>

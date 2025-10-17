@@ -13,15 +13,6 @@ return new class () extends Migration
      */
     public function up(): void
     {
-        Schema::create('setores', function (Blueprint $table) {
-            $table->bigIncrements('setor_id');
-            $table->string('setor_nome');
-            $table->boolean('setor_status')->default(1);
-            $table->integer('created_user_id')->nullable();
-            $table->integer('updated_user_id')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -29,15 +20,9 @@ return new class () extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('must_change_password')->default(false);
-            $table->boolean('is_admin')->default(false);
-            $table->unsignedBigInteger('setor_id')->nullable();
             $table->boolean('status')->default(1);
             $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('setor_id')
-                ->references('setor_id')->on('setores')
-                ->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -53,6 +38,15 @@ return new class () extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+        });
+
+        Schema::create('setores', function (Blueprint $table) {
+            $table->bigIncrements('setor_id');
+            $table->string('setor_nome');
+            $table->boolean('setor_status')->default(1);
+            $table->integer('created_user_id')->nullable();
+            $table->integer('updated_user_id')->nullable();
+            $table->timestamps();
         });
 
         Schema::create('tipos_procedimento', function (Blueprint $table) {
@@ -197,6 +191,7 @@ return new class () extends Migration
 
             // Identifica o tipo de pessoa/unidade que recebeu (só usado se tipo == entrega)
             $table->enum('movimentacao_entregue_para', [
+                '',
                 'paciente',
                 'agente_saude',
                 'equipe_saude',

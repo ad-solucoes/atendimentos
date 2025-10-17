@@ -1,10 +1,10 @@
 <div class="w-full text-center">
     <h2 class="text-2xl font-bold text-blue-900 mb-4">
-        {{ $verified ? 'Email Verificado!' : ($error ? 'Erro na Verificação' : 'Verificando Email...') }}
+        {{ $verified ? 'Email Exibirificado!' : ($error ? 'Erro na Exibirificação' : 'Exibirificando Email...') }}
     </h2>
 
     <p class="text-gray-600 mb-6 text-sm">
-        @if($verified)
+        @if ($verified)
             Seu email foi verificado com sucesso.
         @elseif($error)
             Não foi possível verificar seu email. Tente novamente ou solicite um novo link.
@@ -14,7 +14,7 @@
     </p>
 
     {{-- Estado: sucesso --}}
-    @if($verified)
+    @if ($verified)
         <div class="bg-green-50 border border-green-300 text-green-800 p-5 rounded-lg mb-4">
             <i class="fa fa-check-circle text-3xl mb-2"></i>
             <h4 class="font-semibold mb-1">{{ $message }}</h4>
@@ -37,14 +37,14 @@
     @endif
 
     {{-- Estado: erro --}}
-    @if($error)
+    @if ($error)
         <div class="bg-red-50 border border-red-300 text-red-800 p-5 rounded-lg mb-4">
             <i class="fa fa-times-circle text-3xl mb-2"></i>
             <h4 class="font-semibold mb-1">{{ $message }}</h4>
             <p class="text-xs">Possíveis causas: link expirado, já utilizado ou inválido.</p>
         </div>
 
-        <button wire:click="resendVerificationEmail"
+        <button wire:click="resendExibirificationEmail"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition">
             <i class="fa fa-envelope"></i> Solicitar Novo Email
         </button>
@@ -66,10 +66,10 @@
     @endif
 
     {{-- Estado: carregando --}}
-    @if(!$verified && !$error)
+    @if (!$verified && !$error)
         <div class="bg-blue-50 border border-blue-200 text-blue-800 p-5 rounded-lg">
             <i class="fa fa-spinner fa-spin text-3xl mb-2"></i>
-            <h4 class="font-semibold mb-1">Verificando seu email...</h4>
+            <h4 class="font-semibold mb-1">Exibirificando seu email...</h4>
             <p class="text-xs">Aguarde enquanto processamos a verificação.</p>
         </div>
     @endif

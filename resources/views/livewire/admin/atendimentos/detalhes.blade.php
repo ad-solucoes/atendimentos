@@ -100,6 +100,11 @@
                class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded shadow w-full sm:w-auto text-center text-sm transition flex items-center justify-center gap-2">
                 <i class="fa fa-file-pdf"></i> Imprimir Atendimento
             </a>
+
+            <a href="{{ route('admin.atendimentos.enviar-contato', $atendimento->atendimento_id) }}" 
+                class="btn btn-success" target="_blank">
+                Enviar informações ao paciente
+            </a>
         </div>
 
     </div>

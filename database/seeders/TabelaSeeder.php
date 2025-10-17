@@ -27,6 +27,26 @@ class TabelaSeeder extends Seeder
     {
         $faker = Faker::create('pt_BR');
 
+        User::factory()->create([
+            'name'  => 'User Admin',
+            'email' => 'admin@email.com',
+        ]);
+
+        User::factory()->create([
+            'name'  => 'User Recepção',
+            'email' => 'recepcao@email.com',
+        ]);
+
+        User::factory()->create([
+            'name'  => 'User Marcação',
+            'email' => 'marcacao@email.com',
+        ]);
+
+        User::factory()->create([
+            'name'  => 'User Gestor',
+            'email' => 'gestor@email.com',
+        ]);
+
         /**
          * TABELA: tipo_procedimentos
          */
@@ -170,24 +190,6 @@ class TabelaSeeder extends Seeder
         ];
         Setor::insert($dataSetor);
 
-        User::factory()->create([
-            'name'     => 'User Admin',
-            'email'    => 'admin@email.com',
-            'is_admin' => true,
-        ]);
-
-        User::factory()->create([
-            'name'     => 'User Recepção',
-            'email'    => 'recepcao@email.com',
-            'setor_id' => 1,
-        ]);
-
-        User::factory()->create([
-            'name'     => 'User Marcação',
-            'email'    => 'marcacao@email.com',
-            'setor_id' => 2,
-        ]);
-
         /**
          * TABELA: equipes de saúde
          */
@@ -246,7 +248,7 @@ class TabelaSeeder extends Seeder
             ['agente_saude_equipe_saude_id' => 5, 'agente_saude_nome' => 'Simone Fernandes Oliveira Lima', 'agente_saude_apelido' => 'Lela'],
             ['agente_saude_equipe_saude_id' => 5, 'agente_saude_nome' => 'Viviane Santos Silva', 'agente_saude_apelido' => null],
             ['agente_saude_equipe_saude_id' => 5, 'agente_saude_nome' => 'Robson Buarque Aires', 'agente_saude_apelido' => 'Binho'],
-            
+
             ['agente_saude_equipe_saude_id' => 6, 'agente_saude_nome' => 'Jose Cícero da Silva Lima', 'agente_saude_apelido' => 'Cicinho'],
             ['agente_saude_equipe_saude_id' => 6, 'agente_saude_nome' => 'Macirleide Cristina do Nascimento Melo', 'agente_saude_apelido' => null],
             ['agente_saude_equipe_saude_id' => 6, 'agente_saude_nome' => 'Maria da Conceição Nascimento Silva', 'agente_saude_apelido' => 'Nena'],

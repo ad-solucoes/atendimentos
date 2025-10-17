@@ -76,6 +76,12 @@
                 </div>
             </div>
 
+            <div class="mt-5">
+                <a href="{{ route('admin.solicitacoes.enviar-contato', $solicitacao->solicitacao_id) }}" class="btn btn-primary" target="_blank">
+                    Enviar mensagem ao paciente
+                </a>
+            </div>
+
         @elseif ($aba === 'movimentacoes')
             <div class="space-y-4">
                 @forelse($solicitacao->movimentacoes()->latest()->get() as $mov)
@@ -92,7 +98,7 @@
                             </p>
                             <p class="text-gray-500 text-sm leading-tight mt-1">
                                 <span class="block">Usuário: {{ $mov->usuario?->name ?? '—' }}</span>
-                                <span class="block">Setor destino: {{ $mov->destino?->setor_nome ?? '—' }}</span>
+                                <span class="block">Setor destino: {{ $mov->setor?->setor_nome ?? '—' }}</span>
                                 <span class="block">Observação: {{ $mov->movimentacao_observacao ?: '—' }}</span>
                             </p>
                         </div>

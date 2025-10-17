@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Controllers\Admin\Pacientes;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Paciente;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
-class ImpressaoController extends Controller
+class PacientesController extends Controller
 {
     public function gerarPdf(Request $request)
     {

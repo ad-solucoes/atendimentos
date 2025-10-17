@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -55,19 +57,22 @@ class User extends Authenticatable
         ];
     }
 
-    public function organizacao()
+    public function rolesUser()
     {
-        return $this->belongsTo(Organizacao::class, 'organizacao_id');
+        $data = [];
+
+        $roles = $this->roles;
+
+        foreach ($roles as $key => $value) {
+            $data[] = $value->name;
+        }
+
+        return $data;
     }
 
-    public function documentos()
+    public function isAdmin()
     {
-        return $this->hasMany(Documento::class, 'usuario_id');
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->is_admin === true;
+        return $this->hasRole('Administrador');
     }
 
     public function audits()

@@ -44,6 +44,35 @@ class Solicitacao extends Model
     public const STATUS_ENTREGUE   = 'Entregue';
     public const STATUS_CANCELADO  = 'Cancelada';
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($solicitacao) {
+            $solicitacao->solicitacao_numero = self::gerarNumeroSolicitacao();
+        });
+    }
+
+    public static function gerarNumeroSolicitacao()
+    {
+        $anoAtual = date('Y');
+
+        // Busca última solicitação do ano
+        $ultimo = self::whereYear('solicitacao_data', $anoAtual)
+            ->orderBy('solicitacao_numero', 'desc')
+            ->first();
+
+        if ($ultimo) {
+            // Pega os últimos 6 dígitos e incrementa
+            $numero = intval(substr($ultimo->solicitacao_numero, -6)) + 1;
+        } else {
+            $numero = 1;
+        }
+
+        // Monta o número final no formato AAAAXXXXXX
+        return $anoAtual . formatoId($numero, 6);
+    }
+
     /**
      * Relacionamentos
      */
@@ -97,5 +126,48 @@ class Solicitacao extends Model
         return $this->hasMany(SolicitacaoMovimentacao::class, 'movimentacao_solicitacao_id', 'solicitacao_id')
             ->with('usuario')
             ->latest();
+    }
+
+    public function mensagemParaPaciente()
+    {
+        $paciente = $this->atendimento->paciente; // relacionamento solicitacao->paciente
+
+        $mensagem = "*Sistema Atendimentos SMS*\n";
+        $mensagem .= "Secretaria Municipal de Saúde\n";
+        $mensagem .= "Barra de Santo Antônio/AL\n\n";
+
+        $mensagem .= "Olá, *{$paciente->paciente_nome}*!\n\n";
+
+        $mensagem .= "Solicitação: *{$this->solicitacao_numero}*\n";
+        $mensagem .= "Data: *{$this->solicitacao_data->format('d/m/Y')}*\n";
+        $mensagem .= "Status atual: *" . strtoupper($this->solicitacao_status) . "*\n\n";
+
+        switch ($this->solicitacao_status) {
+            case 'marcado':
+                $mensagem .= "Sua solicitação foi marcada. Você pode retirar a documentação na secretaria ou com seu agente de saúde.\n\n";
+
+                break;
+
+            case 'devolvido':
+            case 'cancelado':
+                $mensagem .= "Sua solicitação foi {strtoupper($this->solicitacao_status)}. Por favor, compareça à secretaria para resolver sobre sua solicitação.\n\n";
+
+                break;
+
+            case 'aguardando':
+            case 'agendado':
+                $mensagem .= "Estamos fazendo todo o esforço para que sua solicitação seja processada e marcada o mais breve possível.\n\n";
+
+                break;
+
+            default:
+                $mensagem .= "Para maiores informações sobre o andamento da solicitação, favor acessar: https://atendimentos.saudebsa.com.br/consultar\n\n";
+
+                break;
+        }
+
+        $mensagem .= "Atenciosamente,\n\nSecretaria Municipal de Saúde";
+
+        return $mensagem;
     }
 }

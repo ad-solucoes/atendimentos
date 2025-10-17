@@ -8,7 +8,6 @@ use App\Models\Atendimento;
 use App\Models\Paciente;
 use App\Models\Procedimento;
 use App\Models\Solicitacao;
-use App\Models\SolicitacaoMovimentacao;
 use App\Models\TipoProcedimento;
 use Livewire\Component;
 
@@ -216,7 +215,6 @@ class Formulario extends Component
             [
                 'atendimento_paciente_id' => $this->atendimento_paciente_id,
                 'atendimento_prioridade'  => $this->atendimento_prioridade,
-                'atendimento_numero'      => $this->atendimento_numero ?? $this->gerarNumeroAtendimento(),
                 'atendimento_data'        => $this->atendimento_data,
                 'atendimento_observacao'  => $this->atendimento_observacao,
                 'created_user_id'         => auth()->id(),
@@ -228,16 +226,13 @@ class Formulario extends Component
             Solicitacao::updateOrCreate(
                 ['solicitacao_id' => $sol['id'] ?? null],
                 [
-                    'solicitacao_atendimento_id'  => $atendimento->atendimento_id,
-                    'solicitacao_procedimento_id' => $sol['procedimento_id'],
+                    'solicitacao_atendimento_id'       => $atendimento->atendimento_id,
+                    'solicitacao_procedimento_id'      => $sol['procedimento_id'],
                     'solicitacao_localizacao_atual_id' => auth()->user()->setor_id ?? null,
-                    'solicitacao_numero'          => isset($sol['id']) && $sol['id']
-                        ? ($sol['solicitacao_numero'] ?? 'S' . rand(100000, 999999))
-                        : 'S' . rand(100000, 999999),
-                    'solicitacao_data'   => now(),
-                    'solicitacao_status' => 'pendente',
-                    'created_user_id'    => auth()->id(),
-                    'updated_user_id'    => auth()->id(),
+                    'solicitacao_data'                 => now(),
+                    'solicitacao_status'               => 'pendente',
+                    'created_user_id'                  => auth()->id(),
+                    'updated_user_id'                  => auth()->id(),
                 ]
             );
         }

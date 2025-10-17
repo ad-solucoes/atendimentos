@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Livewire\Admin\Usuarios;
 
-use App\Models\Setor;
 use App\Models\User;
 use App\Notifications\WelcomeUserNotification;
 use Illuminate\Support\Facades\Hash;
@@ -20,13 +19,7 @@ class Formulario extends Component
 
     public $email;
 
-    public $is_admin = 0;
-
-    public $setor_id;
-
     public $status = 1;
-
-    public $setores;
 
     protected function rules()
     {
@@ -37,9 +30,7 @@ class Formulario extends Component
                 'email',
                 Rule::unique('users', 'email')->ignore($this->user_id, 'id'),
             ],
-            'is_admin' => 'boolean',
-            'setor_id' => 'required_if:is_admin,0',
-            'status'   => 'required',
+            'status' => 'required',
         ];
     }
 
@@ -51,18 +42,12 @@ class Formulario extends Component
 
     public function mount($id = null)
     {
-        if (! $this->is_admin) {
-            $this->setores = Setor::where('setor_status', 1)->orderBy('setor_nome')->get();
-        }
-
         if ($id) {
-            $user           = User::find($id);
-            $this->user_id  = $user->id;
-            $this->name     = $user->name;
-            $this->email    = $user->email;
-            $this->setor_id = $user->setor_id;
-            $this->is_admin = $user->is_admin ? 1 : 0;
-            $this->status   = $user->status;
+            $user          = User::find($id);
+            $this->user_id = $user->id;
+            $this->name    = $user->name;
+            $this->email   = $user->email;
+            $this->status  = $user->status;
         }
     }
 
@@ -81,11 +66,9 @@ class Formulario extends Component
             $usuario->must_change_password = 1;
         }
 
-        $usuario->name     = $this->name;
-        $usuario->email    = $this->email;
-        $usuario->is_admin = $this->is_admin;
-        $usuario->setor_id = $this->setor_id;
-        $usuario->status   = $this->status;
+        $usuario->name   = $this->name;
+        $usuario->email  = $this->email;
+        $usuario->status = $this->status;
 
         if ($usuario->save()) {
             if (! $this->user_id) {

@@ -99,49 +99,198 @@
         </table>
     </div>
 
+    @if(auth()->user()->hasRole('Administrador'))
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow text-center col-span-4">
+                <h2 class="text-lg font-semibold text-gray-600">Visitas ao Site</h2>
+                <p class="text-3xl font-bold text-blue-700 mt-2">{{ $totalVisitas }}</p>
+            </div>
+            <canvas class="col-span-8" id="graficoVisitas" style="width: 100%; height: 200px"></canvas>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow text-center col-span-4">
+                <h2 class="text-lg font-semibold text-gray-600">Consultas Realizadas</h2>
+                <p class="text-3xl font-bold text-blue-700 mt-2">{{ $totalConsultas }}</p>
+            </div>
+            <canvas class="col-span-8" id="graficoConsultas" style="width: 100%; height: 200px"></canvas>
+        </div>
+    @endif
 </div>
 
 {{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Gráfico de Solicitações por Status
-    const ctxStatus = document.getElementById('chartStatus').getContext('2d');
-    new Chart(ctxStatus, {
-        type: 'doughnut',
-        data: {
-            labels: ['Aguardando','Agendado','Marcado','Entregue','Cancelado'],
-            datasets: [{
-                label: 'Solicitações',
-                data: [
-                    {{ $statusCounts['aguardando'] ?? 0 }},
-                    {{ $statusCounts['agendado'] ?? 0 }},
-                    {{ $statusCounts['marcado'] ?? 0 }},
-                    {{ $statusCounts['entregue'] ?? 0 }},
-                    {{ $statusCounts['cancelado'] ?? 0 }}
-                ],
-                backgroundColor: ['#facc15','#3b82f6','#6366f1','#22c55e','#ef4444'],
-                borderWidth: 1
-            }]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-    });
+    // Utility: safe get canvas context
+    const ctxFor = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.getContext('2d') : null;
+    };
 
-    // Gráfico de Atendimentos (exemplo de dados)
-    const ctxAtend = document.getElementById('chartAtendimentos').getContext('2d');
-    new Chart(ctxAtend, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($meses ?? ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']) !!},
+    // 1) Doughnut - Solicitações por Status
+    (function () {
+        const ctxStatus = ctxFor('chartStatus');
+        if (!ctxStatus) return;
+
+        new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aguardando','Agendado','Marcado','Entregue','Cancelado'],
+                datasets: [{
+                    label: 'Solicitações',
+                    data: [
+                        {{ $statusCounts['aguardando'] ?? 0 }},
+                        {{ $statusCounts['agendado'] ?? 0 }},
+                        {{ $statusCounts['marcado'] ?? 0 }},
+                        {{ $statusCounts['entregue'] ?? 0 }},
+                        {{ $statusCounts['cancelado'] ?? 0 }}
+                    ],
+                    backgroundColor: ['#facc15','#3b82f6','#6366f1','#22c55e','#ef4444'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    })();
+
+    // 2) Bar - Atendimentos por mês
+    (function () {
+        const ctxAtend = ctxFor('chartAtendimentos');
+        if (!ctxAtend) return;
+
+        // meses podem vir em PT-BR já do backend; se não, usamos fallback
+        const mesesLabels = {!! json_encode($meses ?? ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']) !!};
+
+        new Chart(ctxAtend, {
+            type: 'bar',
+            data: {
+                labels: mesesLabels,
+                datasets: [{
+                    label: 'Atendimentos',
+                    data: {!! json_encode($atendimentosPorMes ?? array_fill(0,12,0)) !!},
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    })();
+
+    // 3) Line - Visitas por Dia
+    (function () {
+        const ctxVisitas = ctxFor('graficoVisitas');
+        if (!ctxVisitas) return;
+
+        // raw labels/values from backend (assume visitsPorDia is a collection or array)
+        const visitasRaw = @json($visitasPorDia->toArray() ?? []);
+        const visitasLabelsRaw = Object.keys(visitasRaw);
+        const visitasValues = Object.values(visitasRaw);
+
+        // format dates to pt-BR if possible
+        const visitasLabels = visitasLabelsRaw.map(d => {
+            try {
+                const dt = new Date(d);
+                if (!isNaN(dt)) return dt.toLocaleDateString('pt-BR');
+            } catch (e) {}
+            return d;
+        });
+
+        new Chart(ctxVisitas, {
+            type: 'line',
+            data: {
+                labels: visitasLabels,
+                datasets: [{
+                    label: 'Visitas por Dia',
+                    data: visitasValues,
+                    borderColor: 'rgba(37, 99, 235, 1)',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            }
+        });
+    })();
+
+    // 4) Line - Consultas por Dia (formata datas em pt-BR)
+    (function () {
+        const ctxConsultas = ctxFor('graficoConsultas');
+        if (!ctxConsultas) return;
+
+        const consultasRaw = @json($consultasPorDia->toArray() ?? []);
+        const consultasLabelsRaw = Object.keys(consultasRaw);
+        const consultasValues = Object.values(consultasRaw);
+
+        const consultasLabels = consultasLabelsRaw.map(d => {
+            try {
+                const dt = new Date(d);
+                if (!isNaN(dt)) {
+                    // formato com dia/mês abreviado (ex: 05/mai)
+                    return dt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+                }
+            } catch (e) {}
+            return d;
+        });
+
+        const data = {
+            labels: consultasLabels,
             datasets: [{
-                label: 'Atendimentos',
-                data: {!! json_encode($atendimentosPorMes ?? array_fill(0,12,0)) !!},
-                backgroundColor: '#3b82f6'
+                label: 'Consultas',
+                data: consultasValues,
+                borderColor: 'rgba(37, 99, 235, 1)',
+                backgroundColor: 'rgba(37, 99, 235, 0.08)',
+                borderWidth: 2,
+                tension: 0.25,
+                fill: true,
+                pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                pointRadius: 3,
+                pointHoverRadius: 5,
             }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-        }
-    });
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1E40AF',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        padding: 10,
+                        cornerRadius: 6,
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Data', color: '#374151', font: { size: 12 } },
+                        ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 },
+                        grid: { display: false },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Total de Consultas', color: '#374151', font: { size: 12 } },
+                        ticks: { precision: 0 }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctxConsultas, config);
+    })();
 </script>

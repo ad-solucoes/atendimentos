@@ -6,6 +6,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Atendimento;
 use App\Models\Paciente;
+use Illuminate\Support\Facades\DB;
 use App\Models\Procedimento;
 use App\Models\Solicitacao;
 use Carbon\Carbon;
@@ -42,6 +43,27 @@ class Dashboard extends Component
             return Atendimento::whereMonth('created_at', $m)->count();
         });
 
+        if(auth()->user()->hasRole('Administrador')){
+            $totalVisitas = DB::table('visitas')->count();
+
+            // Visitas por dia (para gráfico)
+            $visitasPorDia = DB::table('visitas')
+                ->selectRaw('DATE(visitado_em) as dia, COUNT(*) as total')
+                ->groupBy('dia')
+                ->orderBy('dia')
+                ->pluck('total', 'dia');
+
+            $totalConsultas = DB::table('consultas_log')->count();
+
+            $consultasPorDia = DB::table('consultas_log')
+                ->selectRaw('DATE(consultado_em) as dia, COUNT(*) as total')
+                ->groupBy('dia')
+                ->orderBy('dia')
+                ->pluck('total', 'dia');
+        }
+
+        
+
         return view('livewire.admin.dashboard', compact(
             'totalSolicitacoes',
             'totalPacientes',
@@ -50,7 +72,11 @@ class Dashboard extends Component
             'statusCounts',
             'ultimasSolicitacoes',
             'meses',
-            'atendimentosPorMes'
+            'atendimentosPorMes',
+            'totalVisitas',
+            'visitasPorDia',
+            'totalConsultas',
+            'consultasPorDia',
         ))->layout('layouts.admin', ['title' => 'Dashboard']);
     }
 }

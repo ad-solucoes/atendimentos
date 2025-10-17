@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Route;
 // Site
 Route::name('site.')->group(function () {
     Route::get('/', App\Livewire\Site\Inicio::class)->name('inicio');
-    Route::get('/buscar', App\Livewire\Site\Buscar::class)->name('buscar');
-    Route::get('/documentos/{document}', App\Livewire\Site\DocumentoDetalhes::class)->name('documentos.show');
+    Route::get('/consultar', App\Livewire\Site\Consultar::class)->name('consultar');
     Route::get('/sobre', App\Livewire\Site\Sobre::class)->name('sobre');
 });
 

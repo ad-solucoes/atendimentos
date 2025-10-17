@@ -60,9 +60,13 @@ class Dashboard extends Component
                 ->groupBy('dia')
                 ->orderBy('dia')
                 ->pluck('total', 'dia');
+        }else{
+            $totalVisitas = 0;
+            $visitasPorDia = [];
+            $totalConsultas = 0;
+            $consultasPorDia = [];
         }
 
-        
 
         return view('livewire.admin.dashboard', compact(
             'totalSolicitacoes',

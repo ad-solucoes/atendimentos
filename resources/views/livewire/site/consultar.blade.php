@@ -1,4 +1,4 @@
-<div title="Consultar Atendimento" class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-8 mt-10 border border-blue-100">
+<div title="Consultar Atendimento" class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-8 border border-blue-100">
 
     <h1 class="text-3xl font-bold text-blue-800 text-center mb-6">
         <i class="fa-solid fa-stethoscope mr-2 text-green-500"></i> Consultar Atendimento

@@ -29,9 +29,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Gate::before(function ($user, $ability) {
-        //     return $user->hasRole('Administrador') ? true : null;
-        // });
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('Administrador') ? true : null;
+        });
 
         Validator::extend('cpf', '\App\Utils\CpfValidation@validate');
         Validator::extend('cns', '\App\Utils\CnsValidation@validate');

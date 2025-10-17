@@ -1,9 +1,9 @@
 <div title="Início">
     <!-- Hero Section -->
-    <section class="flex flex-col md:flex-row items-center justify-between py-14 md:py-20 max-w-6xl mx-auto px-6 gap-10">
+    <section class="flex flex-col md:flex-row items-center justify-between py-2 max-w-7xl mx-auto px-6 gap-10">
         <div class="md:w-1/2 text-center md:text-left">
             <h1 class="text-5xl font-extrabold text-blue-800 leading-tight mb-4">
-                <i class="fa-solid fa-heart-pulse text-green-500 mr-2"></i>
+                <i class="fa-solid fa-heart-pulse text-green-500"></i>
                 Saúde Digital Municipal
             </h1>
             <p class="text-lg text-gray-700 mb-8 leading-relaxed">
@@ -18,7 +18,7 @@
         </div>
 
         <div class="md:w-1/2 flex justify-center">
-            <img src="{{ asset('images/fundo-site.jpg') }}" 
+            <img src="{{ asset('images/fundo-site.png') }}" 
                  alt="Ilustração Saúde Digital"
                  class="">
         </div>

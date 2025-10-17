@@ -25,11 +25,10 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans antialiased">
-
     <!-- Header -->
     <header x-data="{ open: false }" class="bg-blue-800 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="{{ route('site.inicio') }}" class="text-2xl font-bold flex items-center space-x-2">
+        <div class="max-w-8xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="{{ route('site.inicio') }}" class="text-2xl font-bold flex items-center space-x-1">
                 <i class="fa-solid fa-heart-pulse text-red-400"></i>
                 <span>e-Saúde Municipal</span>
             </a>
@@ -59,13 +58,13 @@
     </header>
 
     <!-- Conteúdo principal -->
-    <main class="flex-grow max-w-6xl mx-auto w-full px-6 py-10">
+    <main class="flex-grow max-w-8xl mx-auto w-full px-6 py-10">
         {{ $slot }}
     </main>
 
     <!-- Rodapé -->
     <footer class="bg-blue-900 text-white text-center py-6 mt-auto">
-        <div class="max-w-6xl mx-auto px-6">
+        <div class="max-w-8xl mx-auto px-6">
             <p class="text-sm md:text-base">
                 &copy; {{ date('Y') }} <strong>Secretaria Municipal de Saúde</strong> — Todos os direitos reservados.
             </p>

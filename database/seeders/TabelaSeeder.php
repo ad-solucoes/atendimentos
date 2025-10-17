@@ -27,26 +27,6 @@ class TabelaSeeder extends Seeder
     {
         $faker = Faker::create('pt_BR');
 
-        User::factory()->create([
-            'name'  => 'User Admin',
-            'email' => 'admin@email.com',
-        ]);
-
-        User::factory()->create([
-            'name'  => 'User Recepção',
-            'email' => 'recepcao@email.com',
-        ]);
-
-        User::factory()->create([
-            'name'  => 'User Marcação',
-            'email' => 'marcacao@email.com',
-        ]);
-
-        User::factory()->create([
-            'name'  => 'User Gestor',
-            'email' => 'gestor@email.com',
-        ]);
-
         /**
          * TABELA: tipo_procedimentos
          */
@@ -189,6 +169,28 @@ class TabelaSeeder extends Seeder
             ['setor_nome' => 'Paciente'],
         ];
         Setor::insert($dataSetor);
+
+        User::factory()->create([
+            'name'  => 'User Admin',
+            'email' => 'admin@email.com',
+        ]);
+
+        User::factory()->create([
+            'name'  => 'User Recepção',
+            'email' => 'recepcao@email.com',
+            'setor_id' => 1
+        ]);
+
+        User::factory()->create([
+            'name'  => 'User Marcação',
+            'email' => 'marcacao@email.com',
+            'setor_id' => 2
+        ]);
+
+        User::factory()->create([
+            'name'  => 'User Gestor',
+            'email' => 'gestor@email.com',
+        ]);
 
         /**
          * TABELA: equipes de saúde

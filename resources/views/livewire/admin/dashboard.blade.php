@@ -184,6 +184,7 @@
         });
     })();
 
+    @if(auth()->user()->hasRole('Administrador'))
     // 3) Line - Visitas por Dia
     (function () {
         const ctxVisitas = ctxFor('graficoVisitas');
@@ -293,4 +294,5 @@
 
         new Chart(ctxConsultas, config);
     })();
+    @endif
 </script>

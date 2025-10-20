@@ -1,8 +1,10 @@
-<div class="max-w-4xl mx-auto px-0 sm:px-6 lg:px-8 py-">
-    <form wire:submit.prevent="save" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="max-w-4xl mx-auto px-0 sm:px-6 lg:px-8">
+    <form wire:submit.prevent="save" class="space-y-4 mt-10">
+
+        <h5 class="font-bold mb-2 -ml-10 text-lg text-gray-800">#> Informações básicas do Paciente</h5>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
             <!-- CPF nº -->
-            <div>
+            <div class="col-span-6">
                 <label class="block text-sm font-semibold mb-1">CPF nº <span class="text-red-600 text-sm">*</span></label>
                 <div x-data="{
                     cpf: @entangle('paciente_cpf').defer,
@@ -21,7 +23,7 @@
             </div>
 
             <!-- Cartão do SUS -->
-            <div>
+            <div class="col-span-6">
                 <label class="block text-sm font-semibold mb-1">Cartão do SUS <span class="text-red-600 text-sm">*</span></label>
                 <div x-data="{
                     cpf: @entangle('paciente_cpf').defer,
@@ -120,18 +122,22 @@
             @error('paciente_nome_mae') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
         </div>
 
-        <!-- Endereço -->
-        <div>
-            <label class="block text-sm font-semibold mb-1">Endereço <span class="text-red-600 text-sm">*</span></label>
-            <input type="text" wire:model="paciente_endereco" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            @error('paciente_endereco') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
-        </div>
+        <h5 class="font-bold mb-2 -ml-10 text-lg">#> Endereço do Paciente</h5>
 
-        <!-- Número -->
-        <div>
-            <label class="block text-sm font-semibold mb-1">Número <span class="text-red-600 text-sm">*</span></label>
-            <input type="text" wire:model="paciente_numero" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            @error('paciente_numero') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+            <!-- Endereço -->
+            <div class="col-span-10">
+                <label class="block text-sm font-semibold mb-1">Endereço <span class="text-red-600 text-sm">*</span></label>
+                <input type="text" wire:model="paciente_endereco" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                @error('paciente_endereco') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- Número -->
+            <div class="col-span-2">
+                <label class="block text-sm font-semibold mb-1">Número <span class="text-red-600 text-sm">*</span></label>
+                <input type="text" wire:model="paciente_numero" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                @error('paciente_numero') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+            </div>
         </div>
 
         <!-- Bairro -->
@@ -178,6 +184,8 @@
                 @error('paciente_municipio_id') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
             </div>
         </div>
+
+        <h5 class="block font-bold mb-2 -ml-10 text-lg">#> Contato</h5>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Contato 01 -->

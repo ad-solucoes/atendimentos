@@ -36,7 +36,7 @@
             </tr>
             <tr>
                 <td><strong>Cartão SUS:</strong></td>
-                <td>{{ $paciente->paciente_cns }}</td>
+                <td>{{ $paciente->paciente_cartao_sus }}</td>
                 <td><strong>Data de Nascimento:</strong></td>
                 <td>{{ $paciente->paciente_data_nascimento ? $paciente->paciente_data_nascimento->format('d/m/Y') : '-' }}</td>
             </tr>

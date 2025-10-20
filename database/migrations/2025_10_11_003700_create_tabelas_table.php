@@ -101,17 +101,45 @@ return new class () extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
         });
 
+        Schema::create('estados', function (Blueprint $table) {
+            $table->bigIncrements('estado_id');
+            $table->string('estado_nome', 85)->unique();
+            $table->string('estado_uf', 2);
+            $table->boolean('estado_status')->default(1);
+            $table->integer('created_user_id')->nullable();
+            $table->integer('updated_user_id')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('municipios', function (Blueprint $table) {
+            $table->bigIncrements('municipio_id');
+            $table->string('municipio_nome', 125)->unique();
+            $table->bigInteger('municipio_estado_id')->unsigned();
+            $table->boolean('municipio_status')->default(1);
+            $table->integer('created_user_id')->nullable();
+            $table->integer('updated_user_id')->nullable();
+            $table->timestamps();
+
+            $table->foreign('municipio_estado_id')->references('estado_id')->on('estados')->onDelete('cascade');
+        });
+
         Schema::create('pacientes', function (Blueprint $table) {
             $table->bigIncrements('paciente_id');
             $table->unsignedBigInteger('paciente_agente_saude_id')->nullable();
-            $table->string('paciente_nome');
-            $table->string('paciente_sexo', 10);
+            $table->string('paciente_nome', 125);
+            $table->enum('paciente_sexo', ['Feminino', 'Masculino']);
             $table->date('paciente_data_nascimento');
             $table->string('paciente_nome_mae', 125)->nullable();
-            $table->string('paciente_endereco')->nullable();
-            $table->string('paciente_contato', 20)->nullable();
-            $table->string('paciente_cns', 20)->nullable();
+            $table->string('paciente_cartao_sus', 20)->nullable();
             $table->string('paciente_cpf', 15)->unique();
+            $table->string('paciente_endereco', 125)->nullable();
+            $table->string('paciente_numero', 15)->nullable();
+            $table->string('paciente_bairro', 125)->nullable();
+            $table->string('paciente_complemento', 125)->nullable();
+            $table->bigInteger('paciente_municipio_id')->unsigned()->nullable();
+            $table->string('paciente_contato_01', 20)->nullable();
+            $table->string('paciente_contato_02', 15)->nullable();
+            $table->string('paciente_email', 125)->nullable();            
             $table->boolean('paciente_status')->default(1);
             $table->integer('created_user_id')->nullable();
             $table->integer('updated_user_id')->nullable();
@@ -119,6 +147,10 @@ return new class () extends Migration
 
             $table->foreign('paciente_agente_saude_id')
                 ->references('agente_saude_id')->on('agentes_saude')
+                ->onDelete('set null')->onUpdate('cascade');
+
+            $table->foreign('paciente_municipio_id')
+                ->references('municipio_id')->on('municipios')
                 ->onDelete('set null')->onUpdate('cascade');
         });
 

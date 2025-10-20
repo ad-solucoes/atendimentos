@@ -32,12 +32,12 @@ class CnsValidation
 
         switch ($acao) {
             case '1':
-            case '2': $ret = $this->validaCNS();
+            case '2': $ret = $this->validacns();
 
                 break;
             case '7':
             case '8':
-            case '9': $ret = $this->validaCNS_PROVISORIO();
+            case '9': $ret = $this->validacns_PROVISORIO();
 
                 break;
             default: $ret = false;
@@ -51,7 +51,7 @@ class CnsValidation
         return true;
     }
 
-    private function validaCNS()
+    private function validacns()
     {
         $pis  = substr($this->cns, 0, 11);
         $soma = 0;
@@ -77,7 +77,7 @@ class CnsValidation
         }
     }
 
-    private function validaCNS_PROVISORIO()
+    private function validacns_PROVISORIO()
     {
         $soma = 0;
 

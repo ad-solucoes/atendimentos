@@ -44,8 +44,6 @@ class Formulario extends Component
     {
         $this->validate();
 
-        $senha = Str::random(8);
-
         if ($this->perfil_id) {
             $perfil = Role::find($this->perfil_id);
         } else {
@@ -57,7 +55,7 @@ class Formulario extends Component
         if ($perfil->save()) {
             flash()->success('Perfil salvo com sucesso.', [], 'Sucesso!');
         } else {
-            flash()->error('Erro ao salvar usuário.', [], 'Opssss!');
+            flash()->error('Erro ao salvar perfil.', [], 'Opssss!');
         }
 
         return redirect()->route('admin.perfis.listagem');

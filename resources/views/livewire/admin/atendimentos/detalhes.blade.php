@@ -41,7 +41,7 @@
             <p class="text-sm text-gray-700">
                 <strong>Nome:</strong> {{ $atendimento->paciente->paciente_nome }} <br>
                 <strong>CPF:</strong> {{ $atendimento->paciente->paciente_cpf }} <br>
-                <strong>Cartão SUS:</strong> {{ $atendimento->paciente->paciente_cns }} <br>
+                <strong>Cartão SUS:</strong> {{ $atendimento->paciente->paciente_cartao_sus }} <br>
                 <strong>Data de Nascimento:</strong> {{ $atendimento->paciente->paciente_data_nascimento->format('d/m/Y') }}
             </p>
         </div>

@@ -54,7 +54,7 @@ class Formulario extends Component
         if ($permissao->save()) {
             flash()->success('Permissão salvo com sucesso.', [], 'Sucesso!');
         } else {
-            flash()->error('Erro ao salvar usuário.', [], 'Opssss!');
+            flash()->error('Erro ao salvar permissão.', [], 'Opssss!');
         }
 
         return redirect()->route('admin.permissoes.listagem');

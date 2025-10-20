@@ -65,17 +65,22 @@ class Formulario extends Component
     {
         $this->validate();
 
-        AgenteSaude::updateOrCreate(
-            ['agente_saude_id' => $this->agente_saude_id],
-            [
-                'agente_saude_nome'            => $this->agente_saude_nome,
-                'agente_saude_apelido'         => $this->agente_saude_apelido,
-                'agente_saude_equipe_saude_id' => $this->agente_saude_equipe_saude_id,
-                'agente_saude_status'          => $this->agente_saude_status,
-            ]
-        );
+        if($this->agente_saude_id){
+            $agente_saude = AgenteSaude::find($this->agente_saude_id);
+        }else{
+            $agente_saude = new AgenteSaude();
+        }
 
-        flash()->success('Agente de saúde salvo com sucesso.', [], 'Sucesso!');
+        $agente_saude->agente_saude_nome            = $this->agente_saude_nome;
+        $agente_saude->agente_saude_apelido         = $this->agente_saude_apelido;
+        $agente_saude->agente_saude_equipe_saude_id = $this->agente_saude_equipe_saude_id;
+        $agente_saude->agente_saude_status          = $this->agente_saude_status;
+
+        if($agente_saude->save()){
+            flash()->success('Agente de saúde salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar agente de saúde.', [], 'Ossss!');
+        }        
 
         return redirect()->route('admin.agentes_saude.listagem');
     }

@@ -51,14 +51,20 @@ class Formulario extends Component
     {
         $this->validate();
 
-        TipoProcedimento::updateOrCreate(
-            ['tipo_procedimento_id' => $this->tipo_procedimento_id],
-            [
-                'tipo_procedimento_nome' => $this->tipo_procedimento_nome,
-            ]
-        );
+        if($this->tipo_procedimento_id){
+            $tipo_procedimento = TipoProcedimento::find($this->tipo_procedimento_id);
+        }else{
+            $tipo_procedimento = new TipoProcedimento();
+        }
 
-        flash()->success('Tipo de procedimento salvo com sucesso.', [], 'Sucesso!');
+        $tipo_procedimento->tipo_procedimento_nome            = $this->tipo_procedimento_nome;
+        $tipo_procedimento->tipo_procedimento_status          = $this->tipo_procedimento_status;
+
+        if($tipo_procedimento->save()){
+            flash()->success('Tipo de procedimento salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar tipo de procedimento.', [], 'Ossss!');
+        }
 
         return redirect()->route('admin.tipos_procedimento.listagem');
     }

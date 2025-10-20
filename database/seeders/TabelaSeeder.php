@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Database\Seeders;
 
 use App\Models\AgenteSaude;
+use App\Models\Estado;
+use App\Models\Municipio;
 use App\Models\Atendimento;
 use App\Models\EquipeSaude;
 
@@ -260,6 +262,667 @@ class TabelaSeeder extends Seeder
         ];
         AgenteSaude::insert($dataAgenteSaude);
 
+        // Estados
+        $data = [
+            [
+                'estado_nome'     => 'Acre',
+                'estado_uf'       => 'AC',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Alagoas',
+                'estado_uf'       => 'AL',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Amapá',
+                'estado_uf'       => 'AP',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Amazonas',
+                'estado_uf'       => 'AM',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Bahia',
+                'estado_uf'       => 'BA',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Ceará',
+                'estado_uf'       => 'CE',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Distrito Federal',
+                'estado_uf'       => 'DF',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Espírito Santo',
+                'estado_uf'       => 'ES',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Goiás',
+                'estado_uf'       => 'GO',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Maranhão',
+                'estado_uf'       => 'MA',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Mato Grosso',
+                'estado_uf'       => 'MT',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Mato Grosso do Sul',
+                'estado_uf'       => 'MS',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Minas Gerais',
+                'estado_uf'       => 'MG',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Pará',
+                'estado_uf'       => 'PA',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Paraíba',
+                'estado_uf'       => 'PB',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Paraná',
+                'estado_uf'       => 'PR',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Pernambuco',
+                'estado_uf'       => 'PE',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Piauí',
+                'estado_uf'       => 'PI',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Rio de Janeiro',
+                'estado_uf'       => 'RJ',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Rio Grande do Norte',
+                'estado_uf'       => 'RN',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Rio Grande do Sul',
+                'estado_uf'       => 'RS',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Rondônia',
+                'estado_uf'       => 'RO',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Roraima',
+                'estado_uf'       => 'RR',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Santa Catarina',
+                'estado_uf'       => 'SC',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'São Paulo',
+                'estado_uf'       => 'SP',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Sergipe',
+                'estado_uf'       => 'SE',
+                'created_user_id' => 1,
+            ],
+            [
+                'estado_nome'     => 'Tocantins',
+                'estado_uf'       => 'TO',
+                'created_user_id' => 1,
+            ],
+        ];
+
+        for ($i = 0; $i < count($data); $i++) {
+            Estado::create($data[$i]);
+        }
+
+        // Municípios
+        $data = [
+            [
+                'municipio_nome'      => 'Água Branca',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Anadia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Arapiraca',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Atalaia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Barra de Santo Antônio',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Barra de São Miguel',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Batalha',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Belém',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Belo Monte',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Boca da Mata',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Branquinha',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Cacimbinhas',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Cajueiro',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Campestre',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Campo Alegre',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Campo Grande',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Canapi',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Capela',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Carneiros',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Chã Preta',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Coité do Noia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Colônia Leopoldina',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Coqueiro Seco',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Coruripe',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Craíbas',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Delmiro Gouveia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Dois Riachos',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Estrela de Alagoas',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Feira Grande',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Feliz Deserto',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Flexeiras',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Girau do Ponciano',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Ibateguara',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Igaci',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Igreja Nova',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Inhapi',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Jacaré dos Homens',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Jacuípe',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Japaratinga',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Jaramataia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Jequiá da Praia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Joaquim Gomes',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Jundiá',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Junqueiro',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Lagoa da Canoa',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Limoeiro de Anadia',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Maceió',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Major Isidoro',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Mar Vermelho',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Maragogi',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Maravilha',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Marechal Deodoro',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Maribondo',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Mata Grande',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Matriz de Camaragibe',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Messias',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Minador do Negrão',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Monteirópolis',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Murici',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Novo Lino',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Olho d\'Água das Flores',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Olho d\'Água do Casado',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Olho d\'Água Grande',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Olivença',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Ouro Branco',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Palestina',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Palmeira dos Índios',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Pão de Açúcar',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Pariconha',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Paripueira',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Passo de Camaragibe',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Paulo Jacinto',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Penedo',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Piaçabuçu',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Pilar',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Pindoba',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Piranhas',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Poço das Trincheiras',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Porto Calvo',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Porto de Pedras',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Porto Real do Colégio',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Quebrangulo',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Rio Largo',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Roteiro',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Santa Luzia do Norte',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Santana do Ipanema',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Santana do Mundaú',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São Brás',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São José da Laje',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São José da Tapera',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São Luís do Quitunde',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São Miguel dos Campos',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São Miguel dos Milagres',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'São Sebastião',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Satuba',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Senador Rui Palmeira',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Tanque d\'Arca',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Taquarana',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Teotônio Vilela',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Traipu',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'União dos Palmares',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+            [
+                'municipio_nome'      => 'Viçosa',
+                'municipio_estado_id' => 2,
+                'created_user_id'     => 1,
+            ],
+        ];
+
+        for ($i = 0; $i < count($data); $i++) {
+            Municipio::create($data[$i]);
+        }
+
         /**
          * TABELA: pacientes
          */
@@ -274,8 +937,8 @@ class TabelaSeeder extends Seeder
                 'paciente_data_nascimento' => $faker->date(),
                 'paciente_nome_mae'        => $faker->name('female'),
                 'paciente_endereco'        => $faker->address(),
-                'paciente_contato'         => '(82) ' . rand(90000, 99999) . '-' . rand(1000, 9999),
-                'paciente_cns'             => $faker->numerify('###############'),
+                'paciente_contato_01'         => '(82) ' . rand(90000, 99999) . '-' . rand(1000, 9999),
+                'paciente_cartao_sus'             => $faker->numerify('###############'),
             ];
         }
         Paciente::insert($dataPaciente);

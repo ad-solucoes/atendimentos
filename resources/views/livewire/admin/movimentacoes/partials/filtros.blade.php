@@ -110,7 +110,7 @@
         <div class="flex flex-col">
             <label class="text-sm font-semibold text-gray-700 mb-1">Cartão SUS</label>
             <input type="text" wire:model.live="filtro_sus"
-                   placeholder="Número do CNS"
+                   placeholder="Número do cartao_sus"
                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
         </div>
 

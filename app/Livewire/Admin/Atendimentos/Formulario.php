@@ -135,7 +135,7 @@ class Formulario extends Component
             $this->pacientesEncontrados = Paciente::query()
                 ->where('paciente_nome', 'like', "%{$this->pacienteBusca}%")
                 ->orWhere('paciente_cpf', 'like', "%{$this->pacienteBusca}%")
-                ->orWhere('paciente_cns', 'like', "%{$this->pacienteBusca}%")
+                ->orWhere('paciente_cartao_sus', 'like', "%{$this->pacienteBusca}%")
                 ->take(5)
                 ->get();
         } else {
@@ -210,44 +210,37 @@ class Formulario extends Component
     {
         $this->validate();
 
-        $atendimento = Atendimento::updateOrCreate(
-            ['atendimento_id' => $this->atendimento_id],
-            [
-                'atendimento_paciente_id' => $this->atendimento_paciente_id,
-                'atendimento_prioridade'  => $this->atendimento_prioridade,
-                'atendimento_data'        => $this->atendimento_data,
-                'atendimento_observacao'  => $this->atendimento_observacao,
-                'created_user_id'         => auth()->id(),
-                'updated_user_id'         => auth()->id(),
-            ]
-        );
-
-        foreach ($this->solicitacoes as $sol) {
-            Solicitacao::updateOrCreate(
-                ['solicitacao_id' => $sol['id'] ?? null],
-                [
-                    'solicitacao_atendimento_id'       => $atendimento->atendimento_id,
-                    'solicitacao_procedimento_id'      => $sol['procedimento_id'],
-                    'solicitacao_localizacao_atual_id' => auth()->user()->setor_id ?? null,
-                    'solicitacao_data'                 => now(),
-                    'solicitacao_status'               => 'pendente',
-                    'created_user_id'                  => auth()->id(),
-                    'updated_user_id'                  => auth()->id(),
-                ]
-            );
+        if($this->atendimento_id){
+            $atendimento = Atendimento::find($this->atendimento_id);
+        }else{
+            $atendimento = new Atendimento();
         }
 
-        flash()->success('Atendimento salvo com sucesso.', [], 'Sucesso!');
+        $atendimento->atendimento_paciente_id = $this->atendimento_paciente_id;
+        $atendimento->atendimento_prioridade  = $this->atendimento_prioridade;
+        $atendimento->atendimento_data        = $this->atendimento_data;
+        $atendimento->atendimento_observacao  = $this->atendimento_observacao;
+
+        if($atendimento->save()){
+            foreach ($this->solicitacoes as $solicitacao) {
+                Solicitacao::updateOrCreate(
+                    ['solicitacao_id' => $solicitacao['id'] ?? null],
+                    [
+                        'solicitacao_atendimento_id'       => $atendimento->atendimento_id,
+                        'solicitacao_procedimento_id'      => $solicitacao['procedimento_id'],
+                        'solicitacao_localizacao_atual_id' => auth()->user()->setor_id ?? null,
+                        'solicitacao_data'                 => now(),
+                        'solicitacao_status'               => 'pendente'
+                    ]
+                );
+            }
+
+            flash()->success('Atendimento salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar atendimento.', [], 'Ossss!');
+        }
 
         return redirect()->route('admin.atendimentos.detalhes', $atendimento->atendimento_id);
-    }
-
-    private function gerarNumeroAtendimento(): string
-    {
-        $ano   = now()->format('Y');
-        $count = Atendimento::whereYear('created_at', $ano)->count() + 1;
-
-        return $ano . str_pad((string)$count, 4, '0', STR_PAD_LEFT);
     }
 
     public function render()

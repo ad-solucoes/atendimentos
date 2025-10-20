@@ -52,15 +52,20 @@ class Formulario extends Component
     {
         $this->validate();
 
-        EquipeSaude::updateOrCreate(
-            ['equipe_saude_id' => $this->equipe_saude_id],
-            [
-                'equipe_saude_nome'   => $this->equipe_saude_nome,
-                'equipe_saude_status' => $this->equipe_saude_status,
-            ]
-        );
+        if($this->equipe_saude_id){
+            $equipe_saude = EquipeSaude::find($this->equipe_saude_id);
+        }else{
+            $equipe_saude = new EquipeSaude();
+        }
 
-        flash()->success('Equipe de saúde salvo com sucesso.', [], 'Sucesso!');
+        $equipe_saude->equipe_saude_nome            = $this->equipe_saude_nome;
+        $equipe_saude->equipe_saude_status          = $this->equipe_saude_status;
+
+        if($equipe_saude->save()){
+            flash()->success('Equipe de saúde salva com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar equipe de saúde.', [], 'Ossss!');
+        }
 
         return redirect()->route('admin.equipes_saude.listagem');
     }

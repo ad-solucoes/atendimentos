@@ -145,7 +145,7 @@
                             @endif
                         </td>
                         <td class="px-2 py-1 text-sm font-medium text-gray-800">{{ $paciente->paciente_nome }}</td>
-                        <td class="px-2 py-1 text-sm text-gray-800">{{ $paciente->paciente_cns }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $paciente->paciente_cartao_sus }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $paciente->paciente_cpf }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $paciente->paciente_nome_mae }}</td>
                         <td class="px-2 py-1 text-center space-x-0">

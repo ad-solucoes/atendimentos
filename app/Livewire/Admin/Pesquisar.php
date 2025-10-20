@@ -24,8 +24,8 @@ class Pesquisar extends Component
             $pacientes    = $pacientes->where('paciente_cpf', 'like', "%{$termo}%")->get();
             $atendimentos = collect();
             $solicitacoes = collect();
-        } elseif ($tipo === 'cns') {
-            $pacientes    = $pacientes->where('paciente_cns', 'like', "%{$termo}%")->get();
+        } elseif ($tipo === 'cartao_sus') {
+            $pacientes    = $pacientes->where('paciente_cartao_sus', 'like', "%{$termo}%")->get();
             $atendimentos = collect();
             $solicitacoes = collect();
         } elseif ($tipo === 'numero_atendimento') {

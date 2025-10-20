@@ -219,7 +219,7 @@
                         </td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_nome }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_cpf }}</td>
-                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_cns }}</td>
+                        <td class="px-2 py-1 text-sm text-gray-800">{{ $atendimento->paciente->paciente_cartao_sus }}</td>
                         <td class="px-2 py-1 text-sm text-gray-800">
                             @if ($atendimento->atendimento_prioridade == 'Baixa')
                                 <span

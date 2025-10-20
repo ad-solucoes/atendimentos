@@ -38,6 +38,7 @@
                 <a href="{{ route('site.inicio') }}" class="hover:underline"><i class="fa-solid fa-home fa-fw"></i> Início</a>
                 <a href="{{ route('site.consultar') }}" class="hover:underline"><i class="fa-solid fa-search fa-fw"></i> Consultar Atendimento</a>
                 <a href="{{ route('site.sobre') }}" class="hover:underline"><i class="fa-solid fa-th fa-fw"></i> Sobre o Projeto</a>
+                <a href="{{ route('admin.dashboard') }}" class="hover:underline" target="_blank"><i class="fa-solid fa-gauge fa-fw"></i> Paínel Administrativo</a>
             </nav>
 
             <!-- Botão mobile -->

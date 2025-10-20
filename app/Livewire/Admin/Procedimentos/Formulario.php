@@ -61,15 +61,21 @@ class Formulario extends Component
     {
         $this->validate();
 
-        Procedimento::updateOrCreate(
-            ['procedimento_id' => $this->procedimento_id],
-            [
-                'procedimento_nome'    => $this->procedimento_nome,
-                'procedimento_tipo_id' => $this->procedimento_tipo_id,
-            ]
-        );
+        if($this->procedimento_id){
+            $procedimento = Procedimento::find($this->procedimento_id);
+        }else{
+            $procedimento = new Procedimento();
+        }
 
-        flash()->success('Procedimento salvo com sucesso.', [], 'Sucesso!');
+        $procedimento->procedimento_nome            = $this->procedimento_nome;
+        $procedimento->procedimento_tipo_id = $this->procedimento_tipo_id;
+        $procedimento->procedimento_status          = $this->procedimento_status;
+
+        if($procedimento->save()){
+            flash()->success('Procedimento salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar procedimento.', [], 'Ossss!');
+        }
 
         return redirect()->route('admin.procedimentos.listagem');
     }

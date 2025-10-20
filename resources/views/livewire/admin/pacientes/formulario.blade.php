@@ -34,9 +34,9 @@
                         });
                     }
                 }">
-                    <input type="text" x-ref="input" wire:model="paciente_cns" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <input type="text" x-ref="input" wire:model="paciente_cartao_sus" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
-                @error('paciente_cns') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+                @error('paciente_cartao_sus') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
             </div>
         </div> 
 
@@ -127,10 +127,62 @@
             @error('paciente_endereco') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
         </div>
 
+        <!-- Número -->
+        <div>
+            <label class="block text-sm font-semibold mb-1">Número <span class="text-red-600 text-sm">*</span></label>
+            <input type="text" wire:model="paciente_numero" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            @error('paciente_numero') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+        </div>
+
+        <!-- Bairro -->
+        <div>
+            <label class="block text-sm font-semibold mb-1">Bairro <span class="text-red-600 text-sm">*</span></label>
+            <input type="text" wire:model="paciente_bairro" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            @error('paciente_bairro') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+        </div>
+
+        <!-- Complemento -->
+        <div>
+            <label class="block text-sm font-semibold mb-1">Complemento</label>
+            <input type="text" wire:model="paciente_complemento" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            @error('paciente_complemento') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Contato -->
+            <!-- Estado -->
             <div>
-                <label class="block text-sm font-semibold mb-1">Contato <span class="text-red-600 text-sm">*</span></label>
+                <label class="block text-sm font-semibold mb-1">Estado <span class="text-red-600 text-sm">*</span></label>
+                <select wire:model.live="estado_id" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">-- Selecionar --</option>
+                    @foreach($estados as $estado)
+                        <option value="{{ $estado->estado_id }}">{{ $estado->estado_nome }} - {{ $estado->estado_uf }}</option>
+                    @endforeach
+                </select>
+                @error('estado_id') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- Município -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">Município</label>
+                <select wire:model="paciente_municipio_id" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    @if(count($municipios) > 0)
+                        <option value="">-- Selecionar --</option>
+                    @else
+                        <option value="">--</option>
+                    @endif
+
+                    @foreach($municipios as $municipio)
+                        <option value="{{ $municipio->municipio_id }}">{{ $municipio->municipio_nome }}</option>
+                    @endforeach
+                </select>
+                @error('paciente_municipio_id') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Contato 01 -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">Contato 01 <span class="text-red-600 text-sm">*</span></label>
                 <div x-data="{
                     contato: @entangle('paciente_contato_01').defer,
                     init() {
@@ -159,9 +211,52 @@
                         });
                     }
                 }">
-                    <input type="text" x-ref="input" wire:model="paciente_contato" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <input type="text" x-ref="input" wire:model="paciente_contato_01" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
-                @error('paciente_contato') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+                @error('paciente_contato_01') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- Contato 02 -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">Contato 02 <span class="text-red-600 text-sm">*</span></label>
+                <div x-data="{
+                    contato: @entangle('paciente_contato_02').defer,
+                    init() {
+                        const input = this.$refs.input;
+                
+                        // Aplica máscara dinâmica para telefone/celular
+                        const maskBehavior = function(val) {
+                            return val.replace(/\D/g, '').length === 11 ?
+                                '(00) 00000-0000' // celular (11 dígitos)
+                                :
+                                '(00) 0000-00009'; // telefone fixo (10 dígitos)
+                        };
+                
+                        const options = {
+                            onKeyPress: function(val, e, field, options) {
+                                field.mask(maskBehavior.apply({}, arguments), options);
+                            },
+                            reverse: false
+                        };
+                
+                        $(input).mask(maskBehavior, options);
+                
+                        // Atualiza Livewire sem máscara
+                        input.addEventListener('input', () => {
+                            this.contato = input.value.replace(/\D/g, '');
+                        });
+                    }
+                }">
+                    <input type="text" x-ref="input" wire:model="paciente_contato_02" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+                @error('paciente_contato_02') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- E-mail -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">E-mail</label>
+                <input type="text" wire:model="paciente_email" class="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                @error('paciente_email') <span class="text-red-600 text-sm font-semibold">{{ $message }}</span> @enderror
             </div>
 
             <!-- Status -->

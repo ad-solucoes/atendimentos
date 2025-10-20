@@ -52,15 +52,20 @@ class Formulario extends Component
     {
         $this->validate();
 
-        Setor::updateOrCreate(
-            ['setor_id' => $this->setor_id],
-            [
-                'setor_nome'   => $this->setor_nome,
-                'setor_status' => $this->setor_status,
-            ]
-        );
+        if($this->setor_id){
+            $setor = Setor::find($this->setor_id);
+        }else{
+            $setor = new Setor();
+        }
 
-        flash()->success('Setor salvo com sucesso.', [], 'Sucesso!');
+        $setor->setor_nome            = $this->setor_nome;
+        $setor->setor_status          = $this->setor_status;
+
+        if($setor->save()){
+            flash()->success('Setor salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar setor.', [], 'Ossss!');
+        }
 
         return redirect()->route('admin.setores.listagem');
     }

@@ -22,7 +22,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', App\Livewire\Admin\Auth\Login::class)->name('login')->middleware('guest');
     Route::get('/forgot-password', App\Livewire\Admin\Auth\ForgotPassword::class)->name('password.request')->middleware('guest');
     Route::get('/reset-password/{token}', App\Livewire\Admin\Auth\ResetPassword::class)->name('password.reset')->middleware('guest');
-    // Route::get('/email/verify', App\Livewire\Admin\Auth\VerifyEmail::class)->middleware('auth')->name('verification.notice');
 
     Route::get('/auth/verify-email', App\Livewire\Admin\Auth\VerifyEmail::class)->middleware('auth')->name('verification.notice');
     Route::get('/auth/email-verification/{id}/{hash}', App\Livewire\Admin\Auth\EmailVerification::class)
@@ -63,6 +62,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('/detalhes/{id?}', App\Livewire\Admin\Procedimentos\Detalhes::class)->name('detalhes')->middleware('permission:Exibir Procedimento');
             });
 
+            Route::prefix('estados')->name('estados.')->group(function () {
+                Route::get('/listagem', App\Livewire\Admin\Estados\Listagem::class)->name('listagem')->middleware('permission:Listar Estado');
+                Route::get('/formulario/{id?}', App\Livewire\Admin\Estados\Formulario::class)->name('formulario')->middleware('permission:Adicionar Estado|Editar Estado');
+                Route::get('/detalhes/{id?}', App\Livewire\Admin\Estados\Detalhes::class)->name('detalhes')->middleware('permission:Exibir Estado');
+            });
+
+            Route::prefix('municipios')->name('municipios.')->group(function () {
+                Route::get('/listagem', App\Livewire\Admin\Municipios\Listagem::class)->name('listagem')->middleware('permission:Listar Municipio');
+                Route::get('/formulario/{id?}', App\Livewire\Admin\Municipios\Formulario::class)->name('formulario')->middleware('permission:Adicionar Municipio|Editar Municipio');
+                Route::get('/detalhes/{id?}', App\Livewire\Admin\Municipios\Detalhes::class)->name('detalhes')->middleware('permission:Exibir Municipio');
+            });
+
             Route::prefix('equipes_saude')->name('equipes_saude.')->group(function () {
                 Route::get('/listagem', App\Livewire\Admin\EquipesSaude\Listagem::class)->name('listagem')->middleware('permission:Listar Equipe de Saude');
                 Route::get('/formulario/{id?}', App\Livewire\Admin\EquipesSaude\Formulario::class)->name('formulario')->middleware('permission:Adicionar Equipe de Saude|Editar Equipe de Saude');
@@ -93,7 +104,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             Route::prefix('solicitacoes')->name('solicitacoes.')->group(function () {
                 Route::get('/listagem', App\Livewire\Admin\Solicitacoes\Listagem::class)->name('listagem')->middleware('permission:Listar Solicitacao');
-                Route::get('/formulario/{id?}', App\Livewire\Admin\Solicitacoes\Formulario::class)->name('formulario')->middleware('permission:Adicionar Solicitacao|Editar Solicitacao');
                 Route::get('/detalhes/{id}', App\Livewire\Admin\Solicitacoes\Detalhes::class)->name('detalhes')->middleware('permission:Exibir Solicitacao');
                 Route::get('/movimentar/{solicitacao_id}', App\Livewire\Admin\Solicitacoes\Movimentar::class)->name('movimentar')->middleware('permission:Movimentar Solicitacao');
 

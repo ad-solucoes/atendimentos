@@ -37,7 +37,7 @@
                                     {{ $i === $pacienteSelecionadoIndex ? 'bg-blue-100' : 'hover:bg-gray-100' }}">
                                 <div class="font-medium">{{ $paciente->paciente_nome }}</div>
                                 <div class="text-sm text-gray-500">
-                                    <small>CPF:</small> <span class="font-medium">{{ $paciente->paciente_cpf }}</span> <small>| Cartão do SUS:</small> <span class="font-medium">{{ $paciente->paciente_cns }}</span><br/><small>Nascimento:</small> <span class="font-medium">{{ $paciente->paciente_data_nascimento->format('d/m/Y') }}</span> <small>| Nome da Mãe:</small> <span class="font-medium">{{ $paciente->paciente_nome_mae }}</span>
+                                    <small>CPF:</small> <span class="font-medium">{{ $paciente->paciente_cpf }}</span> <small>| Cartão do SUS:</small> <span class="font-medium">{{ $paciente->paciente_cartao_sus }}</span><br/><small>Nascimento:</small> <span class="font-medium">{{ $paciente->paciente_data_nascimento->format('d/m/Y') }}</span> <small>| Nome da Mãe:</small> <span class="font-medium">{{ $paciente->paciente_nome_mae }}</span>
                                 </div>
                             </li>
                         @endforeach

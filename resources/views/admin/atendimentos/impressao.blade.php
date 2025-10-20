@@ -45,7 +45,7 @@
         <h2>Paciente</h2>
         <p class="info"><span class="label">Nome:</span> {{ $atendimento->paciente->paciente_nome }}</p>
         <p class="info"><span class="label">CPF:</span> {{ $atendimento->paciente->paciente_cpf }}</p>
-        <p class="info"><span class="label">Cartão SUS:</span> {{ $atendimento->paciente->paciente_cns }}</p>
+        <p class="info"><span class="label">Cartão SUS:</span> {{ $atendimento->paciente->paciente_cartao_sus }}</p>
         <p class="info"><span class="label">Data de Nascimento:</span> {{ $atendimento->paciente->paciente_data_nascimento->format('d/m/Y') }}</p>
         <p class="info"><span class="label">Nome da Mãe:</span> {{ $atendimento->paciente->paciente_nome_mae ?? '-' }}</p>
     </div>

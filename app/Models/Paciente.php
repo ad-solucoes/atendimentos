@@ -28,7 +28,7 @@ class Paciente extends Model
         'paciente_nome_mae',
         'paciente_endereco',
         'paciente_contato',
-        'paciente_cns',
+        'paciente_cartao_sus',
         'paciente_cpf',
         'paciente_status',
         'created_user_id',
@@ -41,17 +41,25 @@ class Paciente extends Model
         'updated_at'               => 'datetime',
     ];
 
-    /**
-     * Um paciente pertence a um agente de saúde
-     */
+    public function getPacienteIdadeAttribute()
+    {
+        if ($this->paciente_data_nascimento) {
+            return idadeAtual($this->paciente_data_nascimento->format('Y-m-d'));
+        }
+
+        return null;
+    }
+
     public function agente_saude()
     {
         return $this->belongsTo(AgenteSaude::class, 'paciente_agente_saude_id', 'agente_saude_id');
     }
 
-    /**
-     * Um paciente pode ter vários atendimentos
-     */
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class, 'paciente_municipio_id', 'municipio_id');
+    }
+
     public function atendimentos()
     {
         return $this->hasMany(Atendimento::class, 'atendimento_paciente_id', 'paciente_id');

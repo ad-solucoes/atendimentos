@@ -6,6 +6,8 @@ namespace App\Livewire\Admin\Pacientes;
 
 use App\Models\AgenteSaude;
 use App\Models\EquipeSaude;
+use App\Models\Estado;
+use App\Models\Municipio;
 use App\Models\Paciente;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -27,10 +29,19 @@ class Formulario extends Component
     public $paciente_nome_mae;
 
     public $paciente_endereco;
+    public $paciente_numero;
+    public $paciente_bairro;
+    public $paciente_complemento;
 
-    public $paciente_contato;
+    public $estado_id;
 
-    public $paciente_cns;
+    public $paciente_municipio_id;
+
+    public $paciente_contato_01;
+    public $paciente_contato_02;
+    public $paciente_email;
+
+    public $paciente_cartao_sus;
 
     public $paciente_cpf;
 
@@ -39,6 +50,10 @@ class Formulario extends Component
     public $equipes_saude = [];
 
     public $agentes_saude = [];
+
+    public $estados = [];
+
+    public $municipios = [];
 
     protected function rules()
     {
@@ -50,7 +65,7 @@ class Formulario extends Component
                 Rule::unique('pacientes', 'paciente_nome')->ignore($this->paciente_id, 'paciente_id'),
             ],
             'paciente_cpf'    => 'required|cpf',
-            'paciente_cns'    => 'nullable|cns',
+            'paciente_cartao_sus'    => 'nullable|cns',
             'paciente_status' => 'required',
         ];
     }
@@ -64,27 +79,38 @@ class Formulario extends Component
     public function mount($id = null)
     {
         $this->equipes_saude = EquipeSaude::orderBy('equipe_saude_nome')->get();
+        $this->estados = Estado::orderBy('estado_nome')->get();
 
         if ($id) {
-            $doc = Paciente::find($id);
+            $paciente = Paciente::find($id);
 
-            if ($doc) {
-                $this->paciente_id              = $doc->paciente_id;
-                $this->paciente_nome            = $doc->paciente_nome;
-                $this->equipe_saude_id          = $doc->agente_saude->agente_saude_equipe_saude_id;
-                $this->paciente_agente_saude_id = $doc->paciente_agente_saude_id;
-                $this->paciente_sexo            = $doc->paciente_sexo;
-                $this->paciente_data_nascimento = $doc->paciente_data_nascimento->format('d/m/Y');
-                $this->paciente_nome_mae        = $doc->paciente_nome_mae;
-                $this->paciente_endereco        = $doc->paciente_endereco;
-                $this->paciente_contato         = $doc->paciente_contato;
-                $this->paciente_cns             = $doc->paciente_cns;
-                $this->paciente_cpf             = $doc->paciente_cpf;
-                $this->paciente_status          = $doc->paciente_status;
+            if ($paciente) {
+                $this->paciente_id              = $paciente->paciente_id;
+                $this->paciente_nome            = $paciente->paciente_nome;
+                $this->equipe_saude_id          = $paciente->agente_saude->agente_saude_equipe_saude_id;
+                $this->paciente_agente_saude_id = $paciente->paciente_agente_saude_id;
+                $this->paciente_sexo            = $paciente->paciente_sexo;
+                $this->paciente_data_nascimento = $paciente->paciente_data_nascimento->format('d/m/Y');
+                $this->paciente_nome_mae        = $paciente->paciente_nome_mae;
+                $this->paciente_endereco        = $paciente->paciente_endereco;
+                $this->paciente_numero        = $paciente->paciente_numero;
+                $this->paciente_bairro        = $paciente->paciente_bairro;
+                $this->estado_id        = $paciente->municipio?->municipio_estado_id;
+                $this->paciente_municipio_id        = $paciente->paciente_municipio_id;
+                $this->paciente_contato_01         = $paciente->paciente_contato_01;
+                $this->paciente_contato_02         = $paciente->paciente_contato_02;
+                $this->paciente_email         = $paciente->paciente_email;
+                $this->paciente_cartao_sus             = $paciente->paciente_cartao_sus;
+                $this->paciente_cpf             = $paciente->paciente_cpf;
+                $this->paciente_status          = $paciente->paciente_status;
             }
 
             if ($this->equipe_saude_id) {
                 $this->agentes_saude = AgenteSaude::where('agente_saude_equipe_saude_id', $this->equipe_saude_id)->orderBy('agente_saude_nome')->get();
+            }
+
+            if ($this->estado_id) {
+                $this->municipios = Municipio::where('municipio_estado_id', $this->estado_id)->orderBy('municipio_nome')->get();
             }
         }
     }
@@ -95,27 +121,44 @@ class Formulario extends Component
         $this->paciente_agente_saude_id = '';
     }
 
+    public function updatedEstadoId()
+    {
+        $this->municipios = Municipio::where('municipio_estado_id', $this->estado_id)->orderBy('municipio_nome')->get();
+        $this->paciente_municipio_id = '';
+    }
+
     public function save()
     {
         $this->validate();
 
-        $paciente = Paciente::updateOrCreate(
-            ['paciente_id' => $this->paciente_id],
-            [
-                'paciente_nome'            => $this->paciente_nome,
-                'paciente_agente_saude_id' => $this->paciente_agente_saude_id,
-                'paciente_sexo'            => $this->paciente_sexo,
-                'paciente_data_nascimento' => converteData($this->paciente_data_nascimento),
-                'paciente_nome_mae'        => $this->paciente_nome_mae,
-                'paciente_endereco'        => $this->paciente_endereco,
-                'paciente_contato'         => $this->paciente_contato,
-                'paciente_cns'             => $this->paciente_cns,
-                'paciente_cpf'             => $this->paciente_cpf,
-                'paciente_status'          => $this->paciente_status,
-            ]
-        );
+        if($this->paciente_id){
+            $paciente = Paciente::find($this->paciente_id);
+        }else{
+            $paciente = new Paciente();
+        }
 
-        flash()->success('Paciente salvo com sucesso.', [], 'Sucesso!');
+        $paciente->paciente_nome            = $this->paciente_nome;
+        $paciente->paciente_agente_saude_id = $this->paciente_agente_saude_id;
+        $paciente->paciente_sexo           = $this->paciente_sexo;
+        $paciente->paciente_data_nascimento = converteData($this->paciente_data_nascimento);
+        $paciente->paciente_nome_mae       = $this->paciente_nome_mae;
+        $paciente->paciente_endereco       = $this->paciente_endereco;
+        $paciente->paciente_numero       = $this->paciente_numero;
+        $paciente->paciente_bairro       = $this->paciente_bairro;
+        $paciente->paciente_complemento       = $this->paciente_complemento;
+        $paciente->paciente_municipio_id       = $this->paciente_municipio_id;
+        $paciente->paciente_cartao_sus            = $this->paciente_cartao_sus;
+        $paciente->paciente_cpf            = $this->paciente_cpf;
+        $paciente->paciente_contato_01            = $this->paciente_contato_01;
+        $paciente->paciente_contato_02            = $this->paciente_contato_02;
+        $paciente->paciente_email            = $this->paciente_email;
+        $paciente->paciente_status         = $this->paciente_status;
+
+        if($paciente->save()){
+            flash()->success('Paciente salvo com sucesso.', [], 'Sucesso!');
+        }else{
+            flash()->error('Erro ao salvar paciente.', [], 'Ossss!');
+        }
 
         return redirect()->route('admin.pacientes.detalhes', $paciente->paciente_id);
     }

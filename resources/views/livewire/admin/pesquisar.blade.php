@@ -28,7 +28,7 @@
                                 <td class="px-3 py-2">{{ formatoId($paciente->paciente_id, 3) }}</td>
                                 <td class="px-3 py-2">{{ $paciente->paciente_nome }}</td>
                                 <td class="px-3 py-2">{{ $paciente->paciente_cpf }}</td>
-                                <td class="px-3 py-2">{{ $paciente->paciente_cns }}</td>
+                                <td class="px-3 py-2">{{ $paciente->paciente_cartao_sus }}</td>
                                 <td class="px-3 py-2">
                                     <a href="{{ route('admin.pacientes.detalhes', $paciente->paciente_id) }}"
                                         class="text-blue-600 hover:underline text-sm">Exibir</a>

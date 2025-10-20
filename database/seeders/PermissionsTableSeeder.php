@@ -41,6 +41,18 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Exibir Procedimento']);
         Permission::create(['name' => 'Deletar Procedimento']);
 
+        Permission::create(['name' => 'Listar Estado']);
+        Permission::create(['name' => 'Adicionar Estado']);
+        Permission::create(['name' => 'Editar Estado']);
+        Permission::create(['name' => 'Exibir Estado']);
+        Permission::create(['name' => 'Deletar Estado']);
+
+        Permission::create(['name' => 'Listar Municipio']);
+        Permission::create(['name' => 'Adicionar Municipio']);
+        Permission::create(['name' => 'Editar Municipio']);
+        Permission::create(['name' => 'Exibir Municipio']);
+        Permission::create(['name' => 'Deletar Municipio']);
+
         Permission::create(['name' => 'Listar Equipe de Saude']);
         Permission::create(['name' => 'Adicionar Equipe de Saude']);
         Permission::create(['name' => 'Editar Equipe de Saude']);
@@ -158,6 +170,18 @@ class PermissionsTableSeeder extends Seeder
         $role2->givePermissionTo('Exibir Procedimento');
         $role2->givePermissionTo('Deletar Procedimento');
 
+        $role2->givePermissionTo('Listar Estado');
+        $role2->givePermissionTo('Adicionar Estado');
+        $role2->givePermissionTo('Editar Estado');
+        $role2->givePermissionTo('Exibir Estado');
+        $role2->givePermissionTo('Deletar Estado');
+
+        $role2->givePermissionTo('Listar Municipio');
+        $role2->givePermissionTo('Adicionar Municipio');
+        $role2->givePermissionTo('Editar Municipio');
+        $role2->givePermissionTo('Exibir Municipio');
+        $role2->givePermissionTo('Deletar Municipio');
+
         $role2->givePermissionTo('Listar Equipe de Saude');
         $role2->givePermissionTo('Adicionar Equipe de Saude');
         $role2->givePermissionTo('Editar Equipe de Saude');
@@ -212,6 +236,18 @@ class PermissionsTableSeeder extends Seeder
         $role3->givePermissionTo('Exibir Procedimento');
         $role3->givePermissionTo('Deletar Procedimento');
 
+        $role3->givePermissionTo('Listar Estado');
+        $role3->givePermissionTo('Adicionar Estado');
+        $role3->givePermissionTo('Editar Estado');
+        $role3->givePermissionTo('Exibir Estado');
+        $role3->givePermissionTo('Deletar Estado');
+
+        $role3->givePermissionTo('Listar Municipio');
+        $role3->givePermissionTo('Adicionar Municipio');
+        $role3->givePermissionTo('Editar Municipio');
+        $role3->givePermissionTo('Exibir Municipio');
+        $role3->givePermissionTo('Deletar Municipio');
+
         $role3->givePermissionTo('Listar Equipe de Saude');
         $role3->givePermissionTo('Adicionar Equipe de Saude');
         $role3->givePermissionTo('Editar Equipe de Saude');
@@ -256,6 +292,12 @@ class PermissionsTableSeeder extends Seeder
 
         $role4->givePermissionTo('Listar Procedimento');
         $role4->givePermissionTo('Exibir Procedimento');
+
+        $role4->givePermissionTo('Listar Estado');
+        $role4->givePermissionTo('Exibir Estado');
+
+        $role4->givePermissionTo('Listar Municipio');
+        $role4->givePermissionTo('Exibir Municipio');
 
         $role4->givePermissionTo('Listar Equipe de Saude');
         $role4->givePermissionTo('Exibir Equipe de Saude');

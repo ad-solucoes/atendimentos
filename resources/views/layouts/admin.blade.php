@@ -193,6 +193,34 @@
                     </a>
                     @endif
 
+                    <!-- Estados -->
+                    @can('Listar Estado')
+                    @php
+                        $active = request()->routeIs('admin.estados*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.estados.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'estados'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-map text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'estados'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Estados</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Estados </span>
+                    </a>
+                    @endif
+
+                    <!-- Municípios -->
+                    @can('Listar Municipio')
+                    @php
+                        $active = request()->routeIs('admin.municipios*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-800';
+                    @endphp
+                    <a href="{{ route('admin.municipios.listagem') }}"
+                        class="relative flex items-center py-2 px-2 rounded transition text-sm {{ $active }}"
+                        @mouseenter="hoverIndex = 'municipios'" @mouseleave="hoverIndex = null">
+                        <i class="fa-solid fa-city text-md min-w-[1.5rem] text-center"></i>
+                        
+                        <span x-show="isDesktop && collapsed && hoverIndex === 'municipios'" x-transition.opacity class="absolute text-sm left-full top-1/2 -translate-y-1/2 bg-blue-800 text-white px-2 py-2 rounded shadow-lg whitespace-nowrap z-50"> Municípios</span> <!-- Texto normal (menu expandido ou mobile) --> <span x-show="(!isDesktop && sidebarOpen) || (isDesktop && !collapsed)" x-transition.opacity class="ml-1 whitespace-nowrap"> Municípios </span>
+                    </a>
+                    @endif
+
                     <!-- Equipes de Saúde -->
                     @can('Listar Equipe de Saude')
                     @php
@@ -401,7 +429,7 @@
                             <select name="tipo"
                                 class="px-3 py-1.5 text-sm bg-white border-r border-gray-300 focus:outline-none focus:ring-blue-500">
                                 <option value="cpf">CPF</option>
-                                <option value="cns">Cartão SUS</option>
+                                <option value="cartao_sus">Cartão SUS</option>
                                 <option value="numero_atendimento">Nº Atendimento</option>
                             </select>
 
